@@ -1,0 +1,510 @@
+
+<html>
+
+	<style type="text/css">
+
+	.chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+.panel-body
+{
+    overflow-y: scroll;
+    height: 250px;
+}
+
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
+
+
+
+		*{
+			margin: 0;
+			padding: 0;
+			font-family: tahoma, sans-serif;
+			box-sizing: border-box;
+		}
+		body{
+			background: #fff;
+		}
+		.chatbox{
+			width: 500px;
+			min-width: 390px;
+			height: 600px;
+			background: #ddddd6;
+			padding: 15px;
+
+			box-shadow: 2px 3px #b0addb;
+			border-radius: 10px;
+			position: relative;
+			margin-top: 50px;
+		}
+
+		.chatlogs{
+			padding: 10px;
+			padding-right: 0px;
+			width: 100%;
+			height: 450px;
+			background: #fbfbfb;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+		.chatlogs::-webkit-scrollbar{
+			width: 10px;
+		}
+		.chatlogs::-webkit-scrollbar-thumb{
+			border-radius: 5px;
+			background: rgba(0,0,0,0.2);
+		}
+
+
+
+		.chat{
+			display: flex;
+			flex-flow: row wrap;
+			align-items: flex-start;
+			margin-bottom: 3px;
+
+		}
+		.chat .user-photo{
+			width: 50px;
+			height: 50px;
+			background: #d6cdcf;
+			border-radius: 50%;
+			overflow: hidden;
+
+		}
+		.chat .user-photo img{
+			width: 100%;
+		}
+
+
+		.chat .chat-message{
+			width: 80%;
+			padding: 15px;
+			margin: 5px 10px 0;
+			border-radius: 10px;
+			color: #fff;
+			font-size: 15px;
+		}
+
+		.friend .chat-message{
+			background: #F8BA06;
+		}
+		.self .chat-message{
+			background: #5E5E5E;
+			order: -1;
+		}
+		.chat-form{
+			margin-top: 20px;
+			display: flex;
+			align-items: flex-start;
+		}
+		.chat-form textarea{
+			background: #f9fbfc;
+			width: 85%;
+			height: 50px;
+			border: 2px solid #efe;
+			border-radius: 3px;
+			resize: none;
+			padding: 10px;
+			font-size: 16px;
+			color: #333;
+		}
+
+		.chat-form textarea:focus{
+			background: #fff;
+		}
+
+		.chat-form textarea::-webkit-scrollbar{
+			width: 8px;
+		}
+		.chat-form textarea::-webkit-scrollbar-thumb{
+			border-radius: 3px;
+			background: rgba(0,0,0,0.3);
+		}
+
+
+
+		.category{
+			width: 300px;
+
+		}
+
+		.active{
+			background: #F8BA06 !important;
+			border: 1px solid #5E5E5E !important;
+		}
+		#phone, #attach, #mail, #emoji{
+			padding: 20px;
+			padding-top: 10px;
+		}
+		#send{
+			padding-left: 10px;
+		}
+		#send:hover{
+			color: #F8BA06;
+		}
+		#details{
+			width: 330px;
+			padding-left: 50px;
+			margin-top: 100px;
+			font-style: Georgia, serif;
+			font-size: 17px;
+		}
+		#pic{
+			height: 150px;
+			padding-left: 70px;
+			border-radius: 5px;
+		}
+		#online{
+			height: 10px;
+			margin-top: 140px;
+		}
+
+	</style>
+
+
+<head>
+    <meta charset="UTF-8">
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+</head>
+
+
+   <body>
+
+   <form action="#" id="form" method="POST">
+
+   <div style="display:none;">
+
+    <div class="container">
+                <a> > Ingresar código de la conversación: </a>
+
+               <input type="text" size="40" name="id_exp" id="id_exp" value={{id_exp}}>
+
+        <br>
+               <input type="text" size="40" name="nro" id="nro" value={{nro}}>
+
+               <input type="button" value="Ver estructura" class="btn btn-success" onclick = "verconversacion()">
+    <br>
+    </div>
+
+ <div class="container">
+
+    <br>
+    </div>
+
+      <div class="container">
+               <input type="button" value="Volver a iniciar chat" onclick="iniciar()">   
+    </div>
+
+   <br>
+   <br>
+
+</div>
+
+   <div class="container">
+
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" id="accordion">
+                            <span class="glyphicon glyphicon-comment"></span> Chat
+                            <div class="btn-group pull-right">
+                                <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </a>
+                            </div>
+                        </div>
+                    <div class="panel-collapse" id="collapseOne">
+                        <div class="panel-body">
+                            <ul class="chat">
+
+                                {%for l in result%}
+
+
+                                {% if l[0:1]=='*' %}
+
+
+                            <li class="left clearfix"><span class="chat-img pull-left">
+                                <img src="http://placehold.it/50/55C1E7/fff&text=Pad2" alt="User Avatar" class="img-circle" />
+                            </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <small class="primary-font">Pad2 dice: . </small> <small class="pull-right text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>. 14 mins ago</small>
+                                    </div>
+                                    <p>
+                                       {{l}}
+                                    </p>
+                                </div>
+                            </li>
+
+                                     {% elif l[0:1] != '.'  %}
+
+
+                            <li class="right clearfix"><span class="chat-img pull-right">
+                                <img src="http://placehold.it/50/FA6F57/ffE&text=Usted" alt="User Avatar" class="img-circle" />
+                            </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>15 mins ago</small>
+                                        <small class="pull-right primary-font">.    Usted dice. : </small>
+                                    </div>
+                                    <p>
+                                        {{l}}
+                                    </p>
+                                </div>
+                            </li>
+
+
+
+
+
+
+                                            {% endif  %}
+                                
+                                {% endfor %}
+
+                        </ul>
+
+                            <span id="final"></span>
+
+                        </div>
+    
+                        <br><br>
+    
+
+
+                        <div class="panel-footer">
+                            <div class="input-group">
+                                <input size="40" name="texto" id="texto" type="text" class="form-control input-sm" placeholder="Escriba su mensaje aquí ..." />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-warning btn-sm" id="btn-chat" onclick = "makeurl()">
+                                        Enviar </button>
+                                </span>
+                            </div>
+    
+    
+                        </div>
+    
+
+
+
+
+
+
+
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ 
+
+                   
+
+<br>
+
+
+<!--
+
+    <br>
+
+
+   <div class="container">
+                <b> Escribir: </b>
+               <input type="text" size="80" id="texto" name="texto">
+       <input type="submit" value="Enviar" class="btn btn-warning" onclick = "makeurl()">
+
+    </div>
+-->
+
+           </form>
+
+   </body>
+
+
+  </table>
+
+
+
+
+<script language="JavaScript">
+
+document.getElementById("texto").focus()
+
+var APIURL = "http://167.86.94.15:5000/";
+
+
+//document.getElementById("tohome").href = APIURL
+
+//document.formulario.action= APIURL + "putsonda11"
+
+
+
+
+function iniciar() {
+
+var vid_exp = document.getElementById("id_exp").value
+
+url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto=reiniciar"
+
+console.log(url)
+
+document.getElementById("texto").value = "reiniciar"
+
+
+document.getElementById("form").submit()
+
+//location.reload()
+
+document.getElementById("texto").focus()
+
+
+}
+
+
+function verconversacion() {
+
+    var vid_exp = document.getElementById("id_exp").value
+
+    url = APIURL + "pad/viewexp2/?id=" + vid_exp
+
+    window.open(url)
+
+
+}
+
+
+
+
+function makeurl(){
+
+
+var vid_exp = document.getElementById("id_exp").value
+var vtexto = document.getElementById("texto").value
+var vnro = document.getElementById("nro").value
+
+
+url = APIURL + "pad/chatprove_public/?id=" + vid_exp + "&texto="+ vtexto + "&nro="+vnro
+
+url = APIURL + "pad/chatprove/?id=" + vid_exp
+
+console.log(url)
+
+
+document.getElementById("form").action = url
+
+console.log(document.getElementById("form").action)
+
+document.getElementById("texto").focus()
+
+
+}
+
+
+
+function getapi(url) {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+           // Typical action to be performed when the document is ready:
+            var response = xhttp.responseText;
+            console.log("ok"+response);
+        }
+    };
+    xhttp.open("GET", url, true);
+
+    xhttp.send();
+
+
+   }
+
+
+function setapi(url_comando,datos) {
+
+   var url = APIURL + url_comando;
+
+   var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader('Content-type','application; charset=utf-8');
+    xhr.onload = function () {
+	    var users = JSON.parse(xhr.responseText);
+        if (xhr.readyState == 4 && xhr.status == "201") {
+		    console.table(users);
+        } else {
+		    console.error(users);
+        }
+   }
+    xhr.send(datos);
+   }
+
+
+
+document.getElementById('final').scrollIntoView(true)
+
+   </script>
+
+
+
+
+</html>

@@ -1,0 +1,68 @@
+<html>
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+   <body>
+
+   <div>
+   <a href="http://167.86.94.15:5000/"> Volver al menu </a>
+   </div>
+
+
+
+
+      <form action = "http://167.86.94.15:5000/luis2" method = "POST">
+
+
+            <h2> Prueba de la inteligencia artificial: </h2>
+
+              <p>1. Ingresar nro de experiencia: _  </p>
+
+        <div>
+          <select name="nroexperiencia" size="4" value="3005">
+              <option value="3005" selected>Atención al cliente de internet</option>
+              <option value="4001">Preguntale a Pad2 sobre sus servicios</option>
+              <option value="5001">Pregunta sobre biodescodificación</option>
+              <option value="6001">Preguntas sobre espacios conversacionales</option>
+          </select>
+        </div>
+
+                    </br>
+                    </br>
+
+          <p>2. Ingrese la pregunta para Pad2: _</p> <input size="40"  type = "text" name = "vdato" />
+
+          <br><br>
+
+
+
+         <p><input size="35" type = "submit" value = "Consultar respuesta a Pad2 _" /></p>
+
+
+      </form>
+
+    <div style="position:absolute; top:100; left:570;">
+
+        <table border = 2>
+
+            <tr>
+              <h3> La PAD_IA encontró esta categaría para la pregunta que realizó: _ </h3> <br>
+              <b style="color:red;font-size:25px"> {{result[0]}} </b>
+
+            </tr>
+
+        </table>
+        </div>
+
+
+
+
+
+   </body>
+</html>

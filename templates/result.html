@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flask SQLite</title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+</head>
+
+   <body>
+
+   <a> https://wa.me/{% result%}?text=Ininiar Chat</a>
+
+      <table border = 1>
+         {% for key in result %}
+
+            <tr>
+               <th> {{ key }} </th>
+               <td> {{ result[key] }} </td>
+            </tr>
+
+         {% endfor %}
+      </table>
+
+   </body>
+</html>
+

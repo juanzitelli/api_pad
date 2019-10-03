@@ -1,0 +1,498 @@
+{% extends "pivote-table-layout.html" %}
+<!-- Encabezado + Título -->
+{% block title %}Output - {% endblock %}
+{% block head %}
+{{ super() }}
+<link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet" />
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="{{ url_for('static', filename='theme/lightblue/webdatarocks.min.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pivote-table-main.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pivote-table-output.css') }}">
+<title>Analizador Pad2</title>
+{% endblock %}
+{% block nav %}
+{{ super() }}
+<a class="button back-btn" href="/analizador">Volver a los filtros</a>
+{% endblock %}
+<!-- Contenido -->
+{% block content %}
+{{ super() }}
+<div id="wdr-component"></div>
+<div class="view-button-bar-container container-fluid">
+	<ul class="button-bar">
+
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(1)">Plana</li>
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(2)">Cont.-Resp.</li>
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(3)">Preg.-Resp.</li>
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(4)">Resp.-Cont.</li>
+
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(5)">Total. Resp.</li>
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(6)">Total. Resp.-Cont.</li>
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(7)">Total. Cont.-Resp.</li>
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(8)">Total. Preg.-Resp.</li>
+
+	</ul>
+</div>
+<style>
+	.wdr-cell,
+	.wdr-header,
+	.wdr-header-r,
+	.wdr-level-0,
+	.wdr-h-sort {
+		width: 70px;
+	}
+
+	/* class="wdr-cell wdr-header wdr-header-r wdr-level-0 wdr-h-sort"  CLASES DEL DIV DE COLUMNA*/
+</style>
+<script>
+	
+	let selectedJson = {{json | safe}} //ESTO TIENE QUE ESTAR DESCOMENTADO PARA QUE FUNCIONE
+	let modo = {{ modo }}
+	let objReporte = {}
+	switch (modo) {
+		case 1:
+			objReporte = {
+				slice: {
+					"columns": [{
+							"uniqueName": "numtelefono"
+						},
+						{
+							"uniqueName": "pregunta"
+						},
+						{
+							"uniqueName": "respuesta"
+						},
+						{
+							"uniqueName": "timestamp"
+						},
+						{
+							"uniqueName": "experiencia"
+						},
+						{
+							"uniqueName": "empresa"
+						}
+					],
+					"rows": [{
+						"uniqueName": "Measures"
+					}]
+
+				},
+				grid: {
+					"type": "flat"
+				}
+			}
+			break;
+		case 2:
+			objReporte = {
+				"slice": {
+					"columns": [{
+							"uniqueName": "numtelefono"
+						},
+						{
+							"uniqueName": "respuesta"
+						}
+
+					],
+					"rows": [{
+						"uniqueName": "Measures"
+					}]
+				},
+				"grid": {
+					"type": "flat"
+				}
+			}
+			break;
+		case 3:
+			objReporte = {
+				"slice": {
+					"columns": [{
+							"uniqueName": "pregunta"
+						},
+						{
+							"uniqueName": "respuesta"
+						},
+					],
+					"rows": [{
+						"uniqueName": "Measures"
+					}]
+
+				},
+				"grid": {
+					"type": "flat"
+				}
+			}
+			break;
+		case 4:
+			objReporte = {
+				"slice": {
+					"columns": [{
+							"uniqueName": "respuesta"
+						},
+						{
+							"uniqueName": "numtelefono"
+						},
+					],
+					"rows": [{
+						"uniqueName": "Measures"
+					}]
+
+				},
+				"grid": {
+					"type": "flat"
+				}
+			}
+			break;
+		case 5: //Totalizador de respuestas
+			objReporte = {
+				"slice": {
+					"rows": [{
+						"uniqueName": "respuesta"
+					}],
+					"columns": [{
+						"uniqueName": "Measures",
+					}],
+					"measures": [{
+						"uniqueName": "respuesta",
+						"aggregation": "sum"
+					}]
+				},
+				"grid": {
+					"type": "compact",
+					"showTotals": "columns"
+				}
+			}
+			break;
+		case 6: // numtelefonos y sus respuestas
+			objReporte = {
+				"slice": {
+					"rows": [{
+						"uniqueName": "numtelefono"
+					}],
+					"columns": [{
+						"uniqueName": "respuesta",
+					}],
+					"measures": [{
+						"uniqueName": "respuesta",
+						"aggregation": "sum"
+					}]
+				},
+				"grid": {
+					"type": "compact",
+					"showTotals": "columns"
+				}
+			}
+			break;
+		case 7:
+			objReporte = {
+				"slice": {
+					"rows": [{
+						"uniqueName": "respuesta"
+					}],
+					"columns": [{
+						"uniqueName": "numtelefono",
+					}],
+					"measures": [{
+						"uniqueName": "respuesta",
+						"aggregation": "sum"
+					}]
+				},
+				"grid": {
+					"type": "compact",
+					"showTotals": "columns"
+				}
+			}
+			break;
+		case 8:
+			objReporte = {
+				"slice": {
+					"rows": [{
+						"uniqueName": "pregunta"
+					}],
+					"columns": [{
+						"uniqueName": "respuesta",
+					}],
+					"measures": [{
+						"uniqueName": "respuesta",
+						"aggregation": "sum"
+					}]
+				},
+				"grid": {
+					"grid": {
+						"type": "classic",
+						"showTotals": "columns"
+					}
+				}
+			}
+
+			break;
+		default: //Si vienen modos no especificados muestra la tabla plana expandida
+			objReporte = {
+				"slice": {
+					"columns": [{
+							"uniqueName": "numtelefono"
+						},
+						{
+							"uniqueName": "pregunta"
+						},
+						{
+							"uniqueName": "respuesta"
+						},
+						{
+							"uniqueName": "timestamp"
+						}
+					],
+					"rows": [{
+						"uniqueName": "Measures"
+					}]
+
+				},
+				"grid": {
+					"type": "flat"
+				},
+
+			}
+			break;
+	}
+	
+	let pivote = new WebDataRocks({
+		container: "#wdr-component",
+		toolbar: true,
+		report: {
+			dataSource: {
+				data: selectedJson
+			},
+			slice: objReporte.slice,
+			grid: objReporte.grid
+		}
+	});
+
+	//  - - - BUTTON BAR - - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR
+
+	function cambiarReporte(value) {
+		reporte = {};
+		switch (value) {
+			case 1:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					//Acá se especifica el formato con el que se muestra la tabla
+					slice: {
+						"columns": [{
+								"uniqueName": "numtelefono"
+							},
+							{
+								"uniqueName": "pregunta"
+							},
+							{
+								"uniqueName": "respuesta"
+							},
+							{
+								"uniqueName": "timestamp"
+							},
+							{
+								"uniqueName": "experiencia"
+							},
+							{
+								"uniqueName": "empresa"
+							}
+						],
+						"rows": [{
+							"uniqueName": "Measures"
+						}]
+
+					},
+					grid: {
+						"type": "flat"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 2:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					//Acá se especifica el formato con el que se muestra la tabla
+					slice: {
+						"columns": [{
+								"uniqueName": "numtelefono"
+							},
+							{
+								"uniqueName": "respuesta"
+							}
+						],
+						"rows": [{
+							"uniqueName": "Measures"
+						}]
+					},
+					grid: {
+						"type": "flat"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 3:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					//Acá se especifica el formato con el que se muestra la tabla
+					slice: {
+						"columns": [{
+								"uniqueName": "pregunta"
+							},
+							{
+								"uniqueName": "respuesta"
+							},
+						],
+						"rows": [{
+							"uniqueName": "Measures"
+						}]
+
+					},
+					grid: {
+						"type": "flat"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 4:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					//Acá se especifica el formato con el que se muestra la tabla
+					slice: {
+						"columns": [{
+								"uniqueName": "respuesta"
+							},
+							{
+								"uniqueName": "numtelefono"
+							}
+						],
+						"rows": [{
+							"uniqueName": "Measures"
+						}]
+
+					},
+					grid: {
+						"type": "flat"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 5: //Totalizador de respuestas
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					//Acá se especifica el formato con el que se muestra la tabla
+					slice: {
+
+						"rows": [{
+							"uniqueName": "respuesta"
+						}],
+						"columns": [{
+							"uniqueName": "Measures",
+						}],
+						"measures": [{
+							"uniqueName": "respuesta",
+							"aggregation": "sum"
+						}]
+
+					},
+					grid: {
+						"type": "compact",
+						"showTotals": "columns"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 6:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					slice: {
+						"rows": [{
+							"uniqueName": "numtelefono"
+						}],
+						"columns": [{
+							"uniqueName": "respuesta",
+						}],
+						"measures": [{
+							"uniqueName": "respuesta",
+							"aggregation": "sum"
+						}]
+					},
+					grid: {
+						"type": "compact",
+						"showTotals": "columns"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 7:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					slice: {
+						"rows": [{
+							"uniqueName": "respuesta"
+						}],
+						"columns": [{
+							"uniqueName": "numtelefono",
+						}],
+						"measures": [{
+							"uniqueName": "respuesta",
+							"aggregation": "sum"
+						}]
+					},
+					grid: {
+						"type": "compact",
+						"showTotals": "columns"
+					}
+				}
+				pivote.setReport(reporte);
+				break;
+			case 8:
+				reporte = {
+					dataSource: {
+						data: selectedJson
+					},
+					slice: {
+						"rows": [{
+							"uniqueName": "pregunta"
+						}],
+						"columns": [{
+							"uniqueName": "respuesta",
+						}],
+						"measures": [{
+							"uniqueName": "respuesta",
+							"aggregation": "sum"
+						}]
+					},
+					grid: {
+						"grid": {
+							"type": "compact",
+							"showTotals": "columns"
+						}
+					},
+
+				}
+				pivote.setReport(reporte);
+				break;
+			default:
+				break;
+		}
+	}
+</script>
+{% endblock %}
+<!-- Footer -->
+{% block footer %}
+{{ super() }}
+{% endblock %}

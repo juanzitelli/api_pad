@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Analizador Pad2</title>
+<link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet"/>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
+</head>
+
+
+
+<body>
+    <div id="wdr-component"></div>
+    <script>
+
+    //var txt = '[{"name":"John", "age":30, "city":"New York"}]'
+
+
+
+    // var txt2 = {{json|tojson|safe}}
+
+
+    // var obj = JSON.parse(txt2);
+
+    // data: obj
+
+    var pivot = new WebDataRocks({
+        container: "#wdr-component",
+        toolbar: true,
+        report: {
+            dataSource: {
+
+                filename: "https://raw.githubusercontent.com/wsf/Pad2_Logs/master/log_AnalizarFUNP-000019-CAMP_1907060703.csv",
+			    fieldSeparator: ","
+            }
+        }
+    });
+    </script>
+</body>
+
+</html>

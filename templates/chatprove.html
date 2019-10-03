@@ -1,0 +1,202 @@
+
+<html>
+
+
+
+<head>
+    <meta charset="UTF-8">
+<!-- CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<!-- Tema opcional -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+<!-- JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+</head>
+
+
+   <body>
+
+   <h4>Módulo de prueba de conversación</h4>
+
+
+   <form action="#" id="form" method="POST">
+
+    <div class="container">
+                <a> > Ingresar código de la conversación: </a>
+               <input type="text" size="40" name="id_exp" id="id_exp" value={{id_exp}}>
+               <input type="button" value="Ver estructura" class="btn btn-success" onclick = "verconversacion()">
+    <br>
+    </div>
+
+ <div class="container">
+
+    <br>
+    </div>
+
+      <div class="container">
+
+               <input type="button" value="Volver a iniciar chat" onclick="iniciar()">
+               <input type="button" value="Comando2">
+               <input type="button" value="Comando3">
+               <input type="button" value="Comando4">
+               <input type="button" value="Comando5">
+               <input type="button" value="Comando6">
+    </div>
+
+   <br>
+   <br>
+
+   <div class="container">
+
+
+
+        {%for l in result%}
+
+        <a> <font color="grey">
+
+   <div class="container">
+            {{l}}
+   </div>
+            </font>
+        </a>
+
+
+        {% endfor %}
+
+
+
+  <br><br>
+
+
+   <div class="container">
+                <b> Escribir: </b>
+               <input type="text" size="80" id="texto" name="texto">
+       <input type="submit" value="Enviar" class="btn btn-warning" onclick = "makeurl()">
+
+    </div>
+           </form>
+
+   </body>
+
+
+  </table>
+
+
+
+
+<script language="JavaScript">
+
+document.getElementById("texto").focus()
+
+var APIURL = "http://167.86.94.15:5000/";
+
+
+//document.getElementById("tohome").href = APIURL
+
+//document.formulario.action= APIURL + "putsonda11"
+
+
+
+
+function iniciar() {
+
+var vid_exp = document.getElementById("id_exp").value
+
+url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto=reiniciar"
+
+console.log(url)
+
+document.getElementById("texto").value = "reiniciar"
+
+
+document.getElementById("form").submit()
+
+//location.reload()
+
+document.getElementById("texto").focus()
+
+
+}
+
+
+function verconversacion() {
+
+    var vid_exp = document.getElementById("id_exp").value
+
+    url = APIURL + "pad/viewexp2/?id=" + vid_exp
+
+    window.open(url)
+
+
+}
+
+
+
+
+function makeurl(){
+
+
+var vid_exp = document.getElementById("id_exp").value
+var vtexto = document.getElementById("texto").value
+
+
+
+
+url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto="+ vtexto
+
+
+document.getElementById("form").action = url
+
+console.log(document.getElementById("form").action)
+
+document.getElementById("texto").focus()
+
+
+}
+
+
+
+function getapi(url) {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+           // Typical action to be performed when the document is ready:
+            var response = xhttp.responseText;
+            console.log("ok"+response);
+        }
+    };
+    xhttp.open("GET", url, true);
+
+    xhttp.send();
+
+
+   }
+
+
+function setapi(url_comando,datos) {
+
+   var url = APIURL + url_comando;
+
+   var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader('Content-type','application; charset=utf-8');
+    xhr.onload = function () {
+	    var users = JSON.parse(xhr.responseText);
+        if (xhr.readyState == 4 && xhr.status == "201") {
+		    console.table(users);
+        } else {
+		    console.error(users);
+        }
+   }
+    xhr.send(datos);
+   }
+
+
+   </script>
+
+
+
+
+</html>

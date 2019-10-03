@@ -1,0 +1,8 @@
+'student'
+'wa_iniciar'
+'result2'
+'wa'
+'/user/<username>'
+'/post/<int:post_id>'
+'/hello/<name>'
+'/hello/'

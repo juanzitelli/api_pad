@@ -1,0 +1,55 @@
+
+<html>
+
+
+
+<head>
+    <meta charset="UTF-8">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<!-- CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<!-- Tema opcional -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+<!-- JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+</head>
+
+
+   <body>
+
+
+      <table border = 1 class="table table-striped" width="100%">
+
+          <tr>
+              <th> Uni. Diálogo  </b></th>
+              <th> Categoría  </b></th>
+               <th> Mensaje  </th>
+                <th> Próxima CU </b> </th>
+          </tr>
+
+         {% for k in result %}
+
+            {% for kk in result[k] %}
+
+            <tr>
+
+
+                <td> <b>{{result[k][kk]['alias'] }} </b></td>
+
+                <td> <b>{{result[k][kk]['cat'] }} </b></td>
+               <td> {{result[k][kk]['men'] }} </td>
+                <td> <b> {{result[k][kk]['proximo']  }}</b> </td>
+            </tr>
+
+            {% endfor %}
+
+         {% endfor %}
+
+
+   </body>
+
+
+  </table>
+
+</html>
