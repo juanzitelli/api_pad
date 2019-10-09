@@ -12,43 +12,69 @@
 <!-- Contenido -->
 {% block content %}
 <h1>Tabla pivote para visualización de datos</h1>
-<p class="lead">Una tabla pivote es una herramienta que permite desplegar datos en formato de hoja de cálculo, con funcionalidades extra.</p>
+<p class="lead">Una tabla pivote es una herramienta que permite desplegar datos en formato de hoja de cálculo, con
+	funcionalidades extra.</p>
 <hr class="my-4">
 <div class="filters jumbotron">
-	
+
 	<form action="/pad/analizador222/" class="data-filter-form" method="GET">
 		<h4 class="filter-title">Filtro de datos de experiencias</h4>
 		<hr class="my-4">
-		<div class="data-filter-fields">	
-		<div class="form-row">
-			<label for="empresa" class="field-label">Empresa:</label>
-			<input type="text" autocomplete="off" name="empresa" class="input-box" id="empresa">
-		</div>
-		<div class="form-row">
-			<label for="experiencia" class="field-label">Experiencia:</label>
-			<input type="text" autocomplete="off" name="experiencia"class="input-box" id="experiencia">
-		</div>
-		<div class="form-row">
-			<label for="num-telefono" class="field-label">Número telefónico:</label>
-			<input type="text" autocomplete="off" name="num-telefono" class="input-box" id="num-telefono">
-		</div>
-		<div class="form-row">
-			<label for="pregunta" class="field-label">Pregunta:</label>
-			<input type="text" autocomplete="off" name="pregunta" class="input-box" id="pregunta">
-		</div>
-		<div class="form-row">
-			<label for="respuesta" class="field-label">Respuesta:</label>
-			<input type="text" autocomplete="off" name="respuesta" class="input-box" id="respuesta">
-		</div>
-		<div class="form-row">
-			<label for="timestamp" class="field-label">Timestamp:</label>
-			<input type="text" autocomplete="off" name="timestamp"class="input-box" id="timestamp">
-		</div>
-		</div>
-	<input type="submit" value="Filtrar" class="btn-info">
-	
+		<div class="data-filter-fields">
+			<div class="form-row">
+				<label for="empresa" class="field-label">Empresa:</label>
+				<input type="text" autocomplete="off" name="empresa" class="input-box" id="empresa">
+			</div>
+			<div class="form-row">
+				<label for="experiencia" class="field-label">Experiencia:</label>
+				<input type="text" autocomplete="off" name="experiencia" class="input-box" id="experiencia">
+			</div>
+			<div class="form-row">
+				<label for="num-telefono" class="field-label">Número telefónico:</label>
+				<input type="text" autocomplete="off" name="num-telefono" class="input-box" id="num-telefono">
+			</div>
+			<div class="form-row">
+				<label for="pregunta" class="field-label">Pregunta:</label>
+				<input type="text" autocomplete="off" name="pregunta" class="input-box" id="pregunta">
+			</div>
+			<div class="form-row">
+				<label for="respuesta" class="field-label">Respuesta:</label>
+				<input type="text" autocomplete="off" name="respuesta" class="input-box" id="respuesta">
+			</div>
+			<div class="fechahora">
+				<div class="desde">
+					<h5>Desde:</h5>
+					<hr>
+					<div class="form-row">
+						<label for="fechadesde" class="field-label">Fecha:</label>
+						<input type="date" autocomplete="off" name="fechadesde" class="input-box" id="fechadesde">
+					</div>
+					<div class="form-row">
+						<label for="horadesde" class="field-label">Hora:</label>
+						<input type="text" autocomplete="off" name="horadesde" class="input-box" id="horadesde">
+					</div>
 
-</form>
+				</div>
+
+				<div class="hasta">
+					<h5>Hasta:</h5>
+					<hr>
+					<div class="form-row">
+						<label for="fecha" class="field-label">Fecha:</label>
+						<input type="date" autocomplete="off" name="fecha" class="input-box" id="fecha">
+					</div>
+					<div class="form-row">
+						<label for="hora" class="field-label">Hora:</label>
+						<input type="text" autocomplete="off" name="hora" class="input-box" id="hora">
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<input type="submit" value="Filtrar" class="btn-info">
+
+
+	</form>
 </div>
 {% endblock %}
 <!-- Footer -->
