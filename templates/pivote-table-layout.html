@@ -27,6 +27,7 @@
 <body>
 	
 	<header id="header">
+		<!-- navbar navigation -->
 		<nav class="navbar navigation">
 			{% block nav %}
 			{% endblock %}
@@ -35,7 +36,7 @@
 	
 	
 	<main class="container">
-		<div class="jumbotron main-hero">
+		<div class="jumbotron">
 			{% block content %}
 			{% endblock %}
 		</div>
@@ -43,7 +44,8 @@
 	
 	<footer>
 		{% block footer %}
-		<nav class="navbar navigation home-footer">
+		<!-- home-footer navbar navigation  -->
+		<nav class="navbar bottom">
 		
 		</nav>
 		{% endblock %}

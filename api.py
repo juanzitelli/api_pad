@@ -104,8 +104,8 @@ contactosToAdd = {'a': '12345'}
 
 def db2string(vsql):
     dbServer = 'localhost'  # ip del servidor
-    dbUser = 'pad'        # usurio autorizado para leer la base de datos
-    dbPass = 'dalas'  # clave de la base de datos
+    dbUser = 'root'        # usurio autorizado para leer la base de datos
+    dbPass = ''  # clave de la base de datos
     dbBase = 'pad2'    # nombre de la base de datos
     
     result = ""
@@ -1482,7 +1482,8 @@ def setcookie():
 
 if __name__ == '__main__':
     print(URLAPI[7:-6])
-    app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
     
 
 

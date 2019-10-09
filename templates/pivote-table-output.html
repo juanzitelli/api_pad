@@ -14,12 +14,15 @@
 {% endblock %}
 {% block nav %}
 {{ super() }}
-<a class="button back-btn" href="/analizador">Volver a los filtros</a>
+<!-- ACÁ EN LA IMAGEN HAY QUE CAMBIARLE LA URL PORQUE EN LINUX NO ANDA -->
+<a class="button back-btn" href="/analizador"><img
+		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to filters" width="30px" title="Volver a los filtros"></a>
 {% endblock %}
 <!-- Contenido -->
 {% block content %}
 {{ super() }}
 <div id="wdr-component"></div>
+<<<<<<< HEAD
 <div class="view-button-bar-container container-fluid">
 	<ul class="button-bar">
 
@@ -35,6 +38,9 @@
 
 	</ul>
 </div>
+=======
+
+>>>>>>> new-site
 <style>
 	.wdr-cell,
 	.wdr-header,
@@ -495,4 +501,23 @@
 <!-- Footer -->
 {% block footer %}
 {{ super() }}
+<<<<<<< HEAD
 {% endblock %}
+=======
+<div class="view-button-bar-container container-fluid">
+	<ul class="button-bar">
+
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(1)">Plana</li>
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(2)">Cont.-Resp.</li>
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(3)">Preg.-Resp.</li>
+		<li class="btn btn-primary" onclick="javascript:cambiarReporte(4)">Resp.-Cont.</li>
+
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(5)">Total. Resp.</li>
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(6)">Total. Resp.-Cont.</li>
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(7)">Total. Cont.-Resp.</li>
+		<li class="btn btn-success" onclick="javascript:cambiarReporte(8)">Total. Preg.-Resp.</li>
+
+	</ul>
+</div>
+{% endblock %}
+>>>>>>> new-site

@@ -1,14 +1,16 @@
-.filters{
+.filters {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
-	
+
 }
-.filter-title{
+
+.filter-title {
 	text-align: center;
 }
-.data-filter-form{
+
+.data-filter-form {
 	padding: 50px;
 	border: 1px solid black;
 	border-radius: 5px;
@@ -17,31 +19,48 @@
 	-moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 }
-.form-row{
+
+.form-row {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	padding: 5px;
-	
+
 }
-.data-filter-fields{
-	padding-bottom: 20px; 
-	
+
+.data-filter-fields {
+	padding-bottom: 20px;
+
 }
-label{
+
+label {
 	font-weight: bold;
 }
-.btn-info{
+
+.btn-info {
 	width: 100%;
 }
-@media(max-width: 520px){
-	
-	.form-row{
+
+@media(max-width: 520px) {
+
+	.form-row {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
-	h1, .lead{
+
+	h1,
+	.lead {
 		text-align: center;
 	}
+}
+
+.fechahora {
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+.desde,
+.hasta{
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
