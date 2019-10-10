@@ -1,0 +1,59 @@
+.wdr-cell,
+.wdr-header,
+.wdr-header-r,
+.wdr-level-0,
+.wdr-h-sort {
+	width: 70px;
+}
+
+.back-btn {
+	padding: 3px 15px 3px 15px;
+	background: lightblue;
+	border-radius: 5px;
+	margin-left: 5px;
+}
+
+.pivote-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	margin: 5px auto;
+}
+
+.button-bar {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	padding-inline-start: 0px;
+	margin-bottom: 0px;
+}
+
+.btn {
+	font-size: 10px;
+}
+
+.button-bar-container {
+	width: 100%;
+
+}
+
+div.pivote-container>div#wdr-component {
+	display: block;
+
+}
+
+@media(max-width: 745px) {
+	.button-bar {
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding-inline-start: 0px;
+	}
+
+	.btn {
+		width: 100%;
+
+	}
+}

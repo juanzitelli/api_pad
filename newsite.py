@@ -139,7 +139,7 @@ def analizador222():
         
     resultadoRecienSacadoDeLaDB = db2string(query)
     jsonParaPasar = json.dumps(resultadoRecienSacadoDeLaDB)
-    print(str(jsonParaPasar))
+    # print(str(jsonParaPasar))
     modo=1;
     return render_template("pivote-output.html", json=jsonParaPasar, modo=modo)    
 
@@ -175,12 +175,7 @@ def ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(contenidoEmpresa, contenid
         camposDBSeteados.append("pad2.datos.timestamp")
     contadorFor = 0;
     for x in range(contadorDeContenidosSeteados):
-        # print(str(x))
-        # print("Los valores que van saliendo son: " + camposDBSeteados[x] + " y " + contenidosSeteados[x])
-        # print("Y ademas el valor del contador va por el: " + str(contadorFor) +
-        #       " y el largo de la lista es " + str(len(camposDBSeteados)))
-        # if contadorDeContenidosSeteados < len(camposDBSeteados):
-        # print("El valor del contador es menor a la cantidad de datos asi que esto debería mostrarse")
+        
         subquery = subquery + camposDBSeteados[contadorFor] + " LIKE " + "'%'" + '"' + contenidosSeteados[contadorFor] + '"'  + "'%'" +  " AND "
         
         
@@ -192,14 +187,14 @@ def ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(contenidoEmpresa, contenid
 @app.route("/pivotemain")
 def pivotemain():
     
-    print(db2string("SELECT * FROM pad2.datos WHERE empresa LIKE '%onoff%';"))
-    return render_template("pivote-main.html")
+    # print(db2string("SELECT * FROM pad2.datos WHERE empresa LIKE '%onoff%';"))
+    return render_template("pivote-filters.html")
 
 
 
 @app.route('/analizador', methods=['POST', 'GET'])
 def analizador():
-        return render_template("pivote-main.html")
+        return render_template("pivote-filters.html")
 
 class analizador2(Resource):
 
