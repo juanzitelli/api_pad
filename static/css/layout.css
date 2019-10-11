@@ -8,11 +8,12 @@
 	--green: #008000;
 	--turquoise: #35bfa3;
 }
+
 body,
 html {
-	margin: 0;
+	/* margin: 0;
 	padding: 0;
-	height: 100%;
+	height: 100%; */
 	background: #757F9A;
 	font-family:
 		'Open Sans',
@@ -26,10 +27,10 @@ html {
 		'Open Sans',
 		'Helvetica Neue',
 		sans-serif;
-	
+
 }
 
-.layout-top-nav{
+.layout-top-nav {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
@@ -37,10 +38,17 @@ html {
 	background: white;
 	margin-bottom: 30px;
 }
+
 .layout-bottom-nav {
 	background: white;
-	margin-top: 30px;
-	justify-content: space-around;
 }
 
+.site {
+	display: flex;
+    min-height: 87.2vh;
+	flex-direction: column;
+}
 
+.site-content {
+	flex: 1;
+}
