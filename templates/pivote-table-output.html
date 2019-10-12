@@ -38,6 +38,8 @@
 	
 	let selectedJson = {{json | safe}} //ESTO TIENE QUE ESTAR DESCOMENTADO PARA QUE FUNCIONE
 	let modo = {{ modo }}
+
+	alert(selectedJson);
 	let objReporte = {}
 	switch (modo) {
 		case 1:
@@ -53,7 +55,10 @@
 							"uniqueName": "respuesta"
 						},
 						{
-							"uniqueName": "timestamp"
+							"uniqueName": "fecha"
+						},
+						{
+							"uniqueName": "hora"
 						},
 						{
 							"uniqueName": "experiencia"
@@ -228,7 +233,10 @@
 							"uniqueName": "respuesta"
 						},
 						{
-							"uniqueName": "timestamp"
+							"uniqueName": "fecha"
+						},
+						{
+							"uniqueName": "hora"
 						}
 					],
 					"rows": [{
@@ -278,7 +286,10 @@
 								"uniqueName": "respuesta"
 							},
 							{
-								"uniqueName": "timestamp"
+								"uniqueName": "fecha"
+							},
+							{
+								"uniqueName": "hora"
 							},
 							{
 								"uniqueName": "experiencia"

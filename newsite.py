@@ -125,17 +125,42 @@ def db2string(vsql):
 def analizador222():
 
     query = ""
-    consultaVariable = ""
-    if (not request.args.get('empresa')) and (not request.args.get('experiencia')) and (not request.args.get('num-telefono')) and (not request.args.get('pregunta')) and (not request.args.get('respuesta')) and (not request.args.get('timestamp')):
-        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.timestamp FROM pad2.datos;"
+    consultaCamposTexto = ""
+    if (not request.args.get('empresa')) and (not request.args.get('experiencia')) and (not request.args.get('num-telefono')) and (not request.args.get('pregunta')) and (not request.args.get('respuesta')) and (not request.args.get('fechadesde')) and (not request.args.get('horadesde') and (not request.args.get('fechahasta')))  and (not request.args.get('horahasta')):
+        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.hora FROM pad2.datos;"
     else:
         # print("Hay algo seteado")
-        consultaVariable = ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(request.args.get('empresa'), request.args.get(
-            'experiencia'), request.args.get('num-telefono'), request.args.get('pregunta'), request.args.get('respuesta'), request.args.get('timestamp'))
-        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.timestamp FROM pad2.datos WHERE "+ consultaVariable
-        query = query[:-5] 
-        query = query +";"
+        consultaCamposTexto = Filtrar_Texto(request.args.get('empresa'),
+                         request.args.get('experiencia'),
+                          request.args.get('num-telefono'),
+                           request.args.get('pregunta'),
+                            request.args.get('respuesta'))
         
+        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.hora FROM pad2.datos WHERE "+ consultaCamposTexto
+        
+        consultaCamposFecha = Filtrar_Fecha(request.args.get('fechadesde'),
+                                         request.args.get('horadesde'),
+                                         request.args.get('fechahasta'),
+                                         request.args.get('horahasta'))
+
+        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.hora FROM pad2.datos WHERE " + consultaCamposFecha + " "
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        # Este es el final, no cambiar
+        # query = query[:-5]  # Esto quizas no haga falta
+        
+        query = query +";"
+        print(query)
         
     resultadoRecienSacadoDeLaDB = db2string(query)
     jsonParaPasar = json.dumps(resultadoRecienSacadoDeLaDB)
@@ -143,8 +168,8 @@ def analizador222():
     modo=1;
     return render_template("pivote-output.html", json=jsonParaPasar, modo=modo)    
 
-def ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, contenidoPregunta, contenidoRespuesta, contenidoTimestamp):
-    
+def Filtrar_Texto(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, contenidoPregunta, contenidoRespuesta):
+    # Aca va todo menos fechas y horas    
     subquery = ""
     contadorDeContenidosSeteados = 0;
     contenidosSeteados = []
@@ -169,20 +194,82 @@ def ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(contenidoEmpresa, contenid
         contadorDeContenidosSeteados += 1
         contenidosSeteados.append(contenidoRespuesta)
         camposDBSeteados.append("pad2.datos.respuesta")
-    if contenidoTimestamp:
-        contadorDeContenidosSeteados += 1
-        contenidosSeteados.append(contenidoTimestamp)
-        camposDBSeteados.append("pad2.datos.timestamp")
     contadorFor = 0;
     for x in range(contadorDeContenidosSeteados):
-        
         subquery = subquery + camposDBSeteados[contadorFor] + " LIKE " + "'%'" + '"' + contenidosSeteados[contadorFor] + '"'  + "'%'" +  " AND "
-        
-        
         contadorFor += 1;
-    # print(subquery)
     return subquery
+
+
+def Filtrar_Fecha(contenidoFechadesde,cotnenidoHoradesde, contenidoFechahasta, contenidoHorahasta):
+    subq = ""
     
+    # 1- Todo seteado
+    if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and cotnenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + cotnenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+    # 2- No hay fecha inicial
+    if (not contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and cotnenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + cotnenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+    # 3- No hay hora inicial
+    if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and (not cotnenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+    #4-  No hay fecha final
+    if contenidoFechadesde and (not contenidoFechahasta) and contenidoHorahasta and cotnenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + cotnenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+    #5-  No hay hora final
+    if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and cotnenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + cotnenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
+#Solo una seteada
+ # 6- Solo fechadesde
+    if contenidoFechadesde and not(contenidoFechahasta) and not(contenidoHorahasta) and not(cotnenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ");"
+#11- Solo fechahasta
+    if not(contenidoFechadesde) and contenidoFechahasta and not(contenidoHorahasta) and not(cotnenidoHoradesde):
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
+        
+#15- Solo horadesde
+    if not(contenidoFechadesde) and not(contenidoFechahasta) and not(contenidoHorahasta) and cotnenidoHoradesde:
+        subq = "(AND pad2.datos.hora >= " + cotnenidoHoradesde + ");"       
+#17 - Solo horahasta
+    if not(contenidoFechadesde) and not(contenidoFechahasta) and contenidoHorahasta and not(cotnenidoHoradesde):
+        subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
+
+
+#FECHADESDE
+    
+   
+    
+    # 7- fechadesde + horadesde
+    if contenidoFechadesde and contenidoFechahasta and not(contenidoHorahasta) and not(cotnenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + cotnenidoHoradesde + ");"
+    
+    
+    # 9- fechadesde + fechahasta
+    if contenidoFechadesde and contenidoFechahasta and not(contenidoHorahasta) and not(cotnenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"  
+        
+    # 10 - fechadesde + fechahasta + horahasta (COINCIDE CON #3)
+    
+#FECHAHASTA
+    
+    
+    #13 fechahasta + horadesde
+    if not(contenidoFechadesde) and contenidoFechahasta and not(contenidoHorahasta) and cotnenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + cotnenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+    
+    #14 - fechahasta + horahasta
+    if not(contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not(cotnenidoHoradesde):
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+    
+#HORADESDE
+
+    #16 - horadesde + horahasta
+    if not(contenidoFechadesde) and not(contenidoFechahasta) and contenidoHorahasta and cotnenidoHoradesde:
+        subq = "(AND pad2.datos.hora >= " + cotnenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+    return subq
+
+
 
 @app.route("/pivotemain")
 def pivotemain():
@@ -197,17 +284,14 @@ def analizador():
         return render_template("pivote-filters.html")
 
 class analizador2(Resource):
-
     def get(self, file_name):
-        # tomar el contenido del archivo file name
-        # f = open(file_name, 'r')
-        # j = json.load(f)
-        # , json=j,
-        
-        
         return render_template("pivote-output.html")
-        # generar in json
-        # pasarlor a pivot2.htm
+    
+    
+    
+#region REGIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOON
+
+
 
 
 def get(id, num):
@@ -1473,7 +1557,7 @@ def setcookie():
     resp.set_cookie('userID', user)
 
     return resp
-
+#endregion
 
 if __name__ == '__main__':
     print(URLAPI[7:-6])
