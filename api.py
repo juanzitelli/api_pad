@@ -102,8 +102,8 @@ contactosToAdd = {'a': '12345'}
 
 def db2string(vsql):
     dbServer = 'localhost'  # ip del servidor
-    dbUser = 'pad'  # usurio autorizado para leer la base de datos
-    dbPass = 'dalas'  # clave de la base de datos
+    dbUser = 'root'  # usurio autorizado para leer la base de datos
+    dbPass = ''  # clave de la base de datos
     dbBase = 'pad2'  # nombre de la base de datos
 
     result = ""
@@ -222,7 +222,6 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
     # 5-  No hay hora final
     if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-
     # Solo una seteada
     # 6- Solo fechadesde
     if contenidoFechadesde and not (contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
@@ -233,8 +232,8 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
 
     # 15- Solo horadesde
     if not (contenidoFechadesde) and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
-        subq = "(AND pad2.datos.hora >= " + contenidoHoradesde + ");"
     # 17 - Solo horahasta
+    
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
 
@@ -243,22 +242,26 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
     # 7- fechadesde + horadesde
     if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
+        
+    # 14 - fechahasta + horahasta
+    if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+        
+    # Fechadesde + horahasta
+    if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and not(contenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     # 9- fechadesde + fechahasta
     if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
 
-        # 10 - fechadesde + fechahasta + horahasta (COINCIDE CON #3)
+    # 10 - fechadesde + fechahasta + horahasta (COINCIDE CON #3)
 
     # FECHAHASTA
 
     # 13 fechahasta + horadesde
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-
-    # 14 - fechahasta + horahasta
-    if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
-        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     # HORADESDE
 
@@ -1554,8 +1557,8 @@ def setcookie():
 
 if __name__ == '__main__':
     print(URLAPI[7:-6])
-    app.run(host='0.0.0.0', port=5000)
-    # app.run(debug=True)
+    # app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
 
 """
 
