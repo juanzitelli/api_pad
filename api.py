@@ -232,6 +232,7 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
 
     # 15- Solo horadesde
     if not (contenidoFechadesde) and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
+        subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
     # 17 - Solo horahasta
     
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
