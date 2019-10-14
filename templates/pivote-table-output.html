@@ -56,6 +56,9 @@
 	
 	let selectedJson = {{json | safe}} //ESTO TIENE QUE ESTAR DESCOMENTADO PARA QUE FUNCIONE
 	let modo = {{ modo }}
+
+	alert(str(selectedJson));
+	
 	let objReporte = {}
 	switch (modo) {
 		case 1:
@@ -71,7 +74,10 @@
 							"uniqueName": "respuesta"
 						},
 						{
-							"uniqueName": "timestamp"
+							"uniqueName": "fecha"
+						},
+						{
+							"uniqueName": "hora"
 						},
 						{
 							"uniqueName": "experiencia"
@@ -246,7 +252,10 @@
 							"uniqueName": "respuesta"
 						},
 						{
-							"uniqueName": "timestamp"
+							"uniqueName": "fecha"
+						},
+						{
+							"uniqueName": "hora"
 						}
 					],
 					"rows": [{
@@ -266,9 +275,7 @@
 		container: "#wdr-component",
 		toolbar: true,
 		report: {
-			dataSource: {
-				data: selectedJson
-			},
+
 			slice: objReporte.slice,
 			grid: objReporte.grid
 		}
@@ -296,7 +303,10 @@
 								"uniqueName": "respuesta"
 							},
 							{
-								"uniqueName": "timestamp"
+								"uniqueName": "fecha"
+							},
+							{
+								"uniqueName": "hora"
 							},
 							{
 								"uniqueName": "experiencia"
@@ -511,7 +521,6 @@
 		<li class="btn btn-primary" onclick="javascript:cambiarReporte(2)">Cont.-Resp.</li>
 		<li class="btn btn-primary" onclick="javascript:cambiarReporte(3)">Preg.-Resp.</li>
 		<li class="btn btn-primary" onclick="javascript:cambiarReporte(4)">Resp.-Cont.</li>
-
 		<li class="btn btn-success" onclick="javascript:cambiarReporte(5)">Total. Resp.</li>
 		<li class="btn btn-success" onclick="javascript:cambiarReporte(6)">Total. Resp.-Cont.</li>
 		<li class="btn btn-success" onclick="javascript:cambiarReporte(7)">Total. Cont.-Resp.</li>
