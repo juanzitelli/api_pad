@@ -1,5 +1,3 @@
-
-
 # -*- coding: utf-8 -*-
 
 from flask import Flask
@@ -17,7 +15,7 @@ import json
 import sys
 # from gestorDialogo import get, post, delete
 
-#db
+# db
 import pymysql
 import pymysql.cursors
 
@@ -104,13 +102,14 @@ contactosToAdd = {'a': '12345'}
 
 def db2string(vsql):
     dbServer = 'localhost'  # ip del servidor
-    dbUser = 'pad'        # usurio autorizado para leer la base de datos
+    dbUser = 'pad'  # usurio autorizado para leer la base de datos
     dbPass = 'dalas'  # clave de la base de datos
-    dbBase = 'pad2'    # nombre de la base de datos
-    
+    dbBase = 'pad2'  # nombre de la base de datos
+
     result = ""
 
-    db = pymysql.connect(host=dbServer, user=dbUser, passwd=dbPass, db=dbBase,cursorclass = pymysql.cursors.DictCursor, database="mysql")
+    db = pymysql.connect(host=dbServer, user=dbUser, passwd=dbPass, db=dbBase, cursorclass=pymysql.cursors.DictCursor,
+                         database="mysql")
 
     cur = db.cursor()
 
@@ -121,30 +120,47 @@ def db2string(vsql):
 
     return result
 
-@app.route('/pad/analizador222/', methods=['POST', 'GET'])    
+
+@app.route('/pad/analizador222/', methods=['POST', 'GET'])
 def analizador222():
-
     query = ""
-    consultaVariable = ""
-    if (not request.args.get('empresa')) and (not request.args.get('experiencia')) and (not request.args.get('num-telefono')) and (not request.args.get('pregunta')) and (not request.args.get('respuesta')) and (not request.args.get('timestamp')):
-        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.timestamp FROM pad2.datos;"
+    consultaCamposTexto = ""
+    if (not request.args.get('empresa')) and (not request.args.get('experiencia')) and (
+    not request.args.get('num-telefono')) and (not request.args.get('pregunta')) and (
+    not request.args.get('respuesta')) and (not request.args.get('fechadesde')) and (
+            not request.args.get('horadesde') and (not request.args.get('fechahasta'))) and (
+    not request.args.get('horahasta')):
+        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta," \
+                "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos; "
     else:
-        # print("Hay algo seteado")
-        consultaVariable = ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(request.args.get('empresa'), request.args.get(
-            'experiencia'), request.args.get('num-telefono'), request.args.get('pregunta'), request.args.get('respuesta'), request.args.get('timestamp'))
-        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta,pad2.datos.respuesta, pad2.datos.timestamp FROM pad2.datos WHERE "+ consultaVariable
-        query = query[:-5] 
-        query = query +";"
-        
-        
-    resultadoRecienSacadoDeLaDB = db2string(query)
-    jsonParaPasar = json.dumps(resultadoRecienSacadoDeLaDB)
-    print(str(jsonParaPasar))
-    modo=1;
-    return render_template("pivote-table-output.html", json=jsonParaPasar, modo=modo)    
+        consultaCamposTexto = Filtrar_Texto(request.args.get('empresa'),
+                                            request.args.get('experiencia'),
+                                            request.args.get('num-telefono'),
+                                            request.args.get('pregunta'),
+                                            request.args.get('respuesta'))
+        query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta," \
+                "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos WHERE " + consultaCamposTexto
+        consultaCamposFecha = Filtrar_Fecha(request.args.get('fechadesde'),
+                                            request.args.get('horadesde'),
+                                            request.args.get('fechahasta'),
+                                            request.args.get('horahasta'))
+        query = query + consultaCamposFecha + " "
+        if consultaCamposFecha == '':
+            query = query[:-5]
+            query = query + ";"
+        print(query)
 
-def ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, contenidoPregunta, contenidoRespuesta, contenidoTimestamp):
-    
+    resultadoRecienSacadoDeLaDB = db2string(query)
+
+    for obj in resultadoRecienSacadoDeLaDB:
+        obj["fecha"] = "'" + str(obj["fecha"]) + "'"
+    jsonParaPasar = json.dumps(resultadoRecienSacadoDeLaDB, indent=4, sort_keys=True, default=str)
+    modo = 1
+    return render_template("pivote-output.html", json=jsonParaPasar, modo=modo)
+
+
+def Filtrar_Texto(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, contenidoPregunta, contenidoRespuesta):
+    # Aca va todo menos fechas y horas    
     subquery = ""
     contadorDeContenidosSeteados = 0;
     contenidosSeteados = []
@@ -169,50 +185,106 @@ def ArmameLaQueryConLosSiguentesDatos_SiEstanSeteados(contenidoEmpresa, contenid
         contadorDeContenidosSeteados += 1
         contenidosSeteados.append(contenidoRespuesta)
         camposDBSeteados.append("pad2.datos.respuesta")
-    if contenidoTimestamp:
-        contadorDeContenidosSeteados += 1
-        contenidosSeteados.append(contenidoTimestamp)
-        camposDBSeteados.append("pad2.datos.timestamp")
     contadorFor = 0;
     for x in range(contadorDeContenidosSeteados):
-        # print(str(x))
-        # print("Los valores que van saliendo son: " + camposDBSeteados[x] + " y " + contenidosSeteados[x])
-        # print("Y ademas el valor del contador va por el: " + str(contadorFor) +
-        #       " y el largo de la lista es " + str(len(camposDBSeteados)))
-        # if contadorDeContenidosSeteados < len(camposDBSeteados):
-        # print("El valor del contador es menor a la cantidad de datos asi que esto debería mostrarse")
-        subquery = subquery + camposDBSeteados[contadorFor] + " LIKE " + "'%'" + '"' + contenidosSeteados[contadorFor] + '"'  + "'%'" +  " AND "
-        
-        
+        subquery = subquery + camposDBSeteados[contadorFor] + " LIKE " + "'%'" + '"' + contenidosSeteados[
+            contadorFor] + '"' + "'%'" + " AND "
         contadorFor += 1;
-    # print(subquery)
     return subquery
-    
+def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, contenidoHorahasta):
+    subq = ""
+
+    if contenidoFechadesde:
+        contenidoFechadesde = "'" + contenidoFechadesde + "'"
+    if contenidoHorahasta:
+        contenidoHorahasta = "'" + contenidoHorahasta + "'"
+    if contenidoHoradesde:
+        contenidoHoradesde = "'" + contenidoHoradesde + "'"
+    if contenidoFechahasta:
+        contenidoFechahasta = "'" + contenidoFechahasta + "'"
+
+    # 1- Todo seteado LISTO
+    if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+
+    # 2- No hay fecha inicial LISTO
+    if (not contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+    # 3- No hay hora inicial
+    if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and (not contenidoHoradesde):
+        contenidoFechadesde = "'" + contenidoFechadesde + "'"
+        contenidoFechahasta = "'" + contenidoFechahasta + "'"
+        contenidoHorahasta = "'" + contenidoHorahasta + "'"
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+    # 4-  No hay fecha final
+    if contenidoFechadesde and (not contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+    # 5-  No hay hora final
+    if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and contenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
+    # Solo una seteada
+    # 6- Solo fechadesde
+    if contenidoFechadesde and not (contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ");"
+    # 11- Solo fechahasta
+    if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
+    # 15- Solo horadesde
+    if not (contenidoFechadesde) and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
+        subq = "(AND pad2.datos.hora >= " + contenidoHoradesde + ");"
+    # 17 - Solo horahasta
+    if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
+        subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
+
+    # FECHADESDE
+
+    # 7- fechadesde + horadesde
+    if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
+
+    # 9- fechadesde + fechahasta
+    if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
+        # 10 - fechadesde + fechahasta + horahasta (COINCIDE CON #3)
+
+    # FECHAHASTA
+
+    # 13 fechahasta + horadesde
+    if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
+    # 14 - fechahasta + horahasta
+    if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+
+    # HORADESDE
+
+    # 16 - horadesde + horahasta
+    if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+    return subq
+
 
 @app.route("/pivotemain")
 def pivotemain():
-    
-    print(db2string("SELECT * FROM pad2.datos WHERE empresa LIKE '%onoff%';"))
-    return render_template("pivote-table-main.html")
-
+    # print(db2string("SELECT * FROM pad2.datos WHERE empresa LIKE '%onoff%';"))
+    return render_template("pivote-filters.html")
 
 
 @app.route('/analizador', methods=['POST', 'GET'])
 def analizador():
-        return render_template("pivote-table-main.html")
+    return render_template("pivote-filters.html")
+
 
 class analizador2(Resource):
-
     def get(self, file_name):
-        # tomar el contenido del archivo file name
-        # f = open(file_name, 'r')
-        # j = json.load(f)
-        # , json=j,
-        
-        
-        return render_template("pivote-table-output.html")
-        # generar in json
-        # pasarlor a pivot2.htm
+        return render_template("pivote-output.html")
+
+
+# region REGIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOON
 
 
 def get(id, num):
@@ -995,7 +1067,6 @@ def chatprove2():
             env['rta'] = rta
             return render_template("chatprove.html", result=arr_chat, id_exp=vid_exp)
 
-
     if request.method == 'POST':
 
         result = request.form
@@ -1267,8 +1338,6 @@ def getqr():
         return render_template("qr2.html", result=qr)
 
 
-
-
 @app.route('/putsonda11', methods=['POST', 'GET', 'PUT'])
 def putsonda11():
     if request.method == 'POST':
@@ -1278,7 +1347,6 @@ def putsonda11():
         valor = result['valor']
 
         global json_sonda
-
 
         json_sonda = load_persist('json_sonda')
 
@@ -1445,7 +1513,9 @@ def show_post(post_id):
     # show the post with the given id, the id is an integer
     p = post_id + 100
     return 'Post %d' % p
-#holaestoesuncomentarioparaprobarcopiarcosasdewindowsalinux
+
+
+# holaestoesuncomentarioparaprobarcopiarcosasdewindowsalinux
 
 @app.route('/hello/')
 @app.route('/hello/<name>')
@@ -1480,11 +1550,12 @@ def setcookie():
     return resp
 
 
+# endregion
+
 if __name__ == '__main__':
     print(URLAPI[7:-6])
     app.run(host='0.0.0.0', port=5000)
-    
-
+    # app.run(debug=True)
 
 """
 
@@ -1529,5 +1600,3 @@ if __name__ == '__main__':
     app.run()
 
 """
-
-

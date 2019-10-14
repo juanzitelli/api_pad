@@ -1,0 +1,39 @@
+.colors {
+	--blue: #0097e6;
+	--darkblue: #337ab7;
+	--red: #d9534f;
+	--hover: #f9f9f9;
+	--white: #ffffff;
+	--yellow: #ffa500;
+	--green: #008000;
+	--turquoise: #35bfa3;
+}
+.filters{
+	padding: 20px;
+}
+.data-filter-form {
+	display: flex;
+	flex-direction: column;
+	padding-left: var(--paddingLR);
+	padding-right: var(--paddingLR)
+}
+.form-row {
+	width: 100%;
+	flex-wrap: wrap;
+	padding: var(--paddingLR);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.btnFiltrar{
+	background-color: var(--blue);
+	color: var(--white);
+	margin-top: 10px;
+	width: 100%;
+}
+.btnFiltrar:hover {
+	background-color: #337ab7;
+	color: #ffffff;
+	margin-top: 10px;
+	width: 100%;
+}
