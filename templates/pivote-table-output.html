@@ -39,7 +39,8 @@
 	let selectedJson = {{json | safe}} //ESTO TIENE QUE ESTAR DESCOMENTADO PARA QUE FUNCIONE
 	let modo = {{ modo }}
 
-	alert(selectedJson);
+	alert(str(selectedJson));
+	
 	let objReporte = {}
 	switch (modo) {
 		case 1:
@@ -256,9 +257,7 @@
 		container: "#wdr-component",
 		toolbar: true,
 		report: {
-			dataSource: {
-				data: selectedJson
-			},
+
 			slice: objReporte.slice,
 			grid: objReporte.grid
 		}
@@ -501,7 +500,6 @@
 		<li class="btn btn-primary" onclick="javascript:cambiarReporte(2)">Cont.-Resp.</li>
 		<li class="btn btn-primary" onclick="javascript:cambiarReporte(3)">Preg.-Resp.</li>
 		<li class="btn btn-primary" onclick="javascript:cambiarReporte(4)">Resp.-Cont.</li>
-
 		<li class="btn btn-success" onclick="javascript:cambiarReporte(5)">Total. Resp.</li>
 		<li class="btn btn-success" onclick="javascript:cambiarReporte(6)">Total. Resp.-Cont.</li>
 		<li class="btn btn-success" onclick="javascript:cambiarReporte(7)">Total. Cont.-Resp.</li>

@@ -24,7 +24,7 @@
 {% endblock %}
 {% block nav %}
 {{ super() }}
-<span class="back-btn" onclick="javascript:setHeight()">↓ | ↑</span>
+<div class="back-btn" onclick="javascript:setHeight()">↓ | ↑</div>
 <a class="back-btn" href="/analizador" title="Volver a los filtros"><img
 		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to filters" width="20px"></a>
 {% endblock %}
@@ -34,9 +34,6 @@
 <div class="container-fluid pivote-container" onload="setHeight()">
 	<div id="wdr-component"></div>
 </div>
-
-
-
 <style>
 	.wdr-cell,
 	.wdr-header,
@@ -49,7 +46,9 @@
 <script>
 	let selectedJson = {{json | safe}} //ESTO TIENE QUE ESTAR DESCOMENTADO PARA QUE FUNCIONE
 	let modo = {{modo}}
-	let objReporte = {}
+
+
+    let objReporte = {}
 	switch (modo) {
 		case 1:
 			objReporte = {
@@ -64,13 +63,16 @@
 							"uniqueName": "respuesta"
 						},
 						{
-							"uniqueName": "timestamp"
-						},
-						{
 							"uniqueName": "experiencia"
 						},
 						{
 							"uniqueName": "empresa"
+						},
+						{
+							"uniqueName": "fecha"
+						},
+						{
+						"uniqueName": "hora"
 						}
 					],
 					"rows": [{
@@ -239,7 +241,10 @@
 							"uniqueName": "respuesta"
 						},
 						{
-							"uniqueName": "timestamp"
+						    "uniqueName": "fecha"
+						},
+						{
+						    "uniqueName": "hora"
 						}
 					],
 					"rows": [{
@@ -264,7 +269,10 @@
 			},
 			slice: objReporte.slice,
 			grid: objReporte.grid
-		}
+		},
+        global{
+		    localization: "https://cdn.webdatarocks.com/loc/es.json"
+        }
 	});
 
 	//  - - - BUTTON BAR - - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR
@@ -289,13 +297,16 @@
 								"uniqueName": "respuesta"
 							},
 							{
-								"uniqueName": "timestamp"
-							},
-							{
 								"uniqueName": "experiencia"
 							},
 							{
 								"uniqueName": "empresa"
+							},
+							{
+							    "uniqueName": "fecha"
+							},
+							{
+							    "uniqueName": "hora"
 							}
 						],
 						"rows": [{
@@ -363,7 +374,6 @@
 					dataSource: {
 						data: selectedJson
 					},
-					//Acá se especifica el formato con el que se muestra la tabla
 					slice: {
 						"columns": [{
 								"uniqueName": "respuesta"
@@ -388,7 +398,6 @@
 					dataSource: {
 						data: selectedJson
 					},
-					//Acá se especifica el formato con el que se muestra la tabla
 					slice: {
 
 						"rows": [{
@@ -497,17 +506,14 @@
 <div class="button-bar-container">
 	<ul class="button-bar">
 
-		<li class="btn btn-primary" onclick="javascript:cambiarReporte(1)">Plana</li>
-		<li class="btn btn-primary" onclick="javascript:cambiarReporte(2)">Cont.-Resp.</li>
-		<li class="btn btn-primary" onclick="javascript:cambiarReporte(3)">Preg.-Resp.</li>
-		<li class="btn btn-primary" onclick="javascript:cambiarReporte(4)">Resp.-Cont.</li>
-
-		<li class="btn btn-success" onclick="javascript:cambiarReporte(5)">Total. Resp.</li>
-		<li class="btn btn-success" onclick="javascript:cambiarReporte(6)">Total. Resp.-Cont.</li>
-		<li class="btn btn-success" onclick="javascript:cambiarReporte(7)">Total. Cont.-Resp.</li>
-		<li class="btn btn-success" id="lastbtn" onclick="javascript:cambiarReporte(8)">Total. Preg.-Resp.</li>
-
-		
+		<li title="Plano" class="btn btn-primary" onclick="javascript:cambiarReporte(1)">Plana</li>
+		<li title="Contactos y sus respuestas" class="btn btn-primary" onclick="javascript:cambiarReporte(2)">Cont.-Resp.</li>
+		<li title="Preguntas y respuestas" class="btn btn-primary" onclick="javascript:cambiarReporte(3)">Preg.-Resp.</li>
+		<li title="Respuestas y contactos" class="btn btn-primary" onclick="javascript:cambiarReporte(4)">Resp.-Cont.</li>
+		<li title="Totalizador de respuestas" class="btn btn-success" onclick="javascript:cambiarReporte(5)">Total. Resp.</li>
+		<li title="Totalizador de respuestas por contacto" class="btn btn-success" onclick="javascript:cambiarReporte(6)">Total. Resp.-Cont.</li>
+		<li title="Totalizador de contactos y sus respuestas" class="btn btn-success" onclick="javascript:cambiarReporte(7)">Total. Cont.-Resp.</li>
+		<li title="Totalizador de preguntas y sus respuestas" class="btn btn-success" id="lastbtn" onclick="javascript:cambiarReporte(8)">Total. Preg.-Resp.</li>
 		
 	</ul>
 </div>
