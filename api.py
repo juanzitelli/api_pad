@@ -148,7 +148,6 @@ def analizador222():
         if consultaCamposFecha == '':
             query = query[:-5]
             query = query + ";"
-        print(query)
 
     resultadoRecienSacadoDeLaDB = db2string(query)
 
@@ -203,70 +202,51 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
     if contenidoFechahasta:
         contenidoFechahasta = "'" + contenidoFechahasta + "'"
 
-    # 1- Todo seteado LISTO
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
-    # 2- No hay fecha inicial LISTO
     if (not contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
         subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-    # 3- No hay hora inicial
+        
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and (not contenidoHoradesde):
-        contenidoFechadesde = "'" + contenidoFechadesde + "'"
-        contenidoFechahasta = "'" + contenidoFechahasta + "'"
-        contenidoHorahasta = "'" + contenidoHorahasta + "'"
+        # contenidoFechadesde = "'" + contenidoFechadesde + "'"
+        # contenidoFechahasta = "'" + contenidoFechahasta + "'"
+        # contenidoHorahasta = "'" + contenidoHorahasta + "'"
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-    # 4-  No hay fecha final
+        
     if contenidoFechadesde and (not contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
-    # 5-  No hay hora final
+        
     if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-    # Solo una seteada
-    # 6- Solo fechadesde
+
     if contenidoFechadesde and not (contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ");"
-    # 11- Solo fechahasta
+
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
 
-    # 15- Solo horadesde
     if not (contenidoFechadesde) and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
-    # 17 - Solo horahasta
     
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
-
-    # FECHADESDE
-
-    # 7- fechadesde + horadesde
+        
     if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
         
-    # 14 - fechahasta + horahasta
     if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-        
-    # Fechadesde + horahasta
+    
     if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and not(contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
 
-    # 9- fechadesde + fechahasta
     if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-
-    # 10 - fechadesde + fechahasta + horahasta (COINCIDE CON #3)
-
-    # FECHAHASTA
-
-    # 13 fechahasta + horadesde
+        
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-
-    # HORADESDE
-
-    # 16 - horadesde + horahasta
+        
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
         subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
     return subq
@@ -274,7 +254,6 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
 
 @app.route("/pivotemain")
 def pivotemain():
-    # print(db2string("SELECT * FROM pad2.datos WHERE empresa LIKE '%onoff%';"))
     return render_template("pivote-filters.html")
 
 
