@@ -26,7 +26,7 @@
 	</div>
 
 	<form class="shadow-sm filters" action="/pad/analizador222/" method="GET">
-		<div class="form-row">
+		<!-- <div class="form-row">
 			<div class="form-group col-md-6">
 				<label for="empresa">Empresa</label>
 				<input type="text" class="form-control" id="empresa" placeholder="Nombre de la empresa"
@@ -73,12 +73,47 @@
 			<div class="form-group col-md-4">
 				<label for="horahasta">Hora final</label>
 				<input type="time" class="form-control" id="horahasta" autocomplete="off" name="horahasta">
-			</div>
+			</div> -->
+		<div class="filter-row">
+			<label for="empresa">Empresa</label>
+			<input type="text" class="form-control" id="empresa" placeholder="Nombre de la empresa" autocomplete="off"
+				name="empresa">
 		</div>
-
-		<!-- Fechas-->
+		<div class="filter-row"><label for="experiencia">Experiencia</label>
+			<input type="text" class="form-control" id="experiencia" placeholder="Nombre de la experiencia" autocomplete="off"
+				name="experiencia"></div>
+		<div class="filter-row">
+			<label for="num-telefono">Telefono</label>
+			<input type="text" class="form-control" id="num-telefono" placeholder="+54 ..." autocomplete="off"
+				name="num-telefono">
+		</div>
+		<div class="filter-row">
+			<label for="pregunta">Pregunta</label>
+			<input type="text" class="form-control" id="pregunta" placeholder="¡Hola!..." autocomplete="off" name="pregunta">
+		</div>
+		<div class="filter-row">
+			<label for="respuesta">Respuesta</label>
+			<input type="text" class="form-control" id="respuesta" placeholder="Si, Dale, ¡Ok!" autocomplete="off"
+				name="respuesta">
+		</div>
+		<div class="filter-row"><label for="fechadesde">Fecha inicial</label>
+			<input type="date" class="form-control" id="fechadesde" autocomplete="off" name="fechadesde"></div>
+		<div class="filter-row">
+			<label for="horadesde">Hora inicial</label>
+			<input type="time" class="form-control" id="horadesde" autocomplete="off" name="horadesde">
+		</div>
+		<div class="filter-row"><label for="fechahasta">Fecha final</label>
+			<input type="date" class="form-control" id="fechahasta" autocomplete="off" name="fechahasta"></div>
+		<div class="filter-row">
+			<label for="horahasta">Hora final</label>
+			<input type="time" class="form-control" id="horahasta" autocomplete="off" name="horahasta">
+		</div>
 		<button type="submit" class="btn btnFiltrar" value="Filtrar">Filtrar</button>
-	</form>
+</div>
+
+<!-- Fechas-->
+
+</form>
 
 </div>
 {% endblock %}

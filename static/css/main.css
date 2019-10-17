@@ -8,22 +8,34 @@
 	--green: #008000;
 	--turquoise: #35bfa3;
 }
-.filters{
-	padding: 20px;
-}
+
 .data-filter-form {
 	display: flex;
 	flex-direction: column;
 	padding-left: var(--paddingLR);
 	padding-right: var(--paddingLR)
 }
-.form-row {
+/* .form-row {
 	width: 100%;
 	flex-wrap: wrap;
 	padding: var(--paddingLR);
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+} */
+.filter-row{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin: 3px auto;
+	text-align: right;
+}
+.filter-row > label {
+	text-align: right;
+	margin: 5px 0px 5px 40px;
+}
+.form-control{
+	width: 900px;
 }
 .btnFiltrar{
 	background-color: var(--blue);
@@ -36,4 +48,10 @@
 	color: #ffffff;
 	margin-top: 10px;
 	width: 100%;
+}
+@media(max-width: 600px){
+	.filter-row {
+		
+		justify-content: space-around;
+	}
 }

@@ -204,51 +204,50 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
 
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-
-    if (not contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
-        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
         
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and (not contenidoHoradesde):
-        # contenidoFechadesde = "'" + contenidoFechadesde + "'"
-        # contenidoFechahasta = "'" + contenidoFechahasta + "'"
-        # contenidoHorahasta = "'" + contenidoHorahasta + "'"
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-        
-    if contenidoFechadesde and (not contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
         
     if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+    
+    if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+        
+    if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
 
-    if contenidoFechadesde and not (contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
+    if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ");"
 
+    if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
+    
+    if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and not(contenidoHoradesde):
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
+    
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
-        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
-
+	    subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
+    
     if not (contenidoFechadesde) and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
     
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
-        
-    if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
-        
-    if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
-        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
     
-    if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and not(contenidoHoradesde):
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
-
-    if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-        
-    if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
-        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-        
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
         subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+    
+    if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+    
+    if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
+	    subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+
+    if not(contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+        
+    
     return subq
 
 
