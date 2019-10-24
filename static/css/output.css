@@ -31,14 +31,26 @@
 }
 
 .btn {
-	font-size: 10px;
+	font-size: 12.5px;
 }
-
 .button-bar-container {
 	width: 100%;
 
 }
+.btn-success{
+	background: lightblue;
+	color: black;
+	border: none;
+}
 
+.btn-success:hover {
+	background: lightskyblue;
+	color: black;
+	border: none;
+}
+.btn-primary{
+	background: #03A9F4;
+}
 div.pivote-container>div#wdr-component {
 	display: block;
 
