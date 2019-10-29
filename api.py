@@ -4,6 +4,7 @@ from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from flask import render_template, request, make_response, redirect
 from selenium import webdriver
+import requests
 import datetime
 import pickle
 import requests
@@ -279,7 +280,10 @@ def analizador():
 
 @app.route('/analisis-conversaciones', methods=['POST', 'GET'])
 def analisisconversaciones():
-    return render_template("pivote-analysis.html")
+    
+    jsoncito = request.form['json']
+    jsonParaPasar = json.dumps(jsoncito)
+    return render_template("pivote-analysis.html",json=jsonParaPasar )
 
 #endregion
 

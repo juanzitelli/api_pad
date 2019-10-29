@@ -23,8 +23,10 @@
 {% endblock %}
 {% block nav %}
 {{ super() }}
-<a class="back-btn" href="/analisis-conversaciones" cursor="pointer" style="color:black;">Analizar
-	resultados</a>
+<form action="/analisis-conversaciones" method="POST" id="json">
+	<input type="hidden" name="json" id=" json" value="{{json}}">
+	<button type="submit">Analizar los resultados</button>
+</form>
 <div class="back-btn" cursor="pointer" onclick="setHeight()">↓ | ↑</div>
 <a class="back-btn" href="/analizador" title="Volver a los filtros"><img
 		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to filters" width="20px"></a>
@@ -46,7 +48,7 @@
 </style>
 <script>
 	let selectedJson = {{json | safe}}
-
+	
 
 
 	let modo = {{modo}}

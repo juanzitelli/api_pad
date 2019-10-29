@@ -20,7 +20,8 @@
 {% block content %}
 {{ super() }}
 <script>
-	// let selectedJson = {{json | safe}}
+	let selectedJson = {{json | safe}}
+	alert(typeof(selectedJson))
 </script>
 {% endblock %}
 
