@@ -1,0 +1,31 @@
+{% extends "pivote-layout.html" %}
+<!-- Encabezado + Título -->
+{% block title %}Menú de análisis - {% endblock %}
+
+
+<!-- Head -->
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+
+<!-- NAV -->
+{% block nav %}
+{{ super() }}
+<a class="back-btn" href="/analizador" title="Volver al output"><img
+		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px"></a>
+{% endblock %}
+
+<!-- Content -->
+{% block content %}
+{{ super() }}
+<script>
+	// let selectedJson = {{json | safe}}
+</script>
+{% endblock %}
+
+
+<!-- Footer -->
+{% block footer %}
+{{ super() }}
+{% endblock %}

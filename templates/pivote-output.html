@@ -23,6 +23,8 @@
 {% endblock %}
 {% block nav %}
 {{ super() }}
+<a class="back-btn" href="/analisis-conversaciones" cursor="pointer" style="color:black;">Analizar
+	resultados</a>
 <div class="back-btn" cursor="pointer" onclick="setHeight()">↓ | ↑</div>
 <a class="back-btn" href="/analizador" title="Volver a los filtros"><img
 		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to filters" width="20px"></a>
@@ -43,7 +45,10 @@
 	}
 </style>
 <script>
-	let selectedJson = {{json | safe}} //ESTO TIENE QUE ESTAR DESCOMENTADO PARA QUE FUNCIONE
+	let selectedJson = {{json | safe}}
+
+
+
 	let modo = {{modo}}
 	let objReporte = {};
 	switch (modo) {
@@ -76,26 +81,6 @@
 						"uniqueName": "Measures"
 					}]
 
-				},
-				"grid": {
-					"type": "flat"
-				}
-			};
-			break;
-		case 2:
-			objReporte = {
-				"slice": {
-					"columns": [{
-							"uniqueName": "numtelefono"
-						},
-						{
-							"uniqueName": "respuesta"
-						}
-
-					],
-					"rows": [{
-						"uniqueName": "Measures"
-					}]
 				},
 				"grid": {
 					"type": "flat"
@@ -169,26 +154,6 @@
 					}],
 					"columns": [{
 						"uniqueName": "respuesta",
-					}],
-					"measures": [{
-						"uniqueName": "respuesta",
-						"aggregation": "sum"
-					}]
-				},
-				"grid": {
-					"type": "compact",
-					"showTotals": "columns"
-				}
-			};
-			break;
-		case 7:
-			objReporte = {
-				"slice": {
-					"rows": [{
-						"uniqueName": "respuesta"
-					}],
-					"columns": [{
-						"uniqueName": "numtelefono",
 					}],
 					"measures": [{
 						"uniqueName": "respuesta",
@@ -318,29 +283,6 @@
 				};
 				pivote.setReport(reporte);
 				break;
-			case 2:
-				reporte = {
-					dataSource: {
-						data: selectedJson
-					},
-					slice: {
-						"columns": [{
-								"uniqueName": "numtelefono"
-							},
-							{
-								"uniqueName": "respuesta"
-							}
-						],
-						"rows": [{
-							"uniqueName": "Measures"
-						}]
-					},
-					grid: {
-						"type": "flat"
-					}
-				};
-				pivote.setReport(reporte);
-				break;
 			case 3:
 				reporte = {
 					dataSource: {
@@ -427,30 +369,6 @@
 						}],
 						"columns": [{
 							"uniqueName": "respuesta",
-						}],
-						"measures": [{
-							"uniqueName": "respuesta",
-							"aggregation": "sum"
-						}]
-					},
-					grid: {
-						"type": "compact",
-						"showTotals": "columns"
-					}
-				};
-				pivote.setReport(reporte);
-				break;
-			case 7:
-				reporte = {
-					dataSource: {
-						data: selectedJson
-					},
-					slice: {
-						"rows": [{
-							"uniqueName": "respuesta"
-						}],
-						"columns": [{
-							"uniqueName": "numtelefono",
 						}],
 						"measures": [{
 							"uniqueName": "respuesta",

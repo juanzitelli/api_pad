@@ -19,6 +19,7 @@ import sys
 import pymysql
 import pymysql.cursors
 
+
 """
 Documentar las api/
 
@@ -42,7 +43,7 @@ def getConfig(vdato):  # configuracion.json
         return "none"
 
 
-## constantes ---------------------------------------------------------
+#region constantes ---------------------------------------------------------
 
 vurlapi = getConfig('URLAPI')
 URLAPI = vurlapi if vurlapi != 'none' else "http://127.0.0.1:5000/"
@@ -57,9 +58,9 @@ arr_chat = []
 
 env = {'rta': 'none'}
 
-## -----------------------------------------------------------------------
+#endregion -----------------------------------------------------------------------
 
-
+#region Configuraciones (ponele)
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -98,18 +99,19 @@ TODOS = {
 Contactos2 = {'nro': 'estado'}
 
 contactosToAdd = {'a': '12345'}
+#endregion
 
 
 def db2string(vsql):
-    dbServer = 'localhost'  # ip del servidor
-    dbUser = 'pad'  # usurio autorizado para leer la base de datos
-    dbPass = 'dalas'  # clave de la base de datos
-    dbBase = 'pad2'  # nombre de la base de datos
-    
     # dbServer = 'localhost'  # ip del servidor
-    # dbUser = 'root'  # usurio autorizado para leer la base de datos
-    # dbPass = ''  # clave de la base de datos
+    # dbUser = 'pad'  # usurio autorizado para leer la base de datos
+    # dbPass = 'dalas'  # clave de la base de datos
     # dbBase = 'pad2'  # nombre de la base de datos
+    
+    dbServer = 'localhost'  # ip del servidor
+    dbUser = 'root'  # usurio autorizado para leer la base de datos
+    dbPass = ''  # clave de la base de datos
+    dbBase = 'pad2'  # nombre de la base de datos
 
     result = ""
 
@@ -128,41 +130,49 @@ def db2string(vsql):
 
 @app.route('/pad/analizador222/', methods=['POST', 'GET'])
 def analizador222():
+            
+    jsonParaPasar = ArmameElJSON_Bro(request.args.get('empresa'), request.args.get('experiencia'), request.args.get('num-telefono'), request.args.get(
+        'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'), request.args.get('horadesde'), request.args.get('horahasta'))
+    modo = 1
+    
+    return render_template("pivote-output.html", json=jsonParaPasar, modo=modo)
+
+#region Filtros
+def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, reqRESPUESTA, reqFECHA_DESDE, reqFECHA_HASTA, reqHORA_DESDE, reqHORA_HASTA):
     query = ""
     consultaCamposTexto = ""
-    if (not request.args.get('empresa')) and (not request.args.get('experiencia')) and (
-    not request.args.get('num-telefono')) and (not request.args.get('pregunta')) and (
-    not request.args.get('respuesta')) and (not request.args.get('fechadesde')) and (
-            not request.args.get('horadesde') and (not request.args.get('fechahasta'))) and (
-    not request.args.get('horahasta')):
+    if (not reqEMPRESA) and (not reqEXPERIENCIA) and (
+            not reqNUMTELEFONO) and (not reqPREGUNTA) and (
+            not reqRESPUESTA) and (not reqFECHA_DESDE) and (
+                not reqHORA_DESDE and (not reqFECHA_HASTA)) and (
+            not reqHORA_HASTA):
         query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta," \
                 "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos; "
     else:
-        consultaCamposTexto = Filtrar_Texto(request.args.get('empresa'),
-                                            request.args.get('experiencia'),
-                                            request.args.get('num-telefono'),
-                                            request.args.get('pregunta'),
-                                            request.args.get('respuesta'))
+        consultaCamposTexto = Filtrar_Texto(reqEMPRESA,
+                                            reqEXPERIENCIA,
+                                            reqNUMTELEFONO,
+                                            reqPREGUNTA,
+                                            reqRESPUESTA)
         query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta," \
-                "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos WHERE " + consultaCamposTexto
-        consultaCamposFecha = Filtrar_Fecha(request.args.get('fechadesde'),
-                                            request.args.get('horadesde'),
-                                            request.args.get('fechahasta'),
-                                            request.args.get('horahasta'))
+                "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos WHERE " + \
+            consultaCamposTexto
+        consultaCamposFecha = Filtrar_Fecha(reqFECHA_DESDE,
+                                            reqHORA_DESDE,
+                                            reqFECHA_HASTA,
+                                            reqHORA_HASTA)
         query = query + consultaCamposFecha + " "
         if consultaCamposFecha == '':
             query = query[:-5]
             query = query + ";"
-
+            
     resultadoRecienSacadoDeLaDB = db2string(query)
 
     for obj in resultadoRecienSacadoDeLaDB:
         obj["fecha"] = "'" + str(obj["fecha"]) + "'"
-    jsonParaPasar = json.dumps(resultadoRecienSacadoDeLaDB, indent=4, sort_keys=True, default=str)
-    modo = 1
-    return render_template("pivote-output.html", json=jsonParaPasar, modo=modo)
-
-
+    jsonParaPasar = json.dumps(
+        resultadoRecienSacadoDeLaDB, indent=4, sort_keys=True, default=str)
+    return jsonParaPasar;
 def Filtrar_Texto(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, contenidoPregunta, contenidoRespuesta):
     # Aca va todo menos fechas y horas    
     subquery = ""
@@ -254,8 +264,9 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
         
     
     return subq
+#endregion
 
-
+#region Rutas de interés
 @app.route("/pivotemain")
 def pivotemain():
     return render_template("pivote-filters.html")
@@ -266,12 +277,18 @@ def analizador():
     return render_template("pivote-filters.html")
 
 
+@app.route('/analisis-conversaciones', methods=['POST', 'GET'])
+def analisisconversaciones():
+    return render_template("pivote-analysis.html")
+
+#endregion
+
 class analizador2(Resource):
     def get(self, file_name):
         return render_template("pivote-output.html")
 
 
-# region REGIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOON
+# region DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - -
 
 
 def get(id, num):
@@ -1541,9 +1558,10 @@ def setcookie():
 
 if __name__ == '__main__':
     print(URLAPI[7:-6])
-    app.run(host='0.0.0.0', port=5000)
-    #app.run(debug=True)
+    #app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
 
+#region Otros datos innecesarios (Comentarios)
 """
 
 from flask import Flask, request
@@ -1587,3 +1605,4 @@ if __name__ == '__main__':
     app.run()
 
 """
+#endregion
