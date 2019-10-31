@@ -4,3 +4,28 @@
 	border-radius: 5px;
 	margin-left: 5px;
 }
+
+ /* Dropdown */
+
+.dropdown li {
+	list-style-type: none;
+	cursor: pointer;
+}
+
+.childtext {
+	cursor: pointer;
+	transition: all ease 300ms;
+}
+.item-menu{
+	height: 100px;
+	width: 300px;
+	background: red;
+	color: yellow;
+	padding: 10px 50px;
+	margin: 5px;
+}
+.subitem-menu{
+	background: blue;
+	color: green;
+}
+

@@ -25,7 +25,7 @@
 {{ super() }}
 <form action="/analisis-conversaciones" method="POST" id="json">
 	<input type="hidden" name="json" id=" json" value="{{json}}">
-	<button type="submit">Analizar los resultados</button>
+	<button class="back-btn" type="submit">Analizar los resultados</button>
 </form>
 <div class="back-btn" cursor="pointer" onclick="setHeight()">↓ | ↑</div>
 <a class="back-btn" href="/analizador" title="Volver a los filtros"><img

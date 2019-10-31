@@ -7,6 +7,7 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+<!-- static\ -->
 {% endblock %}
 
 <!-- NAV -->
@@ -21,8 +22,72 @@
 {{ super() }}
 <script>
 	let selectedJson = {{json | safe}}
-	alert(typeof(selectedJson))
+	alert(typeof (selectedJson))
+	$(document).ready(function () {
+	$(".dropdown").hide();
+	$(".dropdownchild").hide();
+	$(".btn").on("click", function () {
+	$(".dropdown").slideToggle("fast");
+	});
+
+	$(".childtext").on("click", function () {
+	$(this).next().slideToggle("fast");
+	});
+
+	$(".item-menu").on("click", function () {
+	var value = $(this).text();
+	$(".txt_basic").val(value);
+	});
+
+	});
 </script>
+<div class="jumbotron">
+		<div class="ddl_holder">
+			<!-- <input type="text" class="txt_basic"></input> -->
+			<input type="button" class="btn" value="VER LOS ANÁLISIS DISPONIBLES">
+			<ul class="dropdown">
+				<li>
+					<div class="item-menu">Análisis #1</div>
+				</li>
+				<li>
+
+
+
+					<div class="childtext item-menu">Análisis #2<i class="fa fa-sort-desc"></i></div>
+					<ul class="dropdownchild">
+						<li>
+							<div class="item-menu subitem-menu"> First sub </div>
+						</li>
+						<li>
+							<div class="item-menu subitem-menu"> Second sub </div>
+						</li>
+					</ul>
+				</li>
+				<li>
+
+
+
+
+					<div class="childtext item-menu">Análisis #3<i class="fa fa-sort-desc"></i></div>
+					<ul class="dropdownchild">
+						<li>
+							<div class="item-menu subitem-menu"> Third sub </div>
+						</li>
+						<li>
+							<div class="item-menu subitem-menu"> Fourth sub </div>
+						</li>
+					</ul>
+				</li>
+				<li>
+
+
+
+
+					<div class="item-menu">Análisis #4</div>
+				</li>
+			</ul>
+		</div>
+</div>
 {% endblock %}
 
 
