@@ -22,7 +22,6 @@
 {{ super() }}
 <script>
 	let selectedJson = {{json | safe}}
-	alert(typeof (selectedJson))
 	$(document).ready(function () {
 	$(".dropdown").hide();
 	$(".dropdownchild").hide();
@@ -44,24 +43,29 @@
 <div class="jumbotron">
 		<div class="ddl_holder">
 			<!-- <input type="text" class="txt_basic"></input> -->
-			<input type="button" class="btn" value="VER LOS ANÁLISIS DISPONIBLES">
+			<input type="button" class="btn btn-primary" value="VER LOS ANÁLISIS DISPONIBLES">
 			<ul class="dropdown">
 				<li>
-					<div class="item-menu">Análisis #1</div>
+					<div class="childtext item-menu">Análisis de palabras</div>
+					<ul class="dropdownchild">
+						<li>
+							<div class="item-menu subitem-menu">
+								<img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
+							<a href="">Nube de palabras</a></div>
+						</li>
+						<li>
+							<div class="item-menu subitem-menu">
+								<img width="25px" src="{{ url_for('static', filename='img/analysis.png') }}" alt="cloud">
+								<a href="">Estadísticas</a></div>
+						</li>
+					</ul>
 				</li>
 				<li>
 
 
 
-					<div class="childtext item-menu">Análisis #2<i class="fa fa-sort-desc"></i></div>
-					<ul class="dropdownchild">
-						<li>
-							<div class="item-menu subitem-menu"> First sub </div>
-						</li>
-						<li>
-							<div class="item-menu subitem-menu"> Second sub </div>
-						</li>
-					</ul>
+					<div class="childtext item-menu">Análisis de sentimientos<i class="fa fa-sort-desc"></i></div>
+					
 				</li>
 				<li>
 
@@ -71,10 +75,10 @@
 					<div class="childtext item-menu">Análisis #3<i class="fa fa-sort-desc"></i></div>
 					<ul class="dropdownchild">
 						<li>
-							<div class="item-menu subitem-menu"> Third sub </div>
+							<div class="item-menu subitem-menu"><a href="">Subcosa 3</a></div>
 						</li>
 						<li>
-							<div class="item-menu subitem-menu"> Fourth sub </div>
+							<div class="item-menu subitem-menu"><a href="">Subcosa 4</a></div>
 						</li>
 					</ul>
 				</li>
