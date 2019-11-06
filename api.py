@@ -19,6 +19,14 @@ import sys
 # db
 import pymysql
 import pymysql.cursors
+#WordCloud
+import numpy as np
+import pandas as pd
+from os import path
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import matplotlib.pyplot as plt
+# % matplotlib inline
 
 
 """
@@ -284,6 +292,14 @@ def analisisconversaciones():
     jsoncito = request.form['json']
     jsonParaPasar = json.dumps(jsoncito)
     return render_template("pivote-analysis.html",json=jsonParaPasar )
+
+
+@app.route('/wordcloud', methods=['POST', 'GET'])
+def wordcloud():
+
+    jsoncito = request.form['json']
+    jsonParaPasar = json.dumps(jsoncito)
+    return render_template("wordcloud.html", json=jsonParaPasar)
 
 #endregion
 
