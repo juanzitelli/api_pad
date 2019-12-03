@@ -13,8 +13,12 @@
 <!-- NAV -->
 {% block nav %}
 {{ super() }}
-<a class="back-btn" href="/analizador" title="Volver al output"><img
-		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px"></a>
+<form action="/pad/analizador222/" method="POST" id="json">
+	<button type="submit" class="button-submit back-btn">
+		<input type="hidden" name="json" id=" json" value="{{json}}">
+<img src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px">
+	</button></form>
+	
 {% endblock %}
 
 <!-- Content -->
@@ -39,11 +43,13 @@
 	});
 
 	});
+
+	alert({{json}})
 </script>
 <div class="jumbotron">
 		<div class="ddl_holder">
 			<!-- <input type="text" class="txt_basic"></input> -->
-			<input type="button" class="btn btn-primary" value="VER LOS ANÁLISIS DISPONIBLES">
+			<input type="button" class="btn btn-primary dropdownTitle" value="VER LOS ANÁLISIS DISPONIBLES">
 			<ul class="dropdown">
 				<li>
 					<div class="childtext item-menu">Análisis de palabras</div>
@@ -51,12 +57,22 @@
 						<li>
 							<div class="item-menu subitem-menu">
 								<img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
-							<a href="">Nube de palabras</a></div>
+								<form action="/wordcloud" method="POST" id="wordcloud">
+									<input type="hidden" name="wordcloud" id="wordcloud" value="{{json}}">
+									<button class="button-submit" type="submit"> Nube de palabras</button>
+							</form>
+							</div>
 						</li>
 						<li>
 							<div class="item-menu subitem-menu">
 								<img width="25px" src="{{ url_for('static', filename='img/analysis.png') }}" alt="cloud">
-								<a href="">Estadísticas</a></div>
+								<form action="">
+									<input type="hidden" name="json" id="json" value="{{json}}">
+									<button class="button-submit" type="submit">
+										Estadísticas
+									</button>
+								</form>
+								</div>
 						</li>
 					</ul>
 				</li>
@@ -72,7 +88,7 @@
 
 
 
-					<div class="childtext item-menu">Análisis #3<i class="fa fa-sort-desc"></i></div>
+					<!-- <div class="childtext item-menu">Análisis #3<i class="fa fa-sort-desc"></i></div>
 					<ul class="dropdownchild">
 						<li>
 							<div class="item-menu subitem-menu"><a href="">Subcosa 3</a></div>
@@ -87,7 +103,7 @@
 
 
 
-					<div class="item-menu">Análisis #4</div>
+					<div class="item-menu">Análisis #4</div> -->
 				</li>
 			</ul>
 		</div>

@@ -3,7 +3,7 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from flask import render_template, request, make_response, redirect
-from selenium import webdriver  
+from selenium import webdriver
 import requests
 import datetime
 import pickle
@@ -19,13 +19,14 @@ import sys
 # db
 import pymysql
 import pymysql.cursors
-#WordCloud
+# WordCloud
 import numpy as np
 import pandas as pd
 from os import path
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
+from json import dump
 # % matplotlib inline
 
 
@@ -52,7 +53,7 @@ def getConfig(vdato):  # configuracion.json
         return "none"
 
 
-#region constantes ---------------------------------------------------------
+# region constantes ---------------------------------------------------------
 
 vurlapi = getConfig('URLAPI')
 URLAPI = vurlapi if vurlapi != 'none' else "http://127.0.0.1:5000/"
@@ -67,9 +68,9 @@ arr_chat = []
 
 env = {'rta': 'none'}
 
-#endregion -----------------------------------------------------------------------
+# endregion -----------------------------------------------------------------------
 
-#region Configuraciones (ponele)
+# region Configuraciones (ponele)
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -108,7 +109,7 @@ TODOS = {
 Contactos2 = {'nro': 'estado'}
 
 contactosToAdd = {'a': '12345'}
-#endregion
+# endregion
 
 
 def db2string(vsql):
@@ -116,7 +117,7 @@ def db2string(vsql):
     # dbUser = 'pad'  # usurio autorizado para leer la base de datos
     # dbPass = 'dalas'  # clave de la base de datos
     # dbBase = 'pad2'  # nombre de la base de datos
-    
+
     dbServer = 'localhost'  # ip del servidor
     dbUser = 'root'  # usurio autorizado para leer la base de datos
     dbPass = ''  # clave de la base de datos
@@ -139,14 +140,16 @@ def db2string(vsql):
 
 @app.route('/pad/analizador222/', methods=['POST', 'GET'])
 def analizador222():
-            
+
     jsonParaPasar = ArmameElJSON_Bro(request.args.get('empresa'), request.args.get('experiencia'), request.args.get('num-telefono'), request.args.get(
         'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'), request.args.get('horadesde'), request.args.get('horahasta'))
     modo = 1
-    
+
     return render_template("pivote-output.html", json=jsonParaPasar, modo=modo)
 
-#region Filtros
+# region Filtros
+
+
 def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, reqRESPUESTA, reqFECHA_DESDE, reqFECHA_HASTA, reqHORA_DESDE, reqHORA_HASTA):
     query = ""
     consultaCamposTexto = ""
@@ -174,18 +177,20 @@ def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, re
         if consultaCamposFecha == '':
             query = query[:-5]
             query = query + ";"
-            
+
     resultadoRecienSacadoDeLaDB = db2string(query)
 
     for obj in resultadoRecienSacadoDeLaDB:
         obj["fecha"] = "'" + str(obj["fecha"]) + "'"
     jsonParaPasar = json.dumps(
         resultadoRecienSacadoDeLaDB, indent=4, sort_keys=True, default=str)
-    return jsonParaPasar;
+    return jsonParaPasar
+
+
 def Filtrar_Texto(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, contenidoPregunta, contenidoRespuesta):
-    # Aca va todo menos fechas y horas    
+    # Aca va todo menos fechas y horas
     subquery = ""
-    contadorDeContenidosSeteados = 0;
+    contadorDeContenidosSeteados = 0
     contenidosSeteados = []
     camposDBSeteados = []
     if contenidoEmpresa:
@@ -208,12 +213,14 @@ def Filtrar_Texto(contenidoEmpresa, contenidoExperiencia, contenidoNumtelefono, 
         contadorDeContenidosSeteados += 1
         contenidosSeteados.append(contenidoRespuesta)
         camposDBSeteados.append("pad2.datos.respuesta")
-    contadorFor = 0;
+    contadorFor = 0
     for x in range(contadorDeContenidosSeteados):
         subquery = subquery + camposDBSeteados[contadorFor] + " LIKE " + "'%'" + '"' + contenidosSeteados[
             contadorFor] + '"' + "'%'" + " AND "
-        contadorFor += 1;
+        contadorFor += 1
     return subquery
+
+
 def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, contenidoHorahasta):
     subq = ""
 
@@ -227,55 +234,68 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
         contenidoFechahasta = "'" + contenidoFechahasta + "'"
 
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-        
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + \
+            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + \
+            " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and (not contenidoHoradesde):
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-        
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + \
+            contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+
     if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and contenidoHoradesde:
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-    
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + \
+            contenidoHoradesde + \
+            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
     if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-        
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + \
+            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
     if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + \
+            contenidoHoradesde + \
+            ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
         subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ");"
 
     if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
-    
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + \
+            " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
+
     if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and not(contenidoHoradesde):
-        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
-    
+        subq = "(pad2.datos.fecha >= " + contenidoFechadesde + \
+            ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
+
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
-	    subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
-    
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
     if not (contenidoFechadesde) and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
-    
+
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
         subq = "(pad2.datos.hora <= " + contenidoHorahasta + ");"
-    
+
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
-        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
-    
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + \
+            ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
-        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
-    
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + \
+            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+
     if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
-	    subq = "(pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+        subq = "(pad2.datos.fecha <= " + contenidoFechahasta + \
+            " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     if not(contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
-        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
-        
-    
-    return subq
-#endregion
+        subq = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + \
+            contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
-#region Rutas de interés
+    return subq
+# endregion
+
+# region Rutas de interés
 @app.route("/pivotemain")
 def pivotemain():
     return render_template("pivote-filters.html")
@@ -288,20 +308,36 @@ def analizador():
 
 @app.route('/analisis-conversaciones', methods=['POST', 'GET'])
 def analisisconversaciones():
-    
     jsoncito = request.form['json']
     jsonParaPasar = json.dumps(jsoncito)
-    return render_template("pivote-analysis.html",json=jsonParaPasar )
+    return render_template("pivote-analysis.html", json=jsonParaPasar)
 
 
 @app.route('/wordcloud', methods=['POST', 'GET'])
 def wordcloud():
-
-    jsoncito = request.form['json']
+    print('****************************************')
+    jsoncito = request.form['wordcloud']
+    print('22222222222222222222222222222222222222222')
     jsonParaPasar = json.dumps(jsoncito)
+    text = ()
+    
+    # Create a list of word
+# text=("Python Python Python Matplotlib Matplotlib Seaborn Network Plot Violin Chart Pandas Datascience Wordcloud Spider Radar Parrallel Alpha Color Brewer Density Scatter Barplot Barplot Boxplot Violinplot Treemap Stacked Area Chart Chart Visualization Dataviz Donut Pie Time-Series Wordcloud Wordcloud Sankey Bubble")
+ 
+# # Create the wordcloud object
+# wordcloud = WordCloud(width=480, height=480, margin=0).generate(text)
+ 
+# # Display the generated image:
+# plt.imshow(wordcloud, interpolation='bilinear')
+# plt.axis("off")
+# plt.margins(x=0, y=0)
+# plt.show()
+
+    print(type(jsoncito))
     return render_template("wordcloud.html", json=jsonParaPasar)
 
-#endregion
+# endregion
+
 
 class analizador2(Resource):
     def get(self, file_name):
@@ -331,7 +367,6 @@ def get(id, num):
 
         return rr, vcomando
 
-
     except Exception as e:
 
         return 'error', 'error'
@@ -340,7 +375,8 @@ def get(id, num):
 def post(num, id, message, actor):
     url = "http://chatbot-gd-api-v2.baitsoftware.com/api/DialogMessages"
 
-    vdata = {"numReceptor": num, "idProject": int(id), "message": message, "actor": actor}
+    vdata = {"numReceptor": num, "idProject": int(
+        id), "message": message, "actor": actor}
 
     r = requests.post(url, json=vdata)
     print(r)
@@ -805,8 +841,6 @@ class viewexp(Resource):  # devuelven los contactos que hay en la db_pad2
 
             return render_template("vexp.html", result=j)
 
-
-
         except Exception as e:
             print("Excepción en viewconversa")
             return 'none'
@@ -859,14 +893,13 @@ def viewexp2():  # devuelven los contactos que hay en la db_pad2
 
             return render_template("vexp.html", result=jjj)
 
-
-
         except Exception as e:
             print("Excepción en viewconversa   ", e)
             return 'none'
 
 
-class getdb_contact_sonda(Resource):  # devuelven los contactos que hay en la db_pad2
+# devuelven los contactos que hay en la db_pad2
+class getdb_contact_sonda(Resource):
     def get(self, vexpnro):
         try:
             db_pad2 = load_persist('db_pad2')
@@ -901,7 +934,6 @@ class getdb_contact_sonda(Resource):  # devuelven los contactos que hay en la db
             db_pad2[k] = v
 
             save_persist('db_pad2')
-
 
         except:
             return 'none'
@@ -988,7 +1020,7 @@ class ContactGet(Resource):
 
 
 ##
-## Actually setup the Api resource routing here
+# Actually setup the Api resource routing here
 ##
 api.add_resource(TodoList, '/pad')  # curl http://localhost:5000/todos
 api.add_resource(Todo, '/pad/<todo_id>')  # cu0/todos/todo3
@@ -1008,10 +1040,12 @@ api.add_resource(ContactGet, '/addcontact/')  # cu0/todos/todo3
 ## api para pad2 ###################################################
 api.add_resource(apiContactos,
                  '/pad/apiContactos/<contact2>')  # put, post para agregar contentido a Contactos2. Ej: {'nro':'1111,'name':'Ale','topic':'Iniciar'}
-api.add_resource(getContactos, '/pad/getContacto/<vnro>')  # Muestra el valor que tiene Contactos[vnro]
+# Muestra el valor que tiene Contactos[vnro]
+api.add_resource(getContactos, '/pad/getContacto/<vnro>')
 api.add_resource(listContactos,
                  '/pad/listContactos/')  # Devuelve Contactos2. Es listado completo de todos los contactos
-api.add_resource(initChat, '/pad/initChat/')  # devuelve los nros de contacto que deben ser iniciados
+# devuelve los nros de contacto que deben ser iniciados
+api.add_resource(initChat, '/pad/initChat/')
 api.add_resource(dropContactos2, '/pad/dropContactos2/')
 api.add_resource(command, '/pad/command/<vcomando>')
 api.add_resource(command2, '/pad/command2/<vcomando2>')
@@ -1331,7 +1365,8 @@ def pad_store(valor):
 @app.route('/getqr_api', methods=['POST', 'GET'])
 def getqr_api():
     if request.method == 'GET':
-        qr = pad_store('qr').replace('--', ':').replace('*', '/').replace('"', '')
+        qr = pad_store('qr').replace(
+            '--', ':').replace('*', '/').replace('"', '')
 
         # print(" 613 ",qr)
 
@@ -1349,7 +1384,8 @@ def getqr():
             # url = url.replace('--',':')
             # qr = getApi(url).replace('--',':').replace('*','/').replace('"','')
 
-            qr = pad_store('qr').replace('--', ':').replace('*', '/').replace('"', '')
+            qr = pad_store('qr').replace(
+                '--', ':').replace('*', '/').replace('"', '')
 
             if qr == 'none':
                 qr = 'https://cdn.shopify.com/growth-tools-assets/qr-code/shopify-faae7065b7b351d28495b345ed76096c03de28bac346deb1e85db632862fd0e4.png'
@@ -1383,7 +1419,8 @@ def putsonda11():
         return render_template("sonda.html", result=json_sonda)
 
     if request.method == 'PUT':
-        result = str(request.data).replace("b'", '').replace('\\', '')[:-1].split(':')
+        result = str(request.data).replace(
+            "b'", '').replace('\\', '')[:-1].split(':')
 
         key = result[0]
         valor = result[1]
@@ -1436,7 +1473,8 @@ def wa_iniciar():
         vnombre = result['nombre']
         vcomentario = result['comentario']
 
-        vinit = {'nro': vnro, 'name': vnombre, 'topic': vtema, 'comment': vcomentario}
+        vinit = {'nro': vnro, 'name': vnombre,
+                 'topic': vtema, 'comment': vcomentario}
 
         global Contactos2
         Contactos2 = load_persist('Contactos2')
@@ -1473,7 +1511,8 @@ def cargar_contactos2():
 
         return render_template("lanzamiento.html")
 
-    if request.method == 'PUT':  # and request.headers['Content-Type'] == 'application/json':
+    # and request.headers['Content-Type'] == 'application/json':
+    if request.method == 'PUT':
 
         temp = str(request.data).replace("b'", "").replace('\\', '')[:-1]
         j = eval(temp)
@@ -1581,7 +1620,7 @@ if __name__ == '__main__':
     #app.run(host='0.0.0.0', port=5000)
     app.run(debug=True)
 
-#region Otros datos innecesarios (Comentarios)
+# region Otros datos innecesarios (Comentarios)
 """
 
 from flask import Flask, request
@@ -1625,4 +1664,4 @@ if __name__ == '__main__':
     app.run()
 
 """
-#endregion
+# endregion

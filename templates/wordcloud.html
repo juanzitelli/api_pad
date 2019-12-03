@@ -1,0 +1,25 @@
+<!-- NUEVO SITIO -->
+
+{% extends "pivote-layout.html" %}
+
+<!-- Encabezado + Título -->
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/wordcloud.css') }}">
+{% endblock %}
+
+<!-- Navegación -->
+{% block nav %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+
+</div>
+{% endblock %}
+<!-- Footer -->
+{% block footer %}
+{{ super() }}
+{% endblock %}
