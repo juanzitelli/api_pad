@@ -14,6 +14,7 @@ from os import listdir
 import csv
 import json
 import sys
+import ast
 # from gestorDialogo import get, post, delete
 
 # db
@@ -319,8 +320,18 @@ def wordcloud():
     jsoncito = request.form['wordcloud']
     print('22222222222222222222222222222222222222222')
     jsonParaPasar = json.dumps(jsoncito)
-    text = ()
-    
+    text = ""
+    newjson = json.loads(request.form['wordcloud'])
+    neww = ast.literal_eval(newjson)
+    for x in neww:
+        text = text + x['respuesta'] + " " 
+    print(text)
+    wordcloud = WordCloud(width=480, height=480, margin=0).generate(text)
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.margins(x=10, y=10)
+    plt.show()
+    return render_template("wordcloud.html", json=jsonParaPasar)
     # Create a list of word
 # text=("Python Python Python Matplotlib Matplotlib Seaborn Network Plot Violin Chart Pandas Datascience Wordcloud Spider Radar Parrallel Alpha Color Brewer Density Scatter Barplot Barplot Boxplot Violinplot Treemap Stacked Area Chart Chart Visualization Dataviz Donut Pie Time-Series Wordcloud Wordcloud Sankey Bubble")
  
@@ -333,8 +344,8 @@ def wordcloud():
 # plt.margins(x=0, y=0)
 # plt.show()
 
-    print(type(jsoncito))
-    return render_template("wordcloud.html", json=jsonParaPasar)
+    
+    
 
 # endregion
 
