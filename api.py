@@ -28,6 +28,8 @@ from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
 from json import dump
+import random
+import string
 # % matplotlib inline
 
 
@@ -323,32 +325,27 @@ def wordcloud():
     text = ""
     newjson = json.loads(request.form['wordcloud'])
     neww = ast.literal_eval(newjson)
+
     for x in neww:
-        text = text + x['respuesta'] + " " 
-    print(text)
+        text = text + x['respuesta'] + " "
+
     wordcloud = WordCloud(width=480, height=480, margin=0).generate(text)
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     plt.margins(x=10, y=10)
-    plt.show()
-    return render_template("wordcloud.html", json=jsonParaPasar)
-    # Create a list of word
-# text=("Python Python Python Matplotlib Matplotlib Seaborn Network Plot Violin Chart Pandas Datascience Wordcloud Spider Radar Parrallel Alpha Color Brewer Density Scatter Barplot Barplot Boxplot Violinplot Treemap Stacked Area Chart Chart Visualization Dataviz Donut Pie Time-Series Wordcloud Wordcloud Sankey Bubble")
- 
-# # Create the wordcloud object
-# wordcloud = WordCloud(width=480, height=480, margin=0).generate(text)
- 
-# # Display the generated image:
-# plt.imshow(wordcloud, interpolation='bilinear')
-# plt.axis("off")
-# plt.margins(x=0, y=0)
-# plt.show()
+    path = "C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_wc/" + randomString() + ".png"
+    wordcloud.to_file(path)
+    shortpath = "img/img_wc" + randomString() + ".png"
+    return render_template("wordcloud.html", json=jsonParaPasar, img_path=shortpath)
 
-    
-    
+
+
 
 # endregion
-
+# Función para generar string random y guardar el  wordcloud
+def randomString(stringLength=10):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
 
 class analizador2(Resource):
     def get(self, file_name):

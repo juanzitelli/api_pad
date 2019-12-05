@@ -7,6 +7,8 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/wordcloud.css') }}">
+
+
 {% endblock %}
 
 <!-- Navegación -->
@@ -15,9 +17,28 @@
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron">
 
+<div class="jumbotron">
+	<p id="hola">Aca abajo deberia aparecer la imagen</p>
+	<img src="" alt="" id="wordcloud">
+	<script>
+		// window.onload = function () {
+		let loqueviene = {{img_path}}
+		let path = "{{ url_for('static', filename='" + loqueviene + "') }}";
+		alert(loqueviene);
+		let imagen = document.getElementById('wordcloud');
+
+		function setup() {
+			alert(path)
+			imagen.src = path;
+		}
+		window.onload = function () {
+			setup();
+			$("#wordcloud").attr("src", "{{ url_for('static', filename=' + {{img_path}} + ') }}");
+		}
+	</script>
 </div>
+
 {% endblock %}
 <!-- Footer -->
 {% block footer %}
