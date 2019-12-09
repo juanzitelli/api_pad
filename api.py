@@ -318,25 +318,27 @@ def analisisconversaciones():
 
 @app.route('/wordcloud', methods=['POST', 'GET'])
 def wordcloud():
-    print('****************************************')
     jsoncito = request.form['wordcloud']
-    print('22222222222222222222222222222222222222222')
     jsonParaPasar = json.dumps(jsoncito)
     text = ""
     newjson = json.loads(request.form['wordcloud'])
     neww = ast.literal_eval(newjson)
-
+    arrayDePalabras = []
     for x in neww:
         text = text + x['respuesta'] + " "
-
-    wordcloud = WordCloud(width=480, height=480, margin=0).generate(text)
+        arrayDePalabras.append(x['respuesta'])
+    wordcloud = WordCloud(width=480, height=480, margin=20,
+                          background_color="white").generate(text)
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     plt.margins(x=10, y=10)
-    path = "C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_wc/" + randomString() + ".png"
+    lilname = randomString()
+    path = "C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_wc/" + lilname + ".png"
     wordcloud.to_file(path)
-    shortpath = "img/img_wc" + randomString() + ".png"
-    return render_template("wordcloud.html", json=jsonParaPasar, img_path=shortpath)
+    shortpath = "img/img_wc/" + lilname + ".png"
+    arrayDePalabras.sort()
+    # shortpath = "C:/Users/juanz/Documents/CAETI/api_pad/static/" + shortpath
+    return render_template("wordcloud.html", json=jsonParaPasar, img_path=shortpath, words = arrayDePalabras)
 
 
 
@@ -1428,7 +1430,7 @@ def putsonda11():
 
     if request.method == 'PUT':
         result = str(request.data).replace(
-            "b'", '').replace('\\', '')[:-1].split(':')
+            "b'", '').replace('\\\\', '')[:-1].split(':')
 
         key = result[0]
         valor = result[1]
@@ -1522,7 +1524,7 @@ def cargar_contactos2():
     # and request.headers['Content-Type'] == 'application/json':
     if request.method == 'PUT':
 
-        temp = str(request.data).replace("b'", "").replace('\\', '')[:-1]
+        temp = str(request.data).replace("b'", "").replace('\\\\', '')[:-1]
         j = eval(temp)
 
         # ----------------------------

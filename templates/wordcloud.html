@@ -7,8 +7,28 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/wordcloud.css') }}">
-
-
+<script>
+let arrayDePalabras = {{words}}
+let newarr = [];
+arrayDePalabras.forEach(x => {
+	if(estaEnElOtro(newarr,x)){
+		newarr.push(x);
+	}else{
+		continue;
+	}
+});
+alert(newarr);
+function estaEnElOtro(arraycito, palabrita){
+	arraycito.forEach(y => {
+		if(y == palabrita){
+			return true;
+		}
+		else{
+			return false;
+		}
+	});
+}
+</script>
 {% endblock %}
 
 <!-- Navegación -->
@@ -19,26 +39,17 @@
 {% block content %}
 
 <div class="jumbotron">
-	<p id="hola">Aca abajo deberia aparecer la imagen</p>
-	<img src="" alt="" id="wordcloud">
-	<script>
-		// window.onload = function () {
-		let loqueviene = {{img_path}}
-		let path = "{{ url_for('static', filename='" + loqueviene + "') }}";
-		alert(loqueviene);
-		let imagen = document.getElementById('wordcloud');
-
-		function setup() {
-			alert(path)
-			imagen.src = path;
-		}
-		window.onload = function () {
-			setup();
-			$("#wordcloud").attr("src", "{{ url_for('static', filename=' + {{img_path}} + ') }}");
-		}
-	</script>
+	<h1>Nube de palabras generada</h1>
+	<hr>
+	<img src="{{ url_for('static', filename=img_path) }}" alt="wordcloud" id="wordcloud">
+	<div>
+		<h3 style="margin-top: 30px;">Palabras utilizadas:</h3>
+		<ul>
+		{% for element in words  %}<li>{{element}}</li>{% endfor %}
+		</ul>
+	</div>
 </div>
-
+	
 {% endblock %}
 <!-- Footer -->
 {% block footer %}
