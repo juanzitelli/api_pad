@@ -340,7 +340,9 @@ def wordcloud():
     # shortpath = "C:/Users/juanz/Documents/CAETI/api_pad/static/" + shortpath
     return render_template("wordcloud.html", json=jsonParaPasar, img_path=shortpath, words = arrayDePalabras)
 
-
+@app.route('/word-analysis', methods=['POST', 'GET'])
+def wordanalysis():
+    return render_template('wordanalysis.html')
 
 
 # endregion

@@ -66,7 +66,7 @@
 						<li>
 							<div class="item-menu subitem-menu">
 								<img width="25px" src="{{ url_for('static', filename='img/analysis.png') }}" alt="cloud">
-								<form action="">
+								<form action="/word-analysis" method="POST" id="wordanalysis">
 									<input type="hidden" name="json" id="json" value="{{json}}">
 									<button class="button-submit" type="submit">
 										Estadísticas

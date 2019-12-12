@@ -1,0 +1,34 @@
+.card{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 10px auto;
+	background: lightblue;
+	padding: 1em 2em;
+	border-radius: 5px;
+}
+.container{
+	margin: 1em auto;
+	padding: 2em 0.5em;
+	border-radius: 1em;
+	background: skyblue;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.datetime-table{
+	max-width: 50rem;
+	margin: 2rem auto;
+	text-align: center;
+}
+.subcontainer{
+	background: lightblue;
+	padding: 1em 2em;
+	
+}
+body{
+	min-width: 485px;
+	text-align: center;
+}
