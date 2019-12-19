@@ -6,7 +6,7 @@
  		} else {
  			vresp = "Error en la función de STRUBBIA";
  		}
- 	}
+ 	};
  	xmlhttp.open("GET", v, false);
  	xmlhttp.send();
  	return vresp;

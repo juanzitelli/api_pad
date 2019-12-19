@@ -30,6 +30,7 @@ import matplotlib.pyplot as plt
 from json import dump
 import random
 import string
+
 # % matplotlib inline
 
 
@@ -112,6 +113,8 @@ TODOS = {
 Contactos2 = {'nro': 'estado'}
 
 contactosToAdd = {'a': '12345'}
+
+
 # endregion
 
 
@@ -143,24 +146,25 @@ def db2string(vsql):
 
 @app.route('/pad/analizador222/', methods=['POST', 'GET'])
 def analizador222():
-    
-    jsonToPost = ArmameElJSON_Bro(request.args.get('empresa'), request.args.get('experiencia'), request.args.get('num-telefono'), request.args.get(
-        'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'), request.args.get('horadesde'), request.args.get('horahasta'))
+    jsonToPost = ArmameElJSON_Bro(request.args.get('empresa'), request.args.get('experiencia'),
+                                  request.args.get('num-telefono'), request.args.get(
+            'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'),
+                                  request.args.get('horadesde'), request.args.get('horahasta'))
     modo = 1
     return render_template("pivote-output.html", json=jsonToPost, modo=modo)
-  
-    
+
 
 # region Filtros
 
 
-def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, reqRESPUESTA, reqFECHA_DESDE, reqFECHA_HASTA, reqHORA_DESDE, reqHORA_HASTA):
+def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, reqRESPUESTA, reqFECHA_DESDE,
+                     reqFECHA_HASTA, reqHORA_DESDE, reqHORA_HASTA):
     query = ""
     consultaCamposTexto = ""
     if (not reqEMPRESA) and (not reqEXPERIENCIA) and (
             not reqNUMTELEFONO) and (not reqPREGUNTA) and (
             not reqRESPUESTA) and (not reqFECHA_DESDE) and (
-                not reqHORA_DESDE and (not reqFECHA_HASTA)) and (
+            not reqHORA_DESDE and (not reqFECHA_HASTA)) and (
             not reqHORA_HASTA):
         query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta," \
                 "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos; "
@@ -172,7 +176,7 @@ def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, re
                                             reqRESPUESTA)
         query = "SELECT pad2.datos.empresa, pad2.datos.experiencia, pad2.datos.numtelefono, pad2.datos.pregunta," \
                 "pad2.datos.respuesta, pad2.datos.hora, pad2.datos.fecha FROM pad2.datos WHERE " + \
-            consultaCamposTexto
+                consultaCamposTexto
         consultaCamposFecha = Filtrar_Fecha(reqFECHA_DESDE,
                                             reqHORA_DESDE,
                                             reqFECHA_HASTA,
@@ -239,37 +243,37 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
 
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + contenidoHoradesde + \
-            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + \
-            " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + \
+                   " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     if contenidoFechadesde and contenidoFechahasta and contenidoHorahasta and (not contenidoHoradesde):
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + ") AND ( pad2.datos.fecha <= " + \
-            contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     if contenidoFechadesde and contenidoFechahasta and (not contenidoHorahasta) and contenidoHoradesde:
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + \
-            contenidoHoradesde + \
-            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+                   contenidoHoradesde + \
+                   ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
 
     if contenidoFechadesde and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + \
-            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+                   ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
 
-    if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
+    if contenidoFechadesde and not (contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + " AND pad2.datos.hora >= " + \
-            contenidoHoradesde + \
-            ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   contenidoHoradesde + \
+                   ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
 
-    if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
+    if contenidoFechadesde and not (contenidoFechahasta) and not (contenidoHorahasta) and not (contenidoHoradesde):
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + ");"
 
-    if contenidoFechadesde and not(contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
+    if contenidoFechadesde and not (contenidoFechahasta) and not (contenidoHorahasta) and contenidoHoradesde:
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + \
-            " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
+                   " AND pad2.datos.hora >= " + contenidoHoradesde + ");"
 
-    if contenidoFechadesde and not(contenidoFechahasta) and contenidoHorahasta and not(contenidoHoradesde):
+    if contenidoFechadesde and not (contenidoFechahasta) and contenidoHorahasta and not (contenidoHoradesde):
         subQuery = "(pad2.datos.fecha >= " + contenidoFechadesde + \
-            ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   ") AND ( pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and not (contenidoHoradesde):
         subQuery = "(pad2.datos.fecha <= " + contenidoFechahasta + ");"
@@ -282,21 +286,23 @@ def Filtrar_Fecha(contenidoFechadesde, contenidoHoradesde, contenidoFechahasta, 
 
     if not (contenidoFechadesde) and not (contenidoFechahasta) and contenidoHorahasta and contenidoHoradesde:
         subQuery = "(pad2.datos.hora >= " + contenidoHoradesde + \
-            ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   ") AND (pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     if not (contenidoFechadesde) and contenidoFechahasta and not (contenidoHorahasta) and contenidoHoradesde:
         subQuery = "(pad2.datos.hora >= " + contenidoHoradesde + \
-            ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
+                   ") AND ( pad2.datos.fecha <= " + contenidoFechahasta + ");"
 
     if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and not (contenidoHoradesde):
         subQuery = "(pad2.datos.fecha <= " + contenidoFechahasta + \
-            " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
-    if not(contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
+    if not (contenidoFechadesde) and contenidoFechahasta and contenidoHorahasta and contenidoHoradesde:
         subQuery = "(pad2.datos.hora >= " + contenidoHoradesde + ") AND ( pad2.datos.fecha <= " + \
-            contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
+                   contenidoFechahasta + " AND pad2.datos.hora <= " + contenidoHorahasta + ");"
 
     return subQuery
+
+
 # endregion
 
 # region Rutas de interés - Rutas de interés - Rutas de interés - Rutas de interés - Rutas de interés
@@ -314,18 +320,16 @@ def analizador():
 @app.route('/analisis-conversaciones', methods=['POST', 'GET'])
 def analisisconversaciones():
     jsonToPost = json.dumps(request.form['json'])
-    postedInfoMadeJson = json.loads(request.form['json']) #No sirve de una garcha
+    postedInfoMadeJson = json.loads(request.form['json'])  # No sirve de una garcha
     try:
-        jsonMadePyList = ast.literal_eval(request.form['json']) # QUE ESTO QUEDE ASI CARAJO
+        jsonMadePyList = ast.literal_eval(request.form['json'])  # QUE ESTO QUEDE ASI CARAJO
     except:
         jsonMadePyList = []
-    if(len(jsonMadePyList) != 0):
+    if (len(jsonMadePyList) != 0):
         return render_template("pivote-analysis.html", json=jsonToPost)
     # Hasta aca
     else:
         return render_template("noresults.html")
-
-    
 
 
 @app.route('/wordcloud', methods=['POST', 'GET'])
@@ -333,7 +337,7 @@ def wordcloud():
     jsonToPost = json.dumps(request.form['wordcloud'])
     text = " "
     postedInfoMadeJson = json.loads(request.form['wordcloud'])
-    jsonMadePyList = ast.literal_eval(postedInfoMadeJson) #idk if it works or nah
+    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)  # idk if it works or nah
     wordArray = []
     for x in jsonMadePyList:
         text = text + x['respuesta'] + " "
@@ -349,16 +353,7 @@ def wordcloud():
     shortpath = "img/img_wc/" + shortName + ".png"
     wordArray.sort()
     # shortpath = "C:/Users/juanz/Documents/CAETI/api_pad/static/" + shortpath
-    return render_template("wordcloud.html", json=jsonToPost, img_path=shortpath, words = wordArray)
-
-
-
-
-
-
-
-
-
+    return render_template("wordcloud.html", json=jsonToPost, img_path=shortpath, words=wordArray)
 
 
 @app.route('/word-analysis', methods=['POST', 'GET'])
@@ -366,77 +361,54 @@ def wordanalysis():
     jsonToPost = json.dumps(request.form['wordanalysis'])
     postedInfoMadeJson = json.loads(request.form['wordanalysis'])
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
-    
+
     print("******Debugger manual*******")
-    
+
     print("El json que viene")
     # print(jsonToPost)
     # print(type(jsonToPost))
-    
+
     print("*************")
     print("*************")
-    
+
     print("El diccionario que tenemos para trabajar")
     # print(jsonMadePyList)
     # print(type(jsonMadePyList))
 
     print("*************")
-    
-    smallestDate = datetime.datetime.strptime("9999-12-31", '%Y-%m-%d')
-    biggestDate = datetime.datetime.strptime("1984-01-01", '%Y-%m-%d') # Dance like a robot from 1984 🎶
-    smallestTime = datetime.datetime.strptime("00-00-00", '%H-%M-%S')
-    biggestTime = datetime.datetime.strptime("23-59-59", '%H-%M-%S')
+
+    # smallestDate = datetime.datetime.strptime("9999-12-31", '%Y-%m-%d').date()
+    # biggestDate = datetime.datetime.strptime("1984-01-01", '%Y-%m-%d').date()  # Dance like a robot from 1984 🎶
+    # smallestTime = datetime.datetime.strptime("00:00:00", '%H:%M:%S').time()
+    # biggestTime = datetime.datetime.strptime("23:59:59", '%H:%M:%S').time()
+    listOfDates = []
+    listOfTimes = []
     for objeto in jsonMadePyList:
-        
-        fechaSinLasComillasEsasDeMierda = objeto['fecha'].replace("'","")
-        fechaDelObjeto = datetime.datetime.strptime(fechaSinLasComillasEsasDeMierda, '%Y-%m-%d')
-        
-        horaSinLasComillasEsasDeMierda = objeto['hora']
-        # .replace("'","")
-        horaDelObjeto = datetime.datetime.strptime(horaSinLasComillasEsasDeMierda, '%H:%M:%S')
-        
-        print(objeto['fecha'])
-        print(objeto['hora'])
-        #Menor fecha/hora
-        if (fechaDelObjeto < smallestDate):
-            smallestDate = fechaDelObjeto
-            smallestTime = horaDelObjeto
-        else:
-            continue
-        
-        #Mayor fecha/hora
-        if (fechaDelObjeto > biggestDate):
-            biggestDate = fechaDelObjeto
-            biggestTime = horaDelObjeto
-        else:
-            continue
-        msj = f"El primer mensaje fue el {smallestDate} a las {smallestTime} y el ultimo fue el {biggestDate} a las {biggestTime}"
-        print(msj)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    return render_template('wordanalysis.html', primeraFecha=smallestDate, ultimaFecha = biggestDate, primeraHora = smallestTime, ultimaHora = biggestTime)
+        fechaSinComillas = objeto['fecha'].replace("'", "")
+        fechaDelObjeto = datetime.datetime.strptime(fechaSinComillas, '%Y-%m-%d').date()
+        horaSinComillas = objeto['hora'].replace("'", "")
+        horaDelObjeto = datetime.datetime.strptime(horaSinComillas, '%H:%M:%S').time()
 
+        listOfDates.append(fechaDelObjeto)
+        listOfTimes.append(horaDelObjeto)
+        print(len(listOfTimes))
 
+    doubleBubbleSort(listOfDates, listOfTimes)
+    bubbleSort(listOfTimes)
+    smallestDate = str(reorderDate(listOfDates[0]))
+    biggestDate = str(reorderDate(listOfDates[len(listOfDates) - 1]))
+    smallestTime = str(listOfTimes[0]) + " hs"
+    biggestTime = str(listOfTimes[len(listOfTimes) - 1])+ " hs"
 
+    for x in range(len(listOfDates)):
+        print(listOfDates[x])
+        print(listOfTimes[x])
 
+    msj = f"El primer mensaje fue el {smallestDate} a las {smallestTime} y el ultimo fue el {biggestDate} a las {biggestTime} "
+    print(msj)
 
-
-
-
-
-
+    return render_template('wordanalysis.html', json=jsonToPost, primeraFecha=smallestDate, ultimaFecha=biggestDate,
+                           primeraHora=smallestTime, ultimaHora=biggestTime)
 
 
 # endregion
@@ -444,6 +416,38 @@ def wordanalysis():
 def randomString(stringLength=10):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
+
+
+def doubleBubbleSort(nlist, nlist2):
+    for passnum in range(len(nlist) - 1, 0, -1):
+        for i in range(passnum):
+            if nlist[i] > nlist[i + 1]:
+                temp = nlist[i]
+                temp2 = nlist2[i]
+
+                nlist[i] = nlist[i + 1]
+                nlist2[i] = nlist2[i + 1]
+
+                nlist[i + 1] = temp
+                nlist2[i + 1] = temp2
+
+
+def bubbleSort(nlist):
+    for passnum in range(len(nlist) - 1, 0, -1):
+        for i in range(passnum):
+            if nlist[i] == nlist[i + 1]:
+                if nlist[i] > nlist[i + 1]:
+                    temp = nlist[i]
+                    nlist[i] = nlist[i + 1]
+                    nlist[i + 1] = temp
+def reorderDate(oldDate):
+    arregloFechaVieja = str(oldDate).split('-') # Ej: 2019-03-11 ==> ["2019", "03", "11"]
+    hora = arregloFechaVieja[0]
+    mes = arregloFechaVieja[1]
+    dia = arregloFechaVieja[2]
+    nuevafecha = dia + "/" + mes + "/" + hora
+    return nuevafecha
+    
 
 class analizador2(Resource):
     def get(self, file_name):
@@ -1723,7 +1727,7 @@ def setcookie():
 
 if __name__ == '__main__':
     print(URLAPI[7:-6])
-    #app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
     app.run(debug=True)
 
 # region Otros datos innecesarios (Comentarios)

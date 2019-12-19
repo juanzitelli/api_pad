@@ -2,6 +2,8 @@
   <dictionary name="juanz">
     <words>
       <w>fecha</w>
+      <w>objeto</w>
+      <w>strptime</w>
     </words>
   </dictionary>
 </component>

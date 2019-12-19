@@ -3,7 +3,7 @@
 
 <script>
 
-    var function ffinal(){
+    var function; ffinal();{
 
     var elmnt = document.getElementById('final2');
     elmnt.scrollIntoView();
@@ -410,13 +410,13 @@
 
 
 
-document.getElementById("texto").focus()
+document.getElementById("texto").focus();
 
 //var APIURL = "http://127.0.0.1:5000/";
 
 var APIURL = "http://167.86.94.15:5000/";
 
-console.log('pasa pasa')
+console.log('pasa pasa');
 
 var elmnt = document.getElementById('final2');
 elmnt.scrollIntoView();
@@ -433,16 +433,16 @@ elmnt.scrollIntoView();
 
 function iniciar() {
 
-var vid_exp = document.getElementById("id_exp").value
+var vid_exp = document.getElementById("id_exp").value;
 
-url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto=reiniciar"
+url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto=reiniciar";
 
-console.log(url)
+console.log(url);
 
-document.getElementById("texto").value = "reiniciar"
+document.getElementById("texto").value = "reiniciar";
 
 
-document.getElementById("form").submit()
+document.getElementById("form").submit();
 
 //location.reload()
 
@@ -454,9 +454,9 @@ document.getElementById("texto").focus()
 
 function verconversacion() {
 
-    var vid_exp = document.getElementById("id_exp").value
+    var vid_exp = document.getElementById("id_exp").value;
 
-    url = APIURL + "pad/viewexp2/?id=" + vid_exp
+    url = APIURL + "pad/viewexp2/?id=" + vid_exp;
 
     window.open(url)
 
@@ -469,21 +469,21 @@ function verconversacion() {
 function makeurl(){
 
 
-var vid_exp = document.getElementById("id_exp").value
-var vtexto = document.getElementById("texto").value
-var vnro = document.getElementById("nro").value
+var vid_exp = document.getElementById("id_exp").value;
+var vtexto = document.getElementById("texto").value;
+var vnro = document.getElementById("nro").value;
 
 
-url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto="+ vtexto + "&nro="+vnro
+url = APIURL + "pad/chatprove/?id=" + vid_exp + "&texto="+ vtexto + "&nro="+vnro;
 
-url = APIURL + "pad/chatprove/?id=" + vid_exp
+url = APIURL + "pad/chatprove/?id=" + vid_exp;
 
-console.log(url)
+console.log(url);
 
 
-document.getElementById("form").action = url
+document.getElementById("form").action = url;
 
-console.log(document.getElementById("form").action)
+console.log(document.getElementById("form").action);
 
 document.getElementById("texto").focus()
 
@@ -524,7 +524,7 @@ function setapi(url_comando,datos) {
         } else {
 		    console.error(users);
         }
-   }
+   };
     xhr.send(datos);
    }
 
