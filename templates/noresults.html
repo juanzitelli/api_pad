@@ -1,0 +1,40 @@
+{% extends "pivote-layout.html" %}
+<!-- Encabezado + Título -->
+{% block title %}Menú de análisis - {% endblock %}
+
+
+<!-- Head -->
+{% block head %}
+{{ super() }}
+<style>
+img {
+max-width: 100%;
+display: block;
+height: auto ;
+margin: auto !important;
+}
+</style>
+{% endblock %}
+{% block nav %}
+{{ super() }}
+<!-- <form action="/pad/analizador222/" method="POST" id="json">
+	<button type="submit" class="button-submit back-btn">
+		<input type="hidden" name="json" id=" json" value="{{json}}">
+		<img src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px">
+	</button></form> -->
+{% endblock %}
+
+<!-- Content -->
+{% block content %}
+{{ super() }}
+<div class="jumbotron container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;"> 
+<h1>😢No hay datos para mostrar😢 </h1>
+<hr style="width: 100%;">
+<img src="https://media.tenor.com/images/d34443b7c3b63b2f995f46d0fa116289/tenor.gif" alt="sad spongebob" width="500px">
+
+</div>
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+{% endblock %}

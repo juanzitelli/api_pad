@@ -32,3 +32,24 @@ body{
 	min-width: 485px;
 	text-align: center;
 }
+table, th, td, tr{
+	border: 1px solid transparent;
+	color: black;
+}
+img {
+	max-width: 100%;
+	display: block;
+	height: auto ;
+	margin: auto !important;
+}
+th {
+	padding: 1em 0.5em !important;
+	align-self: center !important;
+	display: table-cell !important;
+	vertical-align: middle !important;
+}
+@media (max-width: 512px){
+	td{
+		font-size: 0.7em !important;
+	}
+}

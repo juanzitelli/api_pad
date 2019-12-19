@@ -27,7 +27,7 @@ html {
 		'Open Sans',
 		'Helvetica Neue',
 		sans-serif;
-
+	position: relative;
 }
 
 .layout-top-nav {
@@ -51,4 +51,11 @@ html {
 
 .site-content {
 	flex: 1;
+}
+
+footer{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	
 }

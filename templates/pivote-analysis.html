@@ -44,7 +44,6 @@
 
 	});
 
-	alert({{json}})
 </script>
 <div class="jumbotron">
 		<div class="ddl_holder">
@@ -67,7 +66,7 @@
 							<div class="item-menu subitem-menu">
 								<img width="25px" src="{{ url_for('static', filename='img/analysis.png') }}" alt="cloud">
 								<form action="/word-analysis" method="POST" id="wordanalysis">
-									<input type="hidden" name="json" id="json" value="{{json}}">
+									<input type="hidden" name="wordanalysis" id="wordanalysis" value="{{json}}">
 									<button class="button-submit" type="submit">
 										Estadísticas
 									</button>
