@@ -1,35 +1,34 @@
 # -*- coding: utf-8 -*-
-
-from flask import Flask
-from flask_restful import reqparse, abort, Api, Resource
-from flask import render_template, request, make_response, redirect
-from selenium import webdriver
-import requests
-import datetime
-import pickle
-import requests
-from flask_cors import CORS
-import os
-from os import listdir
-import csv
-import json
-import sys
 import ast
-# from gestorDialogo import get, post, delete
+import csv
+import datetime
+import json
+import os
+import pickle
+import random
+import string
+import sys
+from json import dump
+from os import listdir, path
 
-# db
-import pymysql
-import pymysql.cursors
+import matplotlib.pyplot as plt
 # WordCloud
 import numpy as np
 import pandas as pd
-from os import path
+# db
+import pymysql
+import pymysql.cursors
+import requests
+from flask import Flask, make_response, redirect, render_template, request
+from flask_cors import CORS
+from flask_restful import Api, Resource, abort, reqparse
 from PIL import Image
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
-import matplotlib.pyplot as plt
-from json import dump
-import random
-import string
+from selenium import webdriver
+from wordcloud import STOPWORDS, ImageColorGenerator, WordCloud
+from collections import Counter
+
+# from gestorDialogo import get, post, delete
+
 
 # % matplotlib inline
 
@@ -361,26 +360,7 @@ def wordanalysis():
     jsonToPost = json.dumps(request.form['wordanalysis'])
     postedInfoMadeJson = json.loads(request.form['wordanalysis'])
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
-
-    print("******Debugger manual*******")
-
-    print("El json que viene")
-    # print(jsonToPost)
-    # print(type(jsonToPost))
-
-    print("*************")
-    print("*************")
-
-    print("El diccionario que tenemos para trabajar")
-    # print(jsonMadePyList)
-    # print(type(jsonMadePyList))
-
-    print("*************")
-
-    # smallestDate = datetime.datetime.strptime("9999-12-31", '%Y-%m-%d').date()
-    # biggestDate = datetime.datetime.strptime("1984-01-01", '%Y-%m-%d').date()  # Dance like a robot from 1984 🎶
-    # smallestTime = datetime.datetime.strptime("00:00:00", '%H:%M:%S').time()
-    # biggestTime = datetime.datetime.strptime("23:59:59", '%H:%M:%S').time()
+    # region Fechas iniciales y finales
     listOfDates = []
     listOfTimes = []
     for objeto in jsonMadePyList:
@@ -388,31 +368,53 @@ def wordanalysis():
         fechaDelObjeto = datetime.datetime.strptime(fechaSinComillas, '%Y-%m-%d').date()
         horaSinComillas = objeto['hora'].replace("'", "")
         horaDelObjeto = datetime.datetime.strptime(horaSinComillas, '%H:%M:%S').time()
-
         listOfDates.append(fechaDelObjeto)
         listOfTimes.append(horaDelObjeto)
-        print(len(listOfTimes))
-
     doubleBubbleSort(listOfDates, listOfTimes)
     bubbleSort(listOfTimes)
     smallestDate = str(reorderDate(listOfDates[0]))
     biggestDate = str(reorderDate(listOfDates[len(listOfDates) - 1]))
     smallestTime = str(listOfTimes[0]) + " hs"
-    biggestTime = str(listOfTimes[len(listOfTimes) - 1])+ " hs"
+    biggestTime = str(listOfTimes[len(listOfTimes) - 1]) + " hs"
+    # endregion
+    # region Día más activo
+    listOfUniqueDates = []
+    counter = []
+    for a in listOfDates:
+        for b in listOfDates:
+            if (a == b) and a not in listOfUniqueDates:
+                listOfUniqueDates.append(a)
+    new = Counter(listOfDates)
+    listitaDePares = list(new.items())
+    alfinwacho = []
+    for x in list(listitaDePares):
+        alfinwacho.append(x[1])
+    doubleBubbleSort(alfinwacho, listOfDates)
+    diaQueMasMensajesSeEnviaron = reorderDate(listOfDates[len(listOfDates) - 1])
+    cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron = alfinwacho[len(alfinwacho) - 1]
+    # endregion
+    #region Totalizadores
+    cantDias = len(listOfUniqueDates)
 
-    for x in range(len(listOfDates)):
-        print(listOfDates[x])
-        print(listOfTimes[x])
-
-    msj = f"El primer mensaje fue el {smallestDate} a las {smallestTime} y el ultimo fue el {biggestDate} a las {biggestTime} "
-    print(msj)
+    #region Cant de palabras en respuestas
+    palabrasEnRespuestas_TEXTO = ""
+    for obj in jsonMadePyList:
+        palabrasEnRespuestas_TEXTO += obj['respuesta']
+    palabras_entexto = palabrasEnRespuestas_TEXTO.split(" ")
+    cantpalabras = len(palabrasEnRespuestas_TEXTO.split(" "))
+    #region
+    stringConTodasLasRespuestas = ""
+    # endregion
+    #endregion
+    #endregion
 
     return render_template('wordanalysis.html', json=jsonToPost, primeraFecha=smallestDate, ultimaFecha=biggestDate,
-                           primeraHora=smallestTime, ultimaHora=biggestTime)
+                           primeraHora=smallestTime, ultimaHora=biggestTime, masmensajes=diaQueMasMensajesSeEnviaron,
+                           cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas = cantDias, cantPalabras = cantpalabras)
 
 
 # endregion
-# Función para generar string random y guardar el  wordcloud
+# region Funciones útiles
 def randomString(stringLength=10):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
@@ -424,10 +426,8 @@ def doubleBubbleSort(nlist, nlist2):
             if nlist[i] > nlist[i + 1]:
                 temp = nlist[i]
                 temp2 = nlist2[i]
-
                 nlist[i] = nlist[i + 1]
                 nlist2[i] = nlist2[i + 1]
-
                 nlist[i + 1] = temp
                 nlist2[i + 1] = temp2
 
@@ -440,14 +440,16 @@ def bubbleSort(nlist):
                     temp = nlist[i]
                     nlist[i] = nlist[i + 1]
                     nlist[i + 1] = temp
+
+
 def reorderDate(oldDate):
-    arregloFechaVieja = str(oldDate).split('-') # Ej: 2019-03-11 ==> ["2019", "03", "11"]
+    arregloFechaVieja = str(oldDate).split('-')  # Ej: 2019-03-11 ==> ["2019", "03", "11"]
     hora = arregloFechaVieja[0]
     mes = arregloFechaVieja[1]
     dia = arregloFechaVieja[2]
     nuevafecha = dia + "/" + mes + "/" + hora
     return nuevafecha
-    
+
 
 class analizador2(Resource):
     def get(self, file_name):
