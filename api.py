@@ -12,6 +12,7 @@ from json import dump
 from os import listdir, path
 
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt; plt.rcdefaults()
 # WordCloud
 import numpy as np
 import pandas as pd
@@ -377,6 +378,7 @@ def wordanalysis():
     smallestTime = str(listOfTimes[0]) + " hs"
     biggestTime = str(listOfTimes[len(listOfTimes) - 1]) + " hs"
     # endregion
+
     # region Día más activo
     listOfUniqueDates = []
     counter = []
@@ -393,24 +395,60 @@ def wordanalysis():
     diaQueMasMensajesSeEnviaron = reorderDate(listOfDates[len(listOfDates) - 1])
     cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron = alfinwacho[len(alfinwacho) - 1]
     # endregion
-    #region Totalizadores
-    cantDias = len(listOfUniqueDates)
 
-    #region Cant de palabras en respuestas
+    # region Totalizadores
+
+    # region DiasDeMensajes
+    cantDias = len(listOfUniqueDates)
+    # endregion
+
+    # region Cant de palabras en respuestas
     palabrasEnRespuestas_TEXTO = ""
     for obj in jsonMadePyList:
         palabrasEnRespuestas_TEXTO += obj['respuesta']
     palabras_entexto = palabrasEnRespuestas_TEXTO.split(" ")
     cantpalabras = len(palabrasEnRespuestas_TEXTO.split(" "))
-    #region
+    # region Letras en rtas
     stringConTodasLasRespuestas = ""
-    # endregion
-    #endregion
-    #endregion
+    for h in palabras_entexto:
+        stringConTodasLasRespuestas += h
+    listaDeLetras = list(stringConTodasLasRespuestas)
+    print(listaDeLetras)
+    totalDeLetras = len(listaDeLetras)
 
+    # endregion
+    # endregion
+
+    # endregion
+
+    # region Promedios
+    respuestas = []
+    for e in jsonMadePyList:
+        respuestas.append(e['respuesta'])
+    cantRespuestas = len(respuestas)
+    promedioRespuestasPorDia = cantRespuestas / len(listOfUniqueDates)
+    promedioLetrasPorRespuesta = totalDeLetras / cantRespuestas
+    promedioLetrasPorDia = totalDeLetras / len(listOfUniqueDates)
+    promedioPalabrasPorRta = cantpalabras / cantRespuestas
+    # endregion
+
+
+    #region Grafico de barras de mensajes por x momento
+    objects = ('Madrugada', 'Mañana', 'Mediodía', 'Tarde', 'Noche')
+    y_pos = np.arange(len(objects))
+    performance = [50, 40, 30, 20, 10]
+
+    plt.bar(y_pos, performance, align='center', alpha=0.5)
+    plt.xticks(y_pos, objects)
+    plt.ylabel('Cantidad de mensajes')
+    plt.title('Cantidad de mensajes enviados por momento del día')
+    #endregion
     return render_template('wordanalysis.html', json=jsonToPost, primeraFecha=smallestDate, ultimaFecha=biggestDate,
                            primeraHora=smallestTime, ultimaHora=biggestTime, masmensajes=diaQueMasMensajesSeEnviaron,
-                           cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas = cantDias, cantPalabras = cantpalabras)
+                           cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas=cantDias,
+                           cantPalabras=cantpalabras, cantLetras=totalDeLetras, promRtaPorDia=promedioRespuestasPorDia,
+                           promLetrasRta=promedioLetrasPorRespuesta, promedioLetrasPorDia=promedioLetrasPorDia,
+                           promedioPalabrasPorRta=promedioPalabrasPorRta)
 
 
 # endregion
