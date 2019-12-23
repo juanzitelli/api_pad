@@ -361,6 +361,7 @@ def wordanalysis():
     jsonToPost = json.dumps(request.form['wordanalysis'])
     postedInfoMadeJson = json.loads(request.form['wordanalysis'])
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
+    
     # region Fechas iniciales y finales
     listOfDates = []
     listOfTimes = []
@@ -426,38 +427,72 @@ def wordanalysis():
     for e in jsonMadePyList:
         respuestas.append(e['respuesta'])
     cantRespuestas = len(respuestas)
-    promedioRespuestasPorDia = cantRespuestas / len(listOfUniqueDates)
-    promedioLetrasPorRespuesta = totalDeLetras / cantRespuestas
-    promedioLetrasPorDia = totalDeLetras / len(listOfUniqueDates)
-    promedioPalabrasPorRta = cantpalabras / cantRespuestas
+    promedioRespuestasPorDia = round(cantRespuestas / len(listOfUniqueDates),2)
+    promedioLetrasPorRespuesta = round(totalDeLetras / cantRespuestas,2)
+    promedioLetrasPorDia = round(totalDeLetras / len(listOfUniqueDates),2)
+    promedioPalabrasPorRta = round(cantpalabras / cantRespuestas,2)
     # endregion
 
-
     #region Grafico de barras de mensajes por x momento
-    objects = ('Madrugada', 'Mañana', 'Mediodía', 'Tarde', 'Noche')
+    objects = ('Madrugada', 'Mañana', 'Mediodía', 'Tarde', 'Noche',"Medianoche")
     y_pos = np.arange(len(objects))
-    performance = [50, 40, 30, 20, 10]
-
+    performance = [0, 0,0, 0, 0,0]
+    for t in listOfTimes:
+        if(whatMomentOfTheDayIsIt(t) == "Madrugada"):
+            performance[0] += 1
+        if(whatMomentOfTheDayIsIt(t) == "Mañana"):
+            performance[1] += 1
+        if(whatMomentOfTheDayIsIt(t) == "Mediodía"):
+            performance[2] += 1
+        if(whatMomentOfTheDayIsIt(t) == "Tarde"):
+            performance[3] += 1
+        if(whatMomentOfTheDayIsIt(t) == "Noche"):
+            performance[4] += 1
+        if(whatMomentOfTheDayIsIt(t) == "Medianoche"):
+            performance[5] += 1
     plt.bar(y_pos, performance, align='center', alpha=0.5)
     plt.xticks(y_pos, objects)
     plt.ylabel('Cantidad de mensajes')
     plt.title('Cantidad de mensajes enviados por momento del día')
+    filename = randomString()
+    longpathBarChart = 'C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_bc/' + filename + '.png'
+    shortPath = 'img/img_bc/' + filename + ".png"
+    plt.savefig(longpathBarChart)
     #endregion
+    
     return render_template('wordanalysis.html', json=jsonToPost, primeraFecha=smallestDate, ultimaFecha=biggestDate,
                            primeraHora=smallestTime, ultimaHora=biggestTime, masmensajes=diaQueMasMensajesSeEnviaron,
                            cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas=cantDias,
                            cantPalabras=cantpalabras, cantLetras=totalDeLetras, promRtaPorDia=promedioRespuestasPorDia,
                            promLetrasRta=promedioLetrasPorRespuesta, promedioLetrasPorDia=promedioLetrasPorDia,
-                           promedioPalabrasPorRta=promedioPalabrasPorRta)
+                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart = shortPath)
 
 
-# endregion
+
 # region Funciones útiles
 def randomString(stringLength=10):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
 
-
+def whatMomentOfTheDayIsIt(dateParameter):
+    if dateParameter >= datetime.datetime.strptime('01:00:00','%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime('05:00:00','%H:%M:%S').time():
+        return "Madrugada"
+    ## Madrugada
+    if dateParameter > datetime.datetime.strptime('05:00:00','%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime('11:00:00','%H:%M:%S').time():
+        return "Mañana"
+    ## Mañana
+    if dateParameter > datetime.datetime.strptime('11:00:00','%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime('14:00:00','%H:%M:%S').time():
+        return "Mediodía"
+    ## Mediodía
+    if dateParameter > datetime.datetime.strptime('14:00:00','%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime('19:00:00','%H:%M:%S').time():
+        return "Tarde"
+    ## Tarde
+    if dateParameter > datetime.datetime.strptime('19:00:00','%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime('23:00:00','%H:%M:%S').time():
+        return "Noche"
+    ## Noche
+    if dateParameter >= datetime.datetime.strptime('01:00:00','%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime('05:00:00','%H:%M:%S').time():
+        return "Medianoche"
+    ## Medianoche
 def doubleBubbleSort(nlist, nlist2):
     for passnum in range(len(nlist) - 1, 0, -1):
         for i in range(passnum):

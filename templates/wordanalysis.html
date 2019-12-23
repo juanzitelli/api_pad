@@ -39,8 +39,8 @@
 				<tr class="table-info">
 					<th scope="row"><img  src="{{ url_for('static', filename='img/calendar.png') }}" alt=""></th>
 					<td>{{primeraFecha}}</td>
-					<td>{{ultimaFecha}}</td>
 					<td>{{primeraHora}}</td>
+					<td>{{ultimaFecha}}</td>
 					<td>{{ultimaHora}}</td>
 				</tr>
 			</tbody>
@@ -63,9 +63,9 @@
 	<div class="time-ranges analysis-section container">
 		<div class="subcontainer container">
 		<h4 class="title">Rangos horarios</h4>
-		<p>En este gráfico se detallan la cantidad de mensajes que se enviaron rangos horarios de 2 horas</p>
+		<p>Distribución de mensajes por momento del día</p>
 		<hr style="border: 0.5px solid black; width: 100%;">
-		<img src="https://i.stack.imgur.com/7BOTc.png"
+		<img src="{{ url_for('static', filename=barchart) }}"
 			alt="time-ranges" width="400px">
 		</div>
 	</div>
