@@ -1,34 +1,25 @@
 # -*- coding: utf-8 -*-
 import ast
-import csv
 import datetime
 import json
-import os
 import pickle
 import random
 import string
-import sys
-from json import dump
-from os import listdir, path
-
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt;
-
+import nltk
 plt.rcdefaults()
-# WordCloud
 import numpy as np
-import pandas as pd
-# db
 import pymysql
 import pymysql.cursors
 import requests
-from flask import Flask, make_response, redirect, render_template, request
+from flask import Flask, make_response, render_template, request
 from flask_cors import CORS
 from flask_restful import Api, Resource, abort, reqparse
-from PIL import Image
 from selenium import webdriver
-from wordcloud import STOPWORDS, ImageColorGenerator, WordCloud
+from wordcloud import WordCloud
 from collections import Counter
+from nltk import word_tokenize
+from googletrans import Translator
 
 # from gestorDialogo import get, post, delete
 
@@ -59,20 +50,96 @@ def getConfig(vdato):  # configuracion.json
         return "none"
 
 
-# region constantes ---------------------------------------------------------
+# region Constantes ---------------------------------------------------------
+
 
 vurlapi = getConfig('URLAPI')
 URLAPI = vurlapi if vurlapi != 'none' else "http://127.0.0.1:5000/"
-
 # URLAPI = 'http://167.86.94.15:5000/'
-
 # URLAPI_TG = "http://chatbot-v2-api.baitsoftware.com"
-
 URLAPI_TG = 'http://chatbot-v2-api.baitsoftware.com/api/'
-
 arr_chat = []
-
 env = {'rta': 'none'}
+
+# region Diccionarios
+diccionarioClasificador_ENG = {
+    "CC": "coordinating conjunction",
+    "CD": "cardinal digit",
+    "DT": "determiner",
+    "EX": "existential",
+    "FW": "foreign word",
+    "IN": "preposition/subordinating conjunction",
+    "JJ": "adjective	'big'",
+    "JJR": "adjective, comparative	'bigger'",
+    "JJS": "adjective, superlative	'biggest'",
+    "LS": "list marker	1)",
+    "MD": "modal	could, will",
+    "NN": "noun, singular 'desk'",
+    "NNS": "noun plural	'desks'",
+    "NNP": "proper noun, singular	'Harrison'",
+    "NNPS": "proper noun, plural	'Americans'",
+    "PDT": "predeterminer	'all the kids'",
+    "POS": "possessive ending",
+    "PRP": "personal pronoun",
+    "PRP$": "possessive pronoun",
+    "RB": "adverb	very, silently,",
+    "RBR": "adverb, comparative	better",
+    "RBS": "adverb, superlative	best",
+    "RP": "particle	give up",
+    "TO": "to	go 'to' the store.",
+    "UH": "interjection	errrrrrrrm",
+    "VB": "verb, base form	take",
+    "VBD": "verb, past tense	took",
+    "VBG": "verb, gerund/present participle	taking",
+    "VBN": "verb, past participle	taken",
+    "VBP": "verb, sing. present, non-3d	take",
+    "VBZ": "verb, 3rd person sing. present	takes",
+    "WDT": "wh-determiner	which",
+    "WP": "wh-pronoun	who, what",
+    "WP$": "possessive wh-pronoun	whose",
+    "WRB": "wh-abverb	where, when",
+}
+
+diccionarioClasificador_ESP = {
+    "CC": "Conjunción de coordinación",
+    "CD": "Dígito cardinal",
+    "DT": "Determinante",
+    "EX": "Existencial",
+    "FW": "Palabra extranjera",
+    "IN": "Preposición / Conjunción subordinante",
+    "JJ": "Adjetivo",
+    "JJR": "Adjetivo comparativo",
+    "JJS": "Adjetivo superlativo",
+    "LS": "Marcador de lista",
+    "MD": "Modal",
+    "NN": "Sustantivo singular",
+    "NNS": "Sustantivo plural",
+    "NNP": "Nombre propio singular",
+    "NNPS": "Nombre propio plural",
+    "PDT": "Predeterminante",
+    "POS": "Final posesivo",
+    "PRP": "Pronombre personal",
+    "PRP$": "Pronombre posesivo",
+    "RB": "Adverbio",
+    "RBR": "Adverbio comparativo",
+    "RBS": "Advervbio superlativo",
+    "RP": "Partícula",
+    "TO": "A-Hacia-Para",
+    "UH": "Interjección",
+    "VB": "Verbo base",
+    "VBD": "Verbo pasado",
+    "VBG": "Verbo gerundio / presente participio",
+    "VBN": "Verbo pasado participio",
+    "VBP": "Verbo singular presente",
+    "VBZ": "Verbo tercera persona singular presente",
+    "WDT": "Determinante WH",
+    "WP": "Pronombre WH",
+    "WP$": "Pronombre posesivo WH",
+    "WRB": "Adverbio WH",
+}
+
+
+# endregion
 
 # endregion -----------------------------------------------------------------------
 
@@ -413,7 +480,6 @@ def wordanalysis():
         test += obj['respuesta'] + " "
     palabras_entexto = palabrasEnRespuestas_TEXTO.split(" ")
     cantpalabras = len(palabrasEnRespuestas_TEXTO.split(" "))
-    print(test)
     # region Letras en rtas
     stringConTodasLasRespuestas = ""
     for h in palabras_entexto:
@@ -431,6 +497,7 @@ def wordanalysis():
     for e in jsonMadePyList:
         respuestas.append(e['respuesta'])
     cantRespuestas = len(respuestas)
+
     promedioRespuestasPorDia = round(cantRespuestas / len(listOfUniqueDates), 2)
     promedioLetrasPorRespuesta = round(totalDeLetras / cantRespuestas, 2)
     promedioLetrasPorDia = round(totalDeLetras / len(listOfUniqueDates), 2)
@@ -464,7 +531,68 @@ def wordanalysis():
     plt.savefig(longpathBarChart)
     # endregion
 
+    # region Clasificador de palabras
+    counterDict = {}
+    lista_keys_diccionario_clasificacion = [diccionarioClasificador_ESP.keys()]
+    respuestas_separadas_con_espacios = ""
+    traductor = Translator()
+    for q in respuestas:
+        respuestas_separadas_con_espacios += q
+        respuestas_separadas_con_espacios += " "
 
+    try:  # Traducir las palabras
+        rta = traductor.translate(str(respuestas_separadas_con_espacios), dest="en")
+        respuestas_separadas_con_espacios = str(rta.text)
+
+    except Exception as e:
+        print("Excepción de traduccion")
+        print(str(e))
+
+    palabras = word_tokenize(respuestas_separadas_con_espacios)
+
+    try:  # Etiquetar las palabras
+        tagged = nltk.pos_tag(palabras)
+        print(tagged)
+
+    except Exception as e:
+        print("Excepción de postag")
+        print(str(e))
+
+    listOfUniqueKeysInTagged = []
+
+    for tuple in tagged:
+
+        if tuple[1] not in listOfUniqueKeysInTagged and tuple[1] in diccionarioClasificador_ESP.keys():
+
+            listOfUniqueKeysInTagged.append(tuple[1])
+
+        else:
+            pass
+
+    cantidad_de_tipos_de_palabras = {}
+
+    for key in listOfUniqueKeysInTagged:
+
+        cantidad_de_tipos_de_palabras[key] = 0
+
+    for tupla_de_palabra_tipo in tagged:
+
+        for value in listOfUniqueKeysInTagged:
+
+            if tupla_de_palabra_tipo[1] == value:
+
+                cantidad_de_tipos_de_palabras[value] += 1
+
+    print("*****************************")
+    print(cantidad_de_tipos_de_palabras)
+    counteer = 0
+    for element in cantidad_de_tipos_de_palabras:
+        if element in diccionarioClasificador_ESP:
+            print(f"{element} en el diccionario posta es {diccionarioClasificador_ESP[element]}")
+            counteer += 1
+    print(counteer)
+
+    # endregion
 
     return render_template('wordanalysis.html', json=jsonToPost, primeraFecha=smallestDate, ultimaFecha=biggestDate,
                            primeraHora=smallestTime, ultimaHora=biggestTime, masmensajes=diaQueMasMensajesSeEnviaron,
@@ -548,7 +676,12 @@ class analizador2(Resource):
     def get(self, file_name):
         return render_template("pivote-output.html")
 
-#endregion
+
+def word_type_count(words):
+    pass
+
+
+# endregion
 
 # region DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - - DATOS INNECESARIOS PARA JUAN - - -
 
