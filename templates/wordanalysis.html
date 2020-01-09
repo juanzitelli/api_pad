@@ -12,7 +12,16 @@
 {% endblock %}
 
 {% block content %}
+    <script>
 
+        let clasificacion_palabras = "{{ clasificacionPalabras | tojson | safe}}";
+        alert(clasificacion_palabras);
+        let x;
+        alert("Hello World");
+        for (x = 0; x < clasificacion_palabras.length; x++ ){
+            alert(clasificacion_palabras[x]);
+        }
+    </script>
 <div class="jumbotron main-container">
 	<div class="header">
 		<h3>Análisis textual completo</h3>

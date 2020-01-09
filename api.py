@@ -7,12 +7,13 @@ import random
 import string
 import matplotlib.pyplot as plt
 import nltk
+
 plt.rcdefaults()
 import numpy as np
 import pymysql
 import pymysql.cursors
 import requests
-from flask import Flask, make_response, render_template, request
+from flask import Flask, make_response, render_template, request, jsonify
 from flask_cors import CORS
 from flask_restful import Api, Resource, abort, reqparse
 from selenium import webdriver
@@ -137,7 +138,6 @@ diccionarioClasificador_ESP = {
     "WP$": "Pronombre posesivo WH",
     "WRB": "Adverbio WH",
 }
-
 
 # endregion
 
@@ -532,65 +532,73 @@ def wordanalysis():
     # endregion
 
     # region Clasificador de palabras
-    counterDict = {}
-    lista_keys_diccionario_clasificacion = [diccionarioClasificador_ESP.keys()]
+
     respuestas_separadas_con_espacios = ""
     traductor = Translator()
     for q in respuestas:
         respuestas_separadas_con_espacios += q
         respuestas_separadas_con_espacios += " "
-
     try:  # Traducir las palabras
         rta = traductor.translate(str(respuestas_separadas_con_espacios), dest="en")
         respuestas_separadas_con_espacios = str(rta.text)
-
     except Exception as e:
         print("Excepción de traduccion")
         print(str(e))
-
     palabras = word_tokenize(respuestas_separadas_con_espacios)
-
     try:  # Etiquetar las palabras
         tagged = nltk.pos_tag(palabras)
-        print(tagged)
-
     except Exception as e:
         print("Excepción de postag")
         print(str(e))
-
     listOfUniqueKeysInTagged = []
-
     for tuple in tagged:
-
         if tuple[1] not in listOfUniqueKeysInTagged and tuple[1] in diccionarioClasificador_ESP.keys():
-
             listOfUniqueKeysInTagged.append(tuple[1])
-
         else:
             pass
-
     cantidad_de_tipos_de_palabras = {}
-
     for key in listOfUniqueKeysInTagged:
-
         cantidad_de_tipos_de_palabras[key] = 0
-
     for tupla_de_palabra_tipo in tagged:
-
         for value in listOfUniqueKeysInTagged:
 
             if tupla_de_palabra_tipo[1] == value:
-
                 cantidad_de_tipos_de_palabras[value] += 1
+    diccionario_final_correcto = {}
+    for n in cantidad_de_tipos_de_palabras:
+        if n in diccionarioClasificador_ESP:
+            diccionario_final_correcto[diccionarioClasificador_ESP[n]] = cantidad_de_tipos_de_palabras[n]
 
-    print("*****************************")
-    print(cantidad_de_tipos_de_palabras)
-    counteer = 0
-    for element in cantidad_de_tipos_de_palabras:
-        if element in diccionarioClasificador_ESP:
-            print(f"{element} en el diccionario posta es {diccionarioClasificador_ESP[element]}")
-            counteer += 1
-    print(counteer)
+    diccionario_final_correcto = {k: v for k, v in sorted(diccionario_final_correcto.items(), key=lambda item: item[1])}
+    listita = []
+    dicEnLista = list(diccionario_final_correcto)
+    for i in range(len(diccionario_final_correcto) - 1):
+        listita.append(
+            [dicEnLista[len(dicEnLista) - i - 1], diccionario_final_correcto[dicEnLista[len(dicEnLista) - i - 1]]])
+    finalDict = {}
+    print(finalDict)
+    for l in listita:
+        key = l[0]
+        value = l[1]
+        finalDict[key] = value
+    try:
+        listaparajson = []
+        for key,value in finalDict.items():
+            listaparajson.append({key: value})
+        if len(listaparajson) > 5:
+            listaparajson = listaparajson[:5]
+        else:
+            pass
+        # jsonlisto = jsonify(json.dumps(listaparajson))
+        # print(jsonlisto)
+    except Exception as e:
+        print(str(e))
+         #jsonlisto = jsonify(str(e))
+        print("***********************")
+        # print(jsonlisto)
+        print("***********************")
+
+
 
     # endregion
 
@@ -599,7 +607,7 @@ def wordanalysis():
                            cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas=cantDias,
                            cantPalabras=cantpalabras, cantLetras=totalDeLetras, promRtaPorDia=promedioRespuestasPorDia,
                            promLetrasRta=promedioLetrasPorRespuesta, promedioLetrasPorDia=promedioLetrasPorDia,
-                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath)
+                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath, clasificacionPalabras = str(finalDict))
 
 
 # region Funciones útiles
