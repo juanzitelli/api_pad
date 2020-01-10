@@ -61,9 +61,11 @@ div.pivote-container>div#wdr-component {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding-inline-start: 0px;
+		padding-inline-start: 0;
 	}
-
+	body{
+		min-height: 100%;
+	}
 	.btn {
 		width: 100%;
 		margin: 5px auto;

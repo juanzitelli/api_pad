@@ -5,6 +5,17 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/wordanalysis.css') }}">
+<script type="text/javascript">
+    let clasificacion_palabras = {{ clasificacionPalabras | safe }};
+    console.log(clasificacion_palabras);
+    clasificacion_palabras.replace("'","");
+    newobj = (JSON.parse(clasificacion_palabras));
+    console.log(newobj);
+    let x;
+    alert(typeof(newobj));
+    alert("Hello World");
+
+</script>
 {% endblock %}
 <!-- Navegación -->
 {% block nav %}
@@ -12,16 +23,7 @@
 {% endblock %}
 
 {% block content %}
-    <script>
 
-        let clasificacion_palabras = "{{ clasificacionPalabras | tojson | safe}}";
-        alert(clasificacion_palabras);
-        let x;
-        alert("Hello World");
-        for (x = 0; x < clasificacion_palabras.length; x++ ){
-            alert(clasificacion_palabras[x]);
-        }
-    </script>
 <div class="jumbotron main-container">
 	<div class="header">
 		<h3>Análisis textual completo</h3>

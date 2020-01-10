@@ -102,12 +102,12 @@ diccionarioClasificador_ENG = {
 }
 
 diccionarioClasificador_ESP = {
-    "CC": "Conjunción de coordinación",
-    "CD": "Dígito cardinal",
+    "CC": "Conjuncion de coordinacion",
+    "CD": "Digito cardinal",
     "DT": "Determinante",
     "EX": "Existencial",
     "FW": "Palabra extranjera",
-    "IN": "Preposición / Conjunción subordinante",
+    "IN": "Preposicion / Conjuncion subordinante",
     "JJ": "Adjetivo",
     "JJR": "Adjetivo comparativo",
     "JJS": "Adjetivo superlativo",
@@ -124,9 +124,9 @@ diccionarioClasificador_ESP = {
     "RB": "Adverbio",
     "RBR": "Adverbio comparativo",
     "RBS": "Advervbio superlativo",
-    "RP": "Partícula",
+    "RP": "Particula",
     "TO": "A-Hacia-Para",
-    "UH": "Interjección",
+    "UH": "Interjeccion",
     "VB": "Verbo base",
     "VBD": "Verbo pasado",
     "VBG": "Verbo gerundio / presente participio",
@@ -576,7 +576,6 @@ def wordanalysis():
         listita.append(
             [dicEnLista[len(dicEnLista) - i - 1], diccionario_final_correcto[dicEnLista[len(dicEnLista) - i - 1]]])
     finalDict = {}
-    print(finalDict)
     for l in listita:
         key = l[0]
         value = l[1]
@@ -594,11 +593,23 @@ def wordanalysis():
     except Exception as e:
         print(str(e))
          #jsonlisto = jsonify(str(e))
-        print("***********************")
+
         # print(jsonlisto)
         print("***********************")
+    finalDict = json.dumps(str(finalDict))
+    print("***********************")
+    print(type(finalDict))
+    print("***********************")
+    string_de_finaldict_reemplazando_comillas = str(finalDict).replace("'",'"')
+    b = [i for i in string_de_finaldict_reemplazando_comillas]
+    b[len(b)-1] = "'"
+    b[0] = "'"
+    string_de_finaldict_reemplazando_comillas = ""
+    for x in b:
+        string_de_finaldict_reemplazando_comillas+=x
 
 
+    print(string_de_finaldict_reemplazando_comillas)
 
     # endregion
 
@@ -607,7 +618,7 @@ def wordanalysis():
                            cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas=cantDias,
                            cantPalabras=cantpalabras, cantLetras=totalDeLetras, promRtaPorDia=promedioRespuestasPorDia,
                            promLetrasRta=promedioLetrasPorRespuesta, promedioLetrasPorDia=promedioLetrasPorDia,
-                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath, clasificacionPalabras = str(finalDict))
+                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath, clasificacionPalabras = string_de_finaldict_reemplazando_comillas)
 
 
 # region Funciones útiles
