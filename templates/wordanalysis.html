@@ -5,14 +5,31 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/wordanalysis.css') }}">
+{#
 <script type="text/javascript">
-    let clasificacion_palabras = {{ clasificacionPalabras | safe }};
-    console.log(clasificacion_palabras);
-    clasificacion_palabras.replace("'","");
-    newobj = (JSON.parse(clasificacion_palabras));
-    console.log(newobj);
-    let x;
+    let ObjetoQueVieneDesdeAPI = {{ clasificacionPalabras | safe }};
+    ObjetoQueVieneDesdeAPI.replace("'","");
+    clasificaciones_de_palabras = (JSON.parse(ObjetoQueVieneDesdeAPI));
+
+    let lista_de_clasificaciones = Object.keys(clasificaciones_de_palabras);
+    let contador = 0;
+    let lista = document.getElementById("lista-clasificadora");
+    console.log(lista);
+    for (let tipo_de_palabra in lista_de_clasificaciones){
+        let descripcion = tipo_de_palabra;
+        console.log(descripcion);
+        let cantidad = clasificaciones_de_palabras[tipo_de_palabra];
+        console.log(cantidad);
+        let item = document.createElement('div');
+        item.className = 'item_clasificacion_palabras';
+        item.innerHTML =
+        '<li>'  + '<b>' + descripcion + ': ' + '</b>' + cantidad +  '</li>';
+        lista.appendChild(item);
+        contador += 1;
+    }
 </script>
+#}
+
 {% endblock %}
 <!-- Navegación -->
 {% block nav %}
@@ -125,11 +142,33 @@
 
     <div class="analysis-section container">
         <h3>Clasificador de palabras</h3>
-        <ul>
+        <ul id="lista-clasificadora">
 
         </ul>
     </div>
 </div>
+<script type="text/javascript">
+    let ObjetoQueVieneDesdeAPI = {{ clasificacionPalabras | safe }};
+    ObjetoQueVieneDesdeAPI.replace("'","");
+    clasificaciones_de_palabras = (JSON.parse(ObjetoQueVieneDesdeAPI));
+    let lista_de_clasificaciones = Object.keys(clasificaciones_de_palabras);
+    let contador = 0;
+    let lista = document.getElementById("lista-clasificadora");
+    console.log(lista);
+    for (let tipo_de_palabra in lista_de_clasificaciones){
+        let descripcion = lista_de_clasificaciones[tipo_de_palabra];
+        console.log(descripcion);
+        let cantidad = clasificaciones_de_palabras[descripcion];
+        console.log(cantidad);
+        let item = document.createElement('div');
+        item.className = 'item_clasificacion_palabras';
+        item.innerHTML =
+        '<li>'  + '<b>' + descripcion + ': ' + '</b>' + cantidad +  '</li>';
+        lista.appendChild(item);
+        contador += 1;
+    }
+
+</script>
 {% endblock %}
 
 <!-- Footer -->
