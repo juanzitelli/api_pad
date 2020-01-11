@@ -53,6 +53,6 @@ th {
 		font-size: 0.7em !important;
 	}
 }
-ul#lista-clasificadora>li{
-	text-align: left;!important;
+ul>li {
+	list-style: none;
 }
