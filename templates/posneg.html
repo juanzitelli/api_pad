@@ -1,0 +1,16 @@
+{% extends "pivote-layout.html" %}
+<!-- Encabezado + Título -->
+{% block title %}Positivismo | Negativisimo{% endblock %}
+
+
+<!-- Head -->
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/posneg.css') }}">
+    <!-- static\ -->
+{% endblock %}
+
+<!-- NAV -->
+{% block nav %}
+    {{ super() }}
+{% endblock %}

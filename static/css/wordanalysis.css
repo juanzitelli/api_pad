@@ -53,6 +53,17 @@ th {
 		font-size: 0.7em !important;
 	}
 }
-ul>li {
+li{
 	list-style: none;
+	border-bottom: 1px solid white !important;
+	border-left: 1px solid white !important;
+	border-right: 1px solid white !important;
+	padding: 5px 3px;
+}
+ul#lista-clasificadora>li:first-of-type{
+	border-top: 1px solid white;
+}
+ul{
+	margin-top: 10px;
+	text-align: start;
 }

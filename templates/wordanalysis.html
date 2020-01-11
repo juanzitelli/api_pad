@@ -142,6 +142,7 @@
 
     <div class="analysis-section container">
         <h3>Clasificador de palabras</h3>
+        <hr style="border: 1px solid black; width:100% ">
         <ul id="lista-clasificadora">
 
         </ul>
@@ -160,10 +161,10 @@
         console.log(descripcion);
         let cantidad = clasificaciones_de_palabras[descripcion];
         console.log(cantidad);
-        let item = document.createElement('div');
+        let item = document.createElement('li');
         item.className = 'item_clasificacion_palabras';
         item.innerHTML =
-        '<li>'  + '<b>' + descripcion + ': ' + '</b>' + cantidad +  '</li>';
+        '<b>' + descripcion + ': ' + '</b>' + cantidad;
         lista.appendChild(item);
         contador += 1;
     }

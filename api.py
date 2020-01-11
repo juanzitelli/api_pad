@@ -620,6 +620,15 @@ def wordanalysis():
                            promLetrasRta=promedioLetrasPorRespuesta, promedioLetrasPorDia=promedioLetrasPorDia,
                            promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath, clasificacionPalabras = string_de_finaldict_reemplazando_comillas)
 
+@app.route('/posneg', methods=['POST', 'GET'])
+def posneg():
+
+    return render_template('posneg.html')
+
+@app.route('/language_identificator', methods=['POST', 'GET'])
+def language():
+
+    return render_template('language_identificator.html')
 
 # region Funciones útiles
 def randomString(stringLength=10):

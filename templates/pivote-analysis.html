@@ -5,112 +5,144 @@
 
 <!-- Head -->
 {% block head %}
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
-<!-- static\ -->
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+    <!-- static\ -->
 {% endblock %}
 
 <!-- NAV -->
 {% block nav %}
-{{ super() }}
-<form action="/pad/analizador222/" method="POST" id="json">
-	<button type="submit" class="button-submit back-btn">
-		<input type="hidden" name="json" id=" json" value="{{json}}">
-<img src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px">
-	</button></form>
-	
+    {{ super() }}
+    <form action="/pad/analizador222/" method="POST" id="json">
+        <button type="submit" class="button-submit back-btn">
+            <input type="hidden" name="json" id=" json" value="{{ json }}">
+            <img src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px">
+        </button>
+    </form>
+
 {% endblock %}
 
 <!-- Content -->
 {% block content %}
-{{ super() }}
-<script>
-	let selectedJson = {{json | safe}}
-	$(document).ready(function () {
-	$(".dropdown").hide();
-	$(".dropdownchild").hide();
-	$(".btn").on("click", function () {
-	$(".dropdown").slideToggle("fast");
-	});
+    {{ super() }}
+    <script>
+        let selectedJson = {{json | safe}}
+            $(document).ready(function () {
+                $(".dropdown").hide();
+                $(".dropdownchild").hide();
+                $(".btn").on("click", function () {
+                    $(".dropdown").slideToggle("fast");
+                });
 
-	$(".childtext").on("click", function () {
-	$(this).next().slideToggle("fast");
-	});
+                $(".childtext").on("click", function () {
+                    $(this).next().slideToggle("fast");
+                });
 
-	$(".item-menu").on("click", function () {
-	var value = $(this).text();
-	$(".txt_basic").val(value);
-	});
+                $(".item-menu").on("click", function () {
+                    var value = $(this).text();
+                    $(".txt_basic").val(value);
+                });
 
-	});
+            });
 
-</script>
-<div class="jumbotron">
-		<div class="ddl_holder">
-			<!-- <input type="text" class="txt_basic"></input> -->
-			<input type="button" class="btn btn-primary dropdownTitle" value="VER LOS ANÁLISIS DISPONIBLES">
-			<ul class="dropdown">
-				<li>
-					<div class="childtext item-menu">Análisis de palabras</div>
-					<ul class="dropdownchild">
-						<li>
-							<div class="item-menu subitem-menu">
-								<img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
-								<form action="/wordcloud" method="POST" id="wordcloud">
-									<input type="hidden" name="wordcloud" id="wordcloud" value="{{json}}">
-									<button class="button-submit" type="submit"> Nube de palabras</button>
-							</form>
-							</div>
-						</li>
-						<li>
-							<div class="item-menu subitem-menu">
-								<img width="25px" src="{{ url_for('static', filename='img/analysis.png') }}" alt="cloud">
-								<form action="/word-analysis" method="POST" id="wordanalysis">
-									<input type="hidden" name="wordanalysis" id="wordanalysis" value="{{json}}">
-									<button class="button-submit" type="submit">
-										Estadísticas
-									</button>
-								</form>
-								</div>
-						</li>
-					</ul>
-				</li>
-				<li>
+    </script>
+    <div class="jumbotron">
+        <div class="ddl_holder">
+            <!-- <input type="text" class="txt_basic"></input> -->
+            <input type="button" class="btn btn-primary dropdownTitle" value="VER LOS ANÁLISIS DISPONIBLES">
+            <ul class="dropdown">
+                <li>
+                    <div class="childtext item-menu">Análisis de palabras</div>
+                    <ul class="dropdownchild">
+                        <li>
+                            <div class="item-menu subitem-menu">
+                                <img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
+                                <form action="/wordcloud" method="POST" id="wordcloud">
+                                    <input type="hidden" name="wordcloud" id="wordcloud" value="{{ json }}">
+                                    <button class="button-submit" type="submit"> Nube de palabras</button>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-menu subitem-menu">
+                                <img width="25px" src="{{ url_for('static', filename='img/analysis.png') }}"
+                                     alt="cloud">
+                                <form action="/word-analysis" method="POST" id="wordanalysis">
+                                    <input type="hidden" name="wordanalysis" id="wordanalysis" value="{{ json }}">
+                                    <button class="button-submit" type="submit">
+                                        Análisis completo
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <!-- ACA VA EL FUCKIN IDENTIFICADOR DE IDIOMA -->
+                            <div class="item-menu subitem-menu">
+                                <img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
+                                <form action="/wordcloud" method="POST" id="wordcloud">
+                                    <input type="hidden" name="wordcloud" id="wordcloud" value="{{ json }}">
+                                    <button class="button-submit" type="submit"> Identificador de Idioma</button>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <!-- ACA VA EL FUCKIN ETIQUETADOR MORFOSINTACTICO-->
+                            <div class="item-menu subitem-menu">
+                                <img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
+                                <form action="/wordcloud" method="POST" id="wordcloud">
+                                    <input type="hidden" name="wordcloud" id="wordcloud" value="{{ json }}">
+                                    <button class="button-submit" type="submit"> Etiquetador Morfosintactico</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="childtext item-menu">Análisis de sentimientos<i class="fa fa-sort-desc"></i></div>
+                    <ul class="dropdownchild">
+                        <li>
+                            <div class="item-menu subitem-menu">
+
+                                <img width="25px" src="{{ url_for('static', filename='img/up-and-down.png') }}"
+                                     alt="up-and-down">
+                                <form action="/posneg" method="POST" id="posneg">
+                                    <input type="hidden" name="posneg" id="posneg" value="{{ json }}">
+                                    <button class="button-submit" type="submit">
+                                        Positividad / Negatividad
+                                    </button>
+                                </form>
+
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+
+
+                    <!-- <div class="childtext item-menu">Análisis #3<i class="fa fa-sort-desc"></i></div>
+                    <ul class="dropdownchild">
+                        <li>
+                            <div class="item-menu subitem-menu"><a href="">Subcosa 3</a></div>
+                        </li>
+                        <li>
+                            <div class="item-menu subitem-menu"><a href="">Subcosa 4</a></div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
 
 
 
-					<div class="childtext item-menu">Análisis de sentimientos<i class="fa fa-sort-desc"></i></div>
-					
-				</li>
-				<li>
 
-
-
-
-					<!-- <div class="childtext item-menu">Análisis #3<i class="fa fa-sort-desc"></i></div>
-					<ul class="dropdownchild">
-						<li>
-							<div class="item-menu subitem-menu"><a href="">Subcosa 3</a></div>
-						</li>
-						<li>
-							<div class="item-menu subitem-menu"><a href="">Subcosa 4</a></div>
-						</li>
-					</ul>
-				</li>
-				<li>
-
-
-
-
-					<div class="item-menu">Análisis #4</div> -->
-				</li>
-			</ul>
-		</div>
-</div>
+                    <div class="item-menu">Análisis #4</div> -->
+                </li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 
 <!-- Footer -->
 {% block footer %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
