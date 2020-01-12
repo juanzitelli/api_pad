@@ -78,9 +78,9 @@
                         <li>
                             <!-- ACA VA EL FUCKIN IDENTIFICADOR DE IDIOMA -->
                             <div class="item-menu subitem-menu">
-                                <img width="25px" src="{{ url_for('static', filename='img/cloud.png') }}" alt="cloud">
-                                <form action="/wordcloud" method="POST" id="wordcloud">
-                                    <input type="hidden" name="wordcloud" id="wordcloud" value="{{ json }}">
+                                <img width="25px" src="{{ url_for('static', filename='img/language.png') }}" alt="cloud">
+                                <form action="/language" method="POST" id="language">
+                                    <input type="hidden" name="language" id="language" value="{{ json }}">
                                     <button class="button-submit" type="submit"> Identificador de Idioma</button>
                                 </form>
                             </div>

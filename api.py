@@ -5,14 +5,19 @@ import json
 import pickle
 import random
 import string
+import time
+
 import matplotlib.pyplot as plt
 import nltk
+from textblob import TextBlob
 
 plt.rcdefaults()
 import numpy as np
+import textblob
 import pymysql
 import pymysql.cursors
 import requests
+import googletrans
 from flask import Flask, make_response, render_template, request, jsonify
 from flask_cors import CORS
 from flask_restful import Api, Resource, abort, reqparse
@@ -568,7 +573,6 @@ def wordanalysis():
     for n in cantidad_de_tipos_de_palabras:
         if n in diccionarioClasificador_ESP:
             diccionario_final_correcto[diccionarioClasificador_ESP[n]] = cantidad_de_tipos_de_palabras[n]
-
     diccionario_final_correcto = {k: v for k, v in sorted(diccionario_final_correcto.items(), key=lambda item: item[1])}
     listita = []
     dicEnLista = list(diccionario_final_correcto)
@@ -582,7 +586,7 @@ def wordanalysis():
         finalDict[key] = value
     try:
         listaparajson = []
-        for key,value in finalDict.items():
+        for key, value in finalDict.items():
             listaparajson.append({key: value})
         if len(listaparajson) > 5:
             listaparajson = listaparajson[:5]
@@ -592,24 +596,18 @@ def wordanalysis():
         # print(jsonlisto)
     except Exception as e:
         print(str(e))
-         #jsonlisto = jsonify(str(e))
+        # jsonlisto = jsonify(str(e))
 
         # print(jsonlisto)
         print("***********************")
     finalDict = json.dumps(str(finalDict))
-    print("***********************")
-    print(type(finalDict))
-    print("***********************")
-    string_de_finaldict_reemplazando_comillas = str(finalDict).replace("'",'"')
+    string_de_finaldict_reemplazando_comillas = str(finalDict).replace("'", '"')
     b = [i for i in string_de_finaldict_reemplazando_comillas]
-    b[len(b)-1] = "'"
+    b[len(b) - 1] = "'"
     b[0] = "'"
     string_de_finaldict_reemplazando_comillas = ""
     for x in b:
-        string_de_finaldict_reemplazando_comillas+=x
-
-
-    print(string_de_finaldict_reemplazando_comillas)
+        string_de_finaldict_reemplazando_comillas += x
 
     # endregion
 
@@ -618,17 +616,40 @@ def wordanalysis():
                            cantmasmensajes=cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron, cantDiasRtas=cantDias,
                            cantPalabras=cantpalabras, cantLetras=totalDeLetras, promRtaPorDia=promedioRespuestasPorDia,
                            promLetrasRta=promedioLetrasPorRespuesta, promedioLetrasPorDia=promedioLetrasPorDia,
-                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath, clasificacionPalabras = string_de_finaldict_reemplazando_comillas)
+                           promedioPalabrasPorRta=promedioPalabrasPorRta, barchart=shortPath,
+                           clasificacionPalabras=string_de_finaldict_reemplazando_comillas)
+
 
 @app.route('/posneg', methods=['POST', 'GET'])
 def posneg():
-
     return render_template('posneg.html')
 
-@app.route('/language_identificator', methods=['POST', 'GET'])
-def language():
 
-    return render_template('language_identificator.html')
+@app.route('/language', methods=['POST', 'GET'])
+def language():
+    translator_languages_dict = googletrans.LANGUAGES
+    print(translator_languages_dict)
+    jsonToPost = json.dumps(request.form['language'])
+    postedInfoMadeJson = json.loads(request.form['language'])
+    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
+
+    respuestas = []
+
+    textito = ""
+    for i in jsonMadePyList:
+        palabra = i["respuesta"]
+        respuestas.append(palabra)
+        textito += palabra
+    print(textito)
+    palabra_tra = TextBlob(textito)
+    palabra_traducida = palabra_tra.detect_language()
+    print(palabra_traducida)
+
+
+    # for x in range(len(idiomas_en_respuestas)):
+    #     print(idiomas_en_respuestas[x] + "\n")
+    return render_template('language_identifier.html')
+
 
 # region Funciones útiles
 def randomString(stringLength=10):
