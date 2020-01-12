@@ -632,23 +632,24 @@ def language():
     jsonToPost = json.dumps(request.form['language'])
     postedInfoMadeJson = json.loads(request.form['language'])
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
-
     respuestas = []
-
+    idioma_respuestas = []
     textito = ""
-    for i in jsonMadePyList:
-        palabra = i["respuesta"]
-        respuestas.append(palabra)
-        textito += palabra
-    print(textito)
-    palabra_tra = TextBlob(textito)
-    palabra_traducida = palabra_tra.detect_language()
-    print(palabra_traducida)
+    try:
+        for i in jsonMadePyList:
+            palabra = i["respuesta"]
+            respuestas.append(palabra)
+            textito += palabra
+        print(textito)
+        palabra_tra = TextBlob(textito)
+        palabra_traducida = palabra_tra.detect_language()
+        print(palabra_traducida)
+    except Exception as e:
+        print(str(e))
 
+    imagen_bandera = "banderas/"  + palabra_traducida + ".png"
 
-    # for x in range(len(idiomas_en_respuestas)):
-    #     print(idiomas_en_respuestas[x] + "\n")
-    return render_template('language_identifier.html')
+    return render_template('language_identifier.html', idioma = palabra_traducida, )
 
 
 # region Funciones útiles
