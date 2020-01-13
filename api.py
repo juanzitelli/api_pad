@@ -646,10 +646,13 @@ def language():
         print(palabra_traducida)
     except Exception as e:
         print(str(e))
+    translatorcito = Translator()
+    QueIdiomaEs = translatorcito.translate(translator_languages_dict[palabra_traducida], "es", "en")
+    print(QueIdiomaEs)
+    imagen_bandera = "img/banderas/" + palabra_traducida + ".png"
 
-    imagen_bandera = "banderas/"  + palabra_traducida + ".png"
-
-    return render_template('language_identifier.html', idioma = palabra_traducida, )
+    return render_template('language_identifier.html', json=jsonToPost, idioma=QueIdiomaEs.text,
+                           bandera=imagen_bandera)
 
 
 # region Funciones útiles
