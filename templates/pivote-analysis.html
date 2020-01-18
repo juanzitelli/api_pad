@@ -48,7 +48,6 @@
     </script>
     <div class="jumbotron">
         <div class="ddl_holder">
-            <!-- <input type="text" class="txt_basic"></input> -->
             <input type="button" class="btn btn-primary dropdownTitle" value="VER LOS ANÁLISIS DISPONIBLES">
             <ul class="dropdown">
                 <li>
@@ -78,7 +77,8 @@
                         <li>
                             <!-- ACA VA EL FUCKIN IDENTIFICADOR DE IDIOMA -->
                             <div class="item-menu subitem-menu">
-                                <img width="25px" src="{{ url_for('static', filename='img/language.png') }}" alt="cloud">
+                                <img width="25px" src="{{ url_for('static', filename='img/language.png') }}"
+                                     alt="cloud">
                                 <form action="/language" method="POST" id="language">
                                     <input type="hidden" name="language" id="language" value="{{ json }}">
                                     <button class="button-submit" type="submit"> Identificador de Idioma</button>

@@ -1,44 +1,10 @@
 
- /* Dropdown */
-
 .dropdown li {
 	list-style-type: none;
 	cursor: pointer;
 }
-
-.childtext {
-	cursor: pointer;
-	transition: all ease 300ms;
-}
-.item-menu{
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	height: 50px;
-	width: 300px;
-	background: #03A9F4;
-	color: black;
-	font-weight: bold;
-	padding: 10px 30px;
-	margin: 5px;
-	border-radius: 10px;
-}
-.subitem-menu{
-	background: #03A9F5;
-	color: green;
-	display: flex;
-	flex-direction: row;
-	justify-content: center
-	align-items: center;
-}
-a{
-	color: white;
-	text-decoration: none;
-	margin-left: 10px;
-}
-.dropdownTitle {
-	margin-bottom: 10px;
+html,body{
+	height: 100vh;
 }
 button {
 	-webkit-appearance: none;
@@ -48,7 +14,7 @@ button {
 	letter-spacing: normal;
 	word-spacing: normal;
 	text-transform: none;
-	text-indent: 0px;
+	text-indent: 0;
 	text-shadow: none;
 	display: inline-block;
 	text-align: center;
@@ -56,29 +22,46 @@ button {
 	cursor: default;
 	background-color: transparent;
 	box-sizing: border-box;
-	margin: 0em;
+	margin: 0;
 	padding: 1px 6px;
-	padding-top: 1px;
-	padding-right: 6px;
-	padding-bottom: 1px;
-	padding-left: 6px;
 	border-width: 2px;
-	border-top-width: 2px;
-	border-right-width: 2px;
-	border-bottom-width: 2px;
-	border-left-width: 2px;
 	border-style: none;
-	border-top-style: none;
-	border-right-style: none;
-	border-bottom-style: none;
-	border-left-style: none;
-	border-color: none;
-	border-top-color: none;
-	border-right-color: none;
-	border-bottom-color: none;
-	border-left-color: none;
+	border-color: transparent;
 	border-image: initial;
 }
+div.item-menu{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	height: 50px;
+	width: 30vw;
+	background: #03A9F4;
+	color: black;
+	font-weight: bold;
+	padding: 1vh 3vw;
+	margin: 1vw;
+	border-radius: 1vw;
+}
+div.jumbotron{
+	width: 80vw;
+}
+div.childtext {
+	cursor: pointer;
+	transition: all ease 300ms;
+}
+input.dropdownTitle, div.childtext,li:last-child {
+	margin-bottom: 3vh;
+}
+{
+
+}
+/*
+
+
+
+
+
 
 
 button.back-btn {
@@ -87,3 +70,4 @@ button.back-btn {
 	border-radius: 5px;
 	margin-left: 5px;
 }
+*/

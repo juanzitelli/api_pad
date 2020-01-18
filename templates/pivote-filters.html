@@ -5,68 +5,63 @@
 <!-- Encabezado + Título -->
 
 {% block head %}
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 {% endblock %}
 
 <!-- Navegación -->
 {% block nav %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 
 <!-- Contenido -->
 {% block content %}
-<div class="container jumbotron">
-	<div class="title">
-		<h1>Tabla pivote para visualización de datos</h1>
-		<p class="lead">Una tabla pivote es una herramienta que permite desplegar datos en formato de hoja de cálculo,
-			con
-			funcionalidades extra.</p>
-		<hr class="my-4">
-	</div>
+    {{ super() }}
+    <div class="jumbotron">
+        <header id="header-title">
+            <h5>🔎 Filtros 🔍</h5>
+        </header>
 
-	<form class="shadow-sm filters" action="/pad/analizador222/" method="GET">
+        <form id="filters" class="shadow-sm" action="/pad/analizador222/" method="GET">
 
-		<div class="filter-row">
-			<label for="empresa">Empresa</label>
-			<input type="text" class="form-control" id="empresa" placeholder="Nombre de la empresa" autocomplete="off"
-				name="empresa">
-		</div>
-		<div class="filter-row"><label for="experiencia">Experiencia</label>
-			<input type="text" class="form-control" id="experiencia" placeholder="Nombre de la experiencia" autocomplete="off"
-				name="experiencia"></div>
-		<div class="filter-row">
-			<label for="num-telefono">Telefono</label>
-			<input type="text" class="form-control" id="num-telefono" placeholder="+54 ..." autocomplete="off"
-				name="num-telefono">
-		</div>
-		<div class="filter-row">
-			<label for="pregunta">Pregunta</label>
-			<input type="text" class="form-control" id="pregunta" placeholder="¡Hola!..." autocomplete="off" name="pregunta">
-		</div>
-		<div class="filter-row">
-			<label for="respuesta">Respuesta</label>
-			<input type="text" class="form-control" id="respuesta" placeholder="Si, Dale, ¡Ok!" autocomplete="off"
-				name="respuesta">
-		</div>
-		<div class="filter-row"><label for="fechadesde">Fecha inicial</label>
-			<input type="date" class="form-control" id="fechadesde" autocomplete="off" name="fechadesde"></div>
-		<div class="filter-row">
-			<label for="horadesde">Hora inicial</label>
-			<input type="time" class="form-control" id="horadesde" autocomplete="off" name="horadesde">
-		</div>
-		<div class="filter-row"><label for="fechahasta">Fecha final</label>
-			<input type="date" class="form-control" id="fechahasta" autocomplete="off" name="fechahasta"></div>
-		<div class="filter-row">
-			<label for="horahasta">Hora final</label>
-			<input type="time" class="form-control" id="horahasta" autocomplete="off" name="horahasta">
-		</div>
-		<button type="submit" class="btn btnFiltrar" value="Filtrar">Filtrar</button>
-</div>
-
-<!-- Fechas-->
-
-</form>
-
-</div>
+            <div class="filter-row">
+                <label for="empresa">Empresa</label>
+                <input type="text" class="form-control" id="empresa" placeholder="Nombre de la empresa"
+                       autocomplete="off"
+                       name="empresa">
+            </div>
+            <div class="filter-row"><label for="experiencia">Experiencia</label>
+                <input type="text" class="form-control" id="experiencia" placeholder="Nombre de la experiencia"
+                       autocomplete="off"
+                       name="experiencia"></div>
+            <div class="filter-row">
+                <label for="num-telefono">Telefono</label>
+                <input type="text" class="form-control" id="num-telefono" placeholder="+54 ..." autocomplete="off"
+                       name="num-telefono">
+            </div>
+            <div class="filter-row">
+                <label for="pregunta">Pregunta</label>
+                <input type="text" class="form-control" id="pregunta" placeholder="¡Hola!..." autocomplete="off"
+                       name="pregunta">
+            </div>
+            <div class="filter-row">
+                <label for="respuesta">Respuesta</label>
+                <input type="text" class="form-control" id="respuesta" placeholder="Si, Dale, ¡Ok!" autocomplete="off"
+                       name="respuesta">
+            </div>
+            <div class="filter-row"><label for="fechadesde">Fecha inicial</label>
+                <input type="date" class="form-control" id="fechadesde" autocomplete="off" name="fechadesde"></div>
+            <div class="filter-row">
+                <label for="horadesde">Hora inicial</label>
+                <input type="time" class="form-control" id="horadesde" autocomplete="off" name="horadesde">
+            </div>
+            <div class="filter-row"><label for="fechahasta">Fecha final</label>
+                <input type="date" class="form-control" id="fechahasta" autocomplete="off" name="fechahasta"></div>
+            <div class="filter-row">
+                <label for="horahasta">Hora final</label>
+                <input type="time" class="form-control" id="horahasta" autocomplete="off" name="horahasta">
+            </div>
+            <button id="btnFiltrar" type="submit" class="btn btn-info" value="Filtrar">Filtrar</button>
+        </form>
+    </div>
 {% endblock %}

@@ -8,13 +8,15 @@
 <script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
 <script type="text/javascript">
 	function setHeight(value) {
-		let obj = document.getElementById('wdr-component');
-		if (obj.style.height == "800px") {
-			obj.style.height = "500px"
+		let obj = document.getElementById('wdr-component-z');
+		{#if (obj.style.height == "80vh") {
+			obj.style.height = "50vh"
 		} else {
-			obj.style.height = "800px"
-		}
+			obj.style.height = "80vh"
+		}#}
+        obj.style.height = "85vh";
 	}
+
 	window.onload = setHeight();
 	
 </script>
@@ -28,15 +30,14 @@
 	<input type="hidden" name="json" id=" json" value="{{json}}">
 	<button class="back-btn" type="submit">Analizar los resultados</button>
 </form>
-<div class="back-btn" cursor="pointer" onclick="setHeight()">↓ | ↑</div>
 <a class="back-btn" href="/analizador" title="Volver a los filtros"><img
 		src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to filters" width="20px"></a>
 {% endblock %}
 
 {% block content %}
 {{ super() }}
-<div class="container-fluid pivote-container" onload="setHeight()">
-	<div id="wdr-component"></div>
+<div onload="setHeight()" id="pivote-container">
+	<div id="wdr-component-z"></div>
 </div>
 <style>
 	.wdr-cell,
@@ -44,12 +45,13 @@
 	.wdr-header-r,
 	.wdr-level-0,
 	.wdr-h-sort {
-		width: 70px;
+		width: 7vwx;
 	}
 </style>
 <script>
-	let selectedJson = {{json | safe}}
-	let modo = {{modo}}
+
+	let selectedJson = {{json | safe}};
+	let modo = {{modo}};
 	let objReporte = {};
 	switch (modo) {
 		case 1:
@@ -226,7 +228,7 @@
 	}
 
 	let pivote = new WebDataRocks({
-		container: "#wdr-component",
+		container: "#wdr-component-z",
 		toolbar: true,
 		report: {
 			dataSource: {
@@ -239,7 +241,7 @@
 			localization: "https://cdn.webdatarocks.com/loc/es.json"
 		}
 	});
-
+    window.onload=setHeight();
 	//  - - - BUTTON BAR - - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR- - - BUTTON BAR
 
 	function cambiarReporte(value) {
@@ -415,18 +417,15 @@
 <!-- Footer -->
 {% block footer %}
 {{ super() }}
-<div class="button-bar-container">
-	<ul class="button-bar">
 
-		<li title="Plano" class="btn btn-primary" onclick="cambiarReporte(1)">Plana</li>
-		<li title="Preguntas y respuestas" class="btn btn-primary" onclick="cambiarReporte(3)">Preg.-Resp.</li>
-		<li title="Respuestas y contactos" class="btn btn-primary" onclick="cambiarReporte(4)">Resp.-Cont.</li>
-		<li title="Totalizador de respuestas" class="btn btn-success" onclick="cambiarReporte(5)">Total. Resp.</li>
-		<li title="Totalizador de respuestas por contacto" class="btn btn-success" onclick="cambiarReporte(6)">Total.
-			Resp.-Cont.</li>
-		<li title="Totalizador de preguntas y sus respuestas" class="btn btn-success" id="lastbtn"
-			onclick="cambiarReporte(8)">Total. Preg.-Resp.</li>
+		<div title="Plano" class="btn btn-primary" onclick="cambiarReporte(1)">Plana</div>
+		<div title="Preguntas y respuestas" class="btn btn-primary" onclick="cambiarReporte(3)">Preg.-Resp.</div>
+		<div title="Respuestas y contactos" class="btn btn-primary" onclick="cambiarReporte(4)">Resp.-Cont.</div>
+		<div title="Totalizador de respuestas" class="btn btn-success" onclick="cambiarReporte(5)">Total. Resp.</div>
+		<div title="Totalizador de respuestas por contacto" class="btn btn-success" onclick="cambiarReporte(6)">Total.
+			Resp.-Cont.</div>
+		<div title="Totalizador de preguntas y sus respuestas" class="btn btn-success" id="lastbtn"
+			onclick="cambiarReporte(8)">Total. Preg.-Resp.</div>
 
-	</ul>
-</div>
+
 {% endblock %}

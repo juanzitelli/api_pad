@@ -1,57 +1,57 @@
 .colors {
-	--blue: #0097e6;
-	--darkblue: #337ab7;
-	--red: #d9534f;
-	--hover: #f9f9f9;
-	--white: #ffffff;
-	--yellow: #ffa500;
-	--green: #008000;
-	--turquoise: #35bfa3;
+    --blue: #0097e6;
+    --darkblue: #337ab7;
+    --red: #d9534f;
+    --hover: #f9f9f9;
+    --white: #ffffff;
+    --yellow: #ffa500;
+    --green: #008000;
+    --turquoise: #35bfa3;
 }
 
-.data-filter-form {
-	display: flex;
-	flex-direction: column;
-	padding-left: var(--paddingLR);
-	padding-right: var(--paddingLR)
+body {
+    display: grid;
+    grid-template-columns: 0.5fr 3fr 0.5fr;
+    grid-template-rows: 1fr;
+    grid-row-gap: 0;
+    grid-template-areas: ". main .";
 }
-/* .form-row {
-	width: 100%;
-	flex-wrap: wrap;
-	padding: var(--paddingLR);
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-} */
-.filter-row{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	margin: 3px auto;
-	text-align: right;
+
+header#header-title > h5 {
+    text-align: center;
 }
-.filter-row > label {
-	text-align: right;
-	margin: 5px 0px 5px 40px;
+
+main#main {
+    grid-area: main;
+    margin-top: 2rem;
 }
-.form-control{
-	width: 900px;
+
+main#main > div.jumbotron {
+    padding: 0.5rem;
 }
-.btnFiltrar{
-	background-color: var(--blue);
-	color: var(--white);
-	margin-top: 10px;
-	width: 100%;
+
+form#filters {
+    padding: 1vh 10vw;
 }
-.btnFiltrar:hover {
-	background-color: #337ab7;
-	color: #ffffff;
-	margin-top: 10px;
-	width: 100%;
+main#main > div.jumbotron > form#filters > button#btnFiltrar {
+    width: 100%;
+
 }
-@media(max-width: 600px){
-	.filter-row {
-		
-		justify-content: space-around;
-	}
+main#main > div.jumbotron > form#filters > div.filter-row {
+    padding-bottom: 1.3vh;
+}
+
+main#main > div.jumbotron > form#filters > div.filter-row > input.form-control {
+    height: 4vh;
+}
+main#main > div.jumbotron > form#filters > div.filter-row > input.form-control::placeholder {
+    font-size: 0.8rem;
+}
+main#main > div.jumbotron > form#filters > div.filter-row > label {
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+main#main > div.jumbotron > form#filters > div.filter-row > input#fechadesde, input#fechahasta{
+    font-size: 0.8rem !important;
 }

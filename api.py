@@ -1,4 +1,19 @@
 # -*- coding: utf-8 -*-
+from googletrans import Translator
+from nltk import word_tokenize
+from collections import Counter
+from wordcloud import WordCloud
+from selenium import webdriver
+from flask_restful import Api, Resource, abort, reqparse
+from flask_cors import CORS
+from flask import Flask, make_response, render_template, request, jsonify
+import googletrans
+import wordcloud
+import requests
+import pymysql.cursors
+import pymysql
+import textblob
+import numpy as np
 import ast
 import datetime
 import json
@@ -12,20 +27,6 @@ import nltk
 from textblob import TextBlob
 
 plt.rcdefaults()
-import numpy as np
-import textblob
-import pymysql
-import pymysql.cursors
-import requests
-import googletrans
-from flask import Flask, make_response, render_template, request, jsonify
-from flask_cors import CORS
-from flask_restful import Api, Resource, abort, reqparse
-from selenium import webdriver
-from wordcloud import WordCloud
-from collections import Counter
-from nltk import word_tokenize
-from googletrans import Translator
 
 # from gestorDialogo import get, post, delete
 
@@ -222,8 +223,8 @@ def db2string(vsql):
 def analizador222():
     jsonToPost = ArmameElJSON_Bro(request.args.get('empresa'), request.args.get('experiencia'),
                                   request.args.get('num-telefono'), request.args.get(
-            'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'),
-                                  request.args.get('horadesde'), request.args.get('horahasta'))
+        'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'),
+        request.args.get('horadesde'), request.args.get('horahasta'))
     modo = 1
     return render_template("pivote-output.html", json=jsonToPost, modo=modo)
 
@@ -394,9 +395,11 @@ def analizador():
 @app.route('/analisis-conversaciones', methods=['POST', 'GET'])
 def analisisconversaciones():
     jsonToPost = json.dumps(request.form['json'])
-    postedInfoMadeJson = json.loads(request.form['json'])  # No sirve de una garcha
+    postedInfoMadeJson = json.loads(
+        request.form['json'])  # No sirve de una garcha
     try:
-        jsonMadePyList = ast.literal_eval(request.form['json'])  # QUE ESTO QUEDE ASI CARAJO
+        jsonMadePyList = ast.literal_eval(
+            request.form['json'])  # QUE ESTO QUEDE ASI CARAJO
     except:
         jsonMadePyList = []
     if (len(jsonMadePyList) != 0):
@@ -411,19 +414,20 @@ def wordcloud():
     jsonToPost = json.dumps(request.form['wordcloud'])
     text = " "
     postedInfoMadeJson = json.loads(request.form['wordcloud'])
-    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)  # idk if it works or nah
+    jsonMadePyList = ast.literal_eval(
+        postedInfoMadeJson)  # idk if it works or nah
     wordArray = []
     for x in jsonMadePyList:
         text = text + x['respuesta'] + " "
         wordArray.append(x['respuesta'])
-    wordcloud = WordCloud(width=480, height=480, margin=20,
-                          background_color="white").generate(text)
-    plt.imshow(wordcloud, interpolation='bilinear')
+    nube = WordCloud(width=480, height=480, margin=20,
+                     background_color="white").generate(text)
+    plt.imshow(nube, interpolation='bilinear')
     plt.axis("off")
     plt.margins(x=10, y=10)
     shortName = randomString()
     path = "C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_wc/" + shortName + ".png"
-    wordcloud.to_file(path)
+    nube.to_file(path)
     shortpath = "img/img_wc/" + shortName + ".png"
     wordArray.sort()
     # shortpath = "C:/Users/juanz/Documents/CAETI/api_pad/static/" + shortpath
@@ -432,6 +436,7 @@ def wordcloud():
 
 @app.route('/word-analysis', methods=['POST', 'GET'])
 def wordanalysis():
+    global tagged
     jsonToPost = json.dumps(request.form['wordanalysis'])
     postedInfoMadeJson = json.loads(request.form['wordanalysis'])
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
@@ -441,9 +446,11 @@ def wordanalysis():
     listOfTimes = []
     for objeto in jsonMadePyList:
         fechaSinComillas = objeto['fecha'].replace("'", "")
-        fechaDelObjeto = datetime.datetime.strptime(fechaSinComillas, '%Y-%m-%d').date()
+        fechaDelObjeto = datetime.datetime.strptime(
+            fechaSinComillas, '%Y-%m-%d').date()
         horaSinComillas = objeto['hora'].replace("'", "")
-        horaDelObjeto = datetime.datetime.strptime(horaSinComillas, '%H:%M:%S').time()
+        horaDelObjeto = datetime.datetime.strptime(
+            horaSinComillas, '%H:%M:%S').time()
         listOfDates.append(fechaDelObjeto)
         listOfTimes.append(horaDelObjeto)
     doubleBubbleSort(listOfDates, listOfTimes)
@@ -467,8 +474,10 @@ def wordanalysis():
     for x in list(listitaDePares):
         alfinwacho.append(x[1])
     doubleBubbleSort(alfinwacho, listOfDates)
-    diaQueMasMensajesSeEnviaron = reorderDate(listOfDates[len(listOfDates) - 1])
-    cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron = alfinwacho[len(alfinwacho) - 1]
+    diaQueMasMensajesSeEnviaron = reorderDate(
+        listOfDates[len(listOfDates) - 1])
+    cantidadDeMensajesDelDiaQueMasMensajesSeEnviaron = alfinwacho[len(
+        alfinwacho) - 1]
     # endregion
 
     # region Totalizadores
@@ -503,14 +512,16 @@ def wordanalysis():
         respuestas.append(e['respuesta'])
     cantRespuestas = len(respuestas)
 
-    promedioRespuestasPorDia = round(cantRespuestas / len(listOfUniqueDates), 2)
+    promedioRespuestasPorDia = round(
+        cantRespuestas / len(listOfUniqueDates), 2)
     promedioLetrasPorRespuesta = round(totalDeLetras / cantRespuestas, 2)
     promedioLetrasPorDia = round(totalDeLetras / len(listOfUniqueDates), 2)
     promedioPalabrasPorRta = round(cantpalabras / cantRespuestas, 2)
     # endregion
 
     # region Grafico de barras de mensajes por x momento
-    objects = ('Madrugada', 'Mañana', 'Mediodía', 'Tarde', 'Noche', "Medianoche")
+    objects = ('Madrugada', 'Mañana', 'Mediodía',
+               'Tarde', 'Noche', "Medianoche")
     y_pos = np.arange(len(objects))
     performance = [0, 0, 0, 0, 0, 0]
     for t in listOfTimes:
@@ -531,7 +542,8 @@ def wordanalysis():
     plt.ylabel('Cantidad de mensajes')
     plt.title('Cantidad de mensajes enviados por momento del día')
     filename = randomString()
-    longpathBarChart = 'C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_bc/' + filename + '.png'
+    longpathBarChart = 'C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_bc/' + \
+        filename + '.png'
     shortPath = 'img/img_bc/' + filename + ".png"
     plt.savefig(longpathBarChart)
     # endregion
@@ -544,7 +556,8 @@ def wordanalysis():
         respuestas_separadas_con_espacios += q
         respuestas_separadas_con_espacios += " "
     try:  # Traducir las palabras
-        rta = traductor.translate(str(respuestas_separadas_con_espacios), dest="en")
+        rta = traductor.translate(
+            str(respuestas_separadas_con_espacios), dest="en")
         respuestas_separadas_con_espacios = str(rta.text)
     except Exception as e:
         print("Excepción de traduccion")
@@ -556,9 +569,9 @@ def wordanalysis():
         print("Excepción de postag")
         print(str(e))
     listOfUniqueKeysInTagged = []
-    for tuple in tagged:
-        if tuple[1] not in listOfUniqueKeysInTagged and tuple[1] in diccionarioClasificador_ESP.keys():
-            listOfUniqueKeysInTagged.append(tuple[1])
+    for tuplita in tagged:
+        if tuplita[1] not in listOfUniqueKeysInTagged and tuplita[1] in diccionarioClasificador_ESP.keys():
+            listOfUniqueKeysInTagged.append(tuplita[1])
         else:
             pass
     cantidad_de_tipos_de_palabras = {}
@@ -572,8 +585,10 @@ def wordanalysis():
     diccionario_final_correcto = {}
     for n in cantidad_de_tipos_de_palabras:
         if n in diccionarioClasificador_ESP:
-            diccionario_final_correcto[diccionarioClasificador_ESP[n]] = cantidad_de_tipos_de_palabras[n]
-    diccionario_final_correcto = {k: v for k, v in sorted(diccionario_final_correcto.items(), key=lambda item: item[1])}
+            diccionario_final_correcto[diccionarioClasificador_ESP[n]
+                                       ] = cantidad_de_tipos_de_palabras[n]
+    diccionario_final_correcto = {k: v for k, v in sorted(
+        diccionario_final_correcto.items(), key=lambda item: item[1])}
     listita = []
     dicEnLista = list(diccionario_final_correcto)
     for i in range(len(diccionario_final_correcto) - 1):
@@ -601,7 +616,8 @@ def wordanalysis():
         # print(jsonlisto)
         print("***********************")
     finalDict = json.dumps(str(finalDict))
-    string_de_finaldict_reemplazando_comillas = str(finalDict).replace("'", '"')
+    string_de_finaldict_reemplazando_comillas = str(
+        finalDict).replace("'", '"')
     b = [i for i in string_de_finaldict_reemplazando_comillas]
     b[len(b) - 1] = "'"
     b[0] = "'"
@@ -647,7 +663,8 @@ def language():
     except Exception as e:
         print(str(e))
     translatorcito = Translator()
-    QueIdiomaEs = translatorcito.translate(translator_languages_dict[palabra_traducida], "es", "en")
+    QueIdiomaEs = translatorcito.translate(
+        translator_languages_dict[palabra_traducida], "es", "en")
     print(QueIdiomaEs)
     imagen_bandera = "img/banderas/" + palabra_traducida + ".png"
 
@@ -664,34 +681,34 @@ def randomString(stringLength=10):
 def whatMomentOfTheDayIsIt(dateParameter):
     if dateParameter >= datetime.datetime.strptime('01:00:00',
                                                    '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-        '05:00:00', '%H:%M:%S').time():
+            '05:00:00', '%H:%M:%S').time():
         return "Madrugada"
-    ## Madrugada
+    # Madrugada
     if dateParameter > datetime.datetime.strptime('05:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-        '11:00:00', '%H:%M:%S').time():
+            '11:00:00', '%H:%M:%S').time():
         return "Mañana"
-    ## Mañana
+    # Mañana
     if dateParameter > datetime.datetime.strptime('11:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-        '14:00:00', '%H:%M:%S').time():
+            '14:00:00', '%H:%M:%S').time():
         return "Mediodía"
-    ## Mediodía
+    # Mediodía
     if dateParameter > datetime.datetime.strptime('14:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-        '19:00:00', '%H:%M:%S').time():
+            '19:00:00', '%H:%M:%S').time():
         return "Tarde"
-    ## Tarde
+    # Tarde
     if dateParameter > datetime.datetime.strptime('19:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-        '23:00:00', '%H:%M:%S').time():
+            '23:00:00', '%H:%M:%S').time():
         return "Noche"
-    ## Noche
+    # Noche
     if dateParameter >= datetime.datetime.strptime('01:00:00',
                                                    '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-        '05:00:00', '%H:%M:%S').time():
+            '05:00:00', '%H:%M:%S').time():
         return "Medianoche"
-    ## Medianoche
+    # Medianoche
 
 
 def doubleBubbleSort(nlist, nlist2):
@@ -717,7 +734,8 @@ def bubbleSort(nlist):
 
 
 def reorderDate(oldDate):
-    arregloFechaVieja = str(oldDate).split('-')  # Ej: 2019-03-11 ==> ["2019", "03", "11"]
+    # Ej: 2019-03-11 ==> ["2019", "03", "11"]
+    arregloFechaVieja = str(oldDate).split('-')
     hora = arregloFechaVieja[0]
     mes = arregloFechaVieja[1]
     dia = arregloFechaVieja[2]
