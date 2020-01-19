@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import ast
+import codecs
 import datetime
 import json
 import pickle
@@ -141,6 +142,131 @@ diccionarioClasificador_ESP = {
     "WP": "Pronombre WH",
     "WP$": "Pronombre posesivo WH",
     "WRB": "Adverbio WH",
+}
+
+diccionario_freeling = {
+    "A": {
+        "Categoria": "Adjetivo",
+        "Tipo": {
+            "Q": "Calificativo",
+            "O": "Ordinal",
+            "0": "-"
+        },
+        "Grado": {
+            "0": "-",
+            "A": "Aumentativo",
+            "C": "Diminutivo",
+            "S": "Superlativo"
+        }
+
+    },
+    "R": {
+        "Categoria": "Adverbio",
+        "Tipo": {
+            "G": "General",
+            "N": "Negativo"
+        }
+    },
+    "D": {
+        "Categoria": "Determinante",
+        "Tipo": {
+            "D": "Demostrativo",
+            "P": "Posesivo",
+            "T": "Interrogativo",
+            "E": "Exclamativo",
+            "I": "Indefinido",
+            "A": "Articulo",
+        },
+        "Persona": {
+            "1": "Primera",
+            "2": "Segunda",
+            "3": "Tercera"
+        }
+
+    },
+    "N": {
+        "Categoria": "Nombre",
+        "Tipo": {
+            "C": "Comun",
+            "P": "Propio"
+        },
+        "Genero": {
+            "M": "Masculino",
+            "F": "Femenino",
+            "C": "Comun"
+        },
+        "Numero": {
+            "S": "Singular",
+            "P": "Plural",
+            "N": "Invariable"
+        },
+        "Clasificacion_semantica": {
+            "SP": "Persona",
+            "G0": "Lugar",
+            "O0": "Organizacion",
+            "V0": "Otros"
+        }
+
+    },
+    "V": {
+        "Categoria": "Verbo",
+        "Tipo": {
+            "M": "Principal",
+            "A": "Auxiliar",
+            "S": "Semiauxiliar"
+        },
+        "Modo": {
+            "I": "Indicativo",
+            "S": "Subjuntivo",
+            "M": "Imperativo",
+            "N": "Infinitivo",
+            "G": "Gerundio",
+            "P": "Participio"
+        }
+    },
+    "P": {
+        "Categoria": "Pronombre",
+        "Tipo": {
+            "P": "Personal",
+            "D": "Demostrativo",
+            "X": "Posesivo",
+            "I": "Indefinido",
+            "T": "Interrogativo",
+            "R": "Relativo",
+            "E": "Exclamativo"
+        },
+        "Persona": {
+            "1": "Primera",
+            "2": "Segunda",
+            "3": "Tercera"
+        }
+    },
+    "C": {
+        "Categoria": "Conjuncion",
+        "Tipo": {
+            "C": "Coordinada",
+            "S": "Subordinada"
+        }
+    },
+    "I": {
+        "Categoria": "Interjeccion"
+    },
+    "S": {
+        "Categoria": "Adposicion",
+        "Tipo": {
+            "P": "Preposicion"
+        },
+        "Forma": {
+            "S": "Simple",
+            "C": "Contraida"
+        }
+    },
+    "F": {
+        "Categoria": "Puntuacion"
+    },
+    "Z": {
+        "Cateoria": "Cifra"
+    },
 }
 
 # endregion
@@ -634,6 +760,45 @@ def wordanalysis():
                            clasificacionPalabras=string_de_finaldict_reemplazando_comillas)
 
 
+@app.route('/etiquetador-morfologico', methods=['POST', 'GET'])
+def etiquetador():
+    oracion = ""
+    jsonToPost = json.dumps(request.form['wordanalysis'])
+    postedInfoMadeJson = json.loads(request.form['wordanalysis'])
+    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
+    for i in jsonMadePyList:
+        oracion += i["respuesta"]
+        oracion += " "
+    entrada = codecs.open("fragmento-wikicorpus-tagged-spa.txt", "r", encoding="utf-8")
+    tagged_words = []
+    tagged_sents = []
+    for linea in entrada:
+        linea = linea.rstrip()
+        if linea.startswith("<") or len(linea) == 0:
+            if len(tagged_words) > 0:
+                tagged_sents.append(tagged_words)
+                tagged_words = []
+        else:
+            camps = linea.split(" ")
+            forma = camps[0]
+            lema = camps[1]
+            etiqueta = camps[2]
+            tupla = (forma, etiqueta)
+            tagged_words.append(tupla)
+
+    unigram_tagger = nltk.UnigramTagger(tagged_sents)
+    bigram_tagger = nltk.BigramTagger(tagged_sents, backoff=unigram_tagger)
+    trigram_tagger = nltk.TrigramTagger(tagged_sents, backoff=bigram_tagger)
+    tokens = nltk.tokenize.word_tokenize(oracion)
+    analisi = bigram_tagger.tag(tokens)
+    palabras_etiquetadas = []
+    for palabra_analizada in analisi:
+        minilist = []
+        minilist.append(palabra_analizada[0])
+
+    return render_template("etiquetado_morfologico.html")
+
+
 @app.route('/posneg', methods=['POST', 'GET'])
 def posneg():
     return render_template('posneg.html')
@@ -749,6 +914,40 @@ class analizador2(Resource):
 
 def word_type_count(words):
     pass
+
+
+def etiquetado_morfologico(codigo):
+    primera_letra = codigo[0]
+    segunda_letra = codigo[1]
+    tercera_letra = codigo[2]
+    cuarta_letra = codigo[3]
+    quinta_letra = codigo[4]
+    sexta_letra = codigo[5]
+
+
+    resultado_del_etiquetado = ""
+    if primera_letra == "A":  # Adjetivo
+        resultado_del_etiquetado += f"{diccionario_freeling["A"]["Categoria"]} "
+    if primera_letra == "R":  # Adverbio
+        pass
+    if primera_letra == "D":  # Determinante
+        pass
+    if primera_letra == "N":  # Nombre
+        pass
+    if primera_letra == "V":  # Verbo
+        pass
+    if primera_letra == "P":  # Pronombre
+        pass
+    if primera_letra == "C":  # Conjuncion
+        pass
+    if primera_letra == "I":  # Interjeccionx
+        pass
+    if primera_letra == "S":  # Adposicion
+        pass
+    if primera_letra == "F":  # Puntuacion
+        pass
+    if primera_letra == "Z":  # Cifra
+        pass
 
 
 # endregion
