@@ -88,9 +88,9 @@
                         <li>
                             <!-- ACA VA EL FUCKIN ETIQUETADOR MORFOSINTACTICO-->
                             <div class="item-menu subitem-menu">
-                                <img width="25px" src="{{ url_for('static', filename='img/tag.png') }}" alt="cloud">
-                                <form action="/wordcloud" method="POST" id="wordcloud">
-                                    <input type="hidden" name="wordcloud" id="wordcloud" value="{{ json }}">
+                                <img width="25px" src="{{ url_for('static', filename='img/tag.png') }}" alt="tagger">
+                                <form action="/etiquetador-morfologico" method="POST" id="etiquetador">
+                                    <input type="hidden" name="etiquetador" id="etiquetador" value="{{ json }}">
                                     <button class="button-submit" type="submit"> Etiquetador Morfosintactico</button>
                                 </form>
                             </div>

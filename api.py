@@ -5,6 +5,7 @@ import datetime
 import json
 import pickle
 import random
+import re
 import string
 import time
 from collections import Counter
@@ -763,8 +764,8 @@ def wordanalysis():
 @app.route('/etiquetador-morfologico', methods=['POST', 'GET'])
 def etiquetador():
     oracion = ""
-    jsonToPost = json.dumps(request.form['wordanalysis'])
-    postedInfoMadeJson = json.loads(request.form['wordanalysis'])
+    jsonToPost = json.dumps(request.form['etiquetador'])
+    postedInfoMadeJson = json.loads(request.form['etiquetador'])
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
     for i in jsonMadePyList:
         oracion += i["respuesta"]
@@ -793,9 +794,12 @@ def etiquetador():
     analisi = bigram_tagger.tag(tokens)
     palabras_etiquetadas = []
     for palabra_analizada in analisi:
-        minilist = []
-        minilist.append(palabra_analizada[0])
-
+        palabra_analizada = list(palabra_analizada)
+        if str(type(palabra_analizada[1])) == "<class 'NoneType'>":
+            palabra_analizada[1] = "None"
+        minilist = [palabra_analizada[0], etiquetado_morfologico(palabra_analizada[1])]
+        palabras_etiquetadas.append(minilist)
+    print(palabras_etiquetadas)
     return render_template("etiquetado_morfologico.html")
 
 
@@ -917,37 +921,104 @@ def word_type_count(words):
 
 
 def etiquetado_morfologico(codigo):
-    primera_letra = codigo[0]
-    segunda_letra = codigo[1]
-    tercera_letra = codigo[2]
-    cuarta_letra = codigo[3]
-    quinta_letra = codigo[4]
-    sexta_letra = codigo[5]
 
+    codigo = str(codigo).upper()
+    if len(str(codigo)) == 1:
+        primera_letra = str(codigo[0])
+    elif len(str(codigo)) == 2:
+        primera_letra = str(codigo[0])
+        segunda_letra = str(codigo[1])
+    elif len(str(codigo)) == 3:
+        primera_letra = str(codigo[0])
+        segunda_letra = str(codigo[1])
+        tercera_letra = str(codigo[2])
+    elif len(str(codigo)) == 4:
+        primera_letra = str(codigo[0])
+        segunda_letra = str(codigo[1])
+        tercera_letra = str(codigo[2])
+        cuarta_letra = str(codigo[3])
+    elif len(str(codigo)) > 4:
+        primera_letra = str(codigo[0])
+        segunda_letra = str(codigo[1])
+        tercera_letra = str(codigo[2])
+        cuarta_letra = str(codigo[3])
+        quinsex_letra = str(f"{codigo[4]}{codigo[5]}")
 
     resultado_del_etiquetado = ""
+
     if primera_letra == "A":  # Adjetivo
-        resultado_del_etiquetado += f"{diccionario_freeling["A"]["Categoria"]} "
-    if primera_letra == "R":  # Adverbio
-        pass
-    if primera_letra == "D":  # Determinante
-        pass
-    if primera_letra == "N":  # Nombre
-        pass
-    if primera_letra == "V":  # Verbo
-        pass
-    if primera_letra == "P":  # Pronombre
-        pass
-    if primera_letra == "C":  # Conjuncion
-        pass
-    if primera_letra == "I":  # Interjeccionx
-        pass
-    if primera_letra == "S":  # Adposicion
-        pass
-    if primera_letra == "F":  # Puntuacion
-        pass
-    if primera_letra == "Z":  # Cifra
-        pass
+        adj_cat = diccionario_freeling[primera_letra]["Categoria"]
+        adj_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        adj_grado = diccionario_freeling[primera_letra]["Grado"][tercera_letra]
+        resultado_del_etiquetado += f"{adj_cat} "
+        resultado_del_etiquetado += f"{adj_tipo} "
+        resultado_del_etiquetado += f"{adj_grado} "
+    elif primera_letra == "R":  # Adverbio
+        adv_cat = diccionario_freeling[primera_letra]["Categoria"]
+        adv_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        resultado_del_etiquetado = f"{adv_cat} "
+        resultado_del_etiquetado += f"{adv_tipo} "
+    elif primera_letra == "D":  # Determinante
+        det_cat = diccionario_freeling[primera_letra]["Categoria"]
+        det_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        det_per = diccionario_freeling[primera_letra]["Persona"][tercera_letra]
+        resultado_del_etiquetado = f"{det_cat} persona"
+        resultado_del_etiquetado += f"{det_tipo} persona"
+        resultado_del_etiquetado += f"{det_per} persona"
+    elif primera_letra == "N":  # Nombre
+        nom_cat = diccionario_freeling[primera_letra]["Categoria"]
+        nom_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        nom_gen = diccionario_freeling[primera_letra]["Genero"][tercera_letra]
+        nom_num = diccionario_freeling[primera_letra]["Numero"][cuarta_letra]
+        nom_clas = diccionario_freeling[primera_letra]["Clasificacion_semantica"][quinsex_letra]
+        resultado_del_etiquetado = f"{nom_cat} "
+        resultado_del_etiquetado += f"{nom_tipo} "
+        resultado_del_etiquetado += f"{nom_gen} "
+        resultado_del_etiquetado += f"{nom_num} "
+        resultado_del_etiquetado += f"{nom_clas} "
+    elif primera_letra == "V":  # Verbo
+        verb_cat = diccionario_freeling[primera_letra]["Categoria"]
+        verb_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        verb_modo = diccionario_freeling[primera_letra]["Modo"][tercera_letra]
+        resultado_del_etiquetado = f"{verb_cat} "
+        resultado_del_etiquetado += f"{verb_tipo} "
+        resultado_del_etiquetado += f"{verb_modo} "
+    elif primera_letra == "P":  # Pronombre
+        pron_cat = diccionario_freeling[primera_letra]["Categoria"]
+        pron_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        pron_pers = diccionario_freeling[primera_letra]["Persona"][tercera_letra]
+        resultado_del_etiquetado = f"{pron_cat} persona"
+        resultado_del_etiquetado += f"{pron_tipo} persona "
+        resultado_del_etiquetado += f"{pron_pers} persona "
+    elif primera_letra == "C":  # Conjuncion
+        conj_cat = diccionario_freeling[primera_letra]["Categoria"]
+        conj_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        resultado_del_etiquetado = f"{conj_cat} "
+        resultado_del_etiquetado += f"{conj_tipo} "
+    elif primera_letra == "I":  # Interjeccion
+        int_cat = diccionario_freeling[primera_letra]["Categoria"]
+        resultado_del_etiquetado = f"{int_cat} "
+    elif primera_letra == "S":  # Adposicion
+        adp_cat = diccionario_freeling[primera_letra]["Categoria"]
+        adp_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
+        adp_forma = diccionario_freeling[primera_letra]["Forma"][tercera_letra]
+        resultado_del_etiquetado = f"{adp_cat} "
+        resultado_del_etiquetado += f"{adp_tipo} "
+        resultado_del_etiquetado += f"{adp_forma} "
+    elif primera_letra == "F":  # Puntuacion
+        punct_cat = diccionario_freeling[primera_letra]["Categoria"]
+        patron = re.compile(r'F[a-z]]')
+        if patron.match(codigo):
+            resultado_del_etiquetado = punct_cat
+
+    elif primera_letra == "Z":  # Cifra
+        cif_cat = diccionario_freeling[primera_letra]["Categoria"]
+        resultado_del_etiquetado = cif_cat
+
+    else:
+        resultado_del_etiquetado = "N/D"
+
+    return resultado_del_etiquetado
 
 
 # endregion
