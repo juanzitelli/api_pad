@@ -1,29 +1,47 @@
-body{
+body {
     display: grid;
     grid-template-columns: 0.5fr 5fr 0.5fr;
     grid-template-rows: 0.3fr 5fr 0.5fr;
-    grid-template-areas:
-        "header header header"
-        ". main ."
-        "footer footer footer";
+    grid-template-areas: "header header header" ". main ." "footer footer footer";
 
 }
-footer#footer{
+
+body, html {
+    height: 100vh;
+}
+
+img {
+    max-width: 30vw;
+    height: auto;
+}
+
+footer#footer {
     grid-area: footer;
 }
-header#header{
+
+header#header {
     grid-area: header;
 }
-main#main{
+
+main#main {
     grid-area: main;
 }
-hr{
+
+hr {
     border-top: 1px solid black !important;
 }
-main{
+
+main {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+div.jumbotron {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

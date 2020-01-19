@@ -34,12 +34,12 @@ function estaEnElOtro(arraycito, palabrita){
 {% block content %}
 {{ super() }}
 <div class="jumbotron">
-	<h1>Nube de palabras generada</h1>
+	<h5>Nube de palabras generada</h5>
 	<hr>
 	<img src="{{ url_for('static', filename=img_path) }}" alt="wordcloud" id="wordcloud">
-	<div>
-		<h3 style="margin-top: 30px;">Palabras utilizadas:</h3>
-		<ul>
+	<div id="palabras-usadas">
+		<h6 style="margin-top: 30px;">Palabras utilizadas:</h6>
+		<ul id="words-container">
 		{% for element in words %}<li>{{element}}</li>{% endfor %}
 		</ul>
 	</div>

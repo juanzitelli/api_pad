@@ -13,20 +13,19 @@
 <!-- NAV -->
 {% block nav %}
     {{ super() }}
-    <form action="/pad/analizador222/" method="POST" id="json">
-        <button type="submit" class="button-submit back-btn">
-            <input type="hidden" name="json" id=" json" value="{{ json }}">
-            <img src="{{ url_for('static', filename='img/left-arrow-key.png') }}" alt="Back to output" width="20px">
-        </button>
-    </form>
+
 {% endblock %}
 
 {% block content %}
     {{ super() }}
     <div class="jumbotron">
-    <h1>Idioma: {{ idioma }}</h1>
-        <hr>
-        <img src="{{ url_for('static', filename = bandera) }}" alt="{{ idioma }}">
+        <figure>
+            <img src="{{ url_for('static', filename = bandera) }}" alt="{{ idioma }}">
+            <hr>
+            <figcaption>
+                <h4>Idioma: {{ idioma }}</h4>
+            </figcaption>
+        </figure>
     </div>
     
 {% endblock %}

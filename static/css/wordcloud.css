@@ -1,0 +1,44 @@
+body {
+    grid-template-columns: 0.5fr 3fr 0.5fr;
+    grid-template-rows: 0.01fr 3fr 0.01fr;
+}
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+main#main > div.jumbotron > h5, main#main > div.jumbotron > img{
+    align-self: center;
+}
+ul#words-container {
+    column-count: 4;
+    column-gap: 0.5vw;
+}
+
+main#main > div.jumbotron > div#palabras-usadas > ul#words-container > li {
+    list-style-type: none;
+    font-size: 0.7rem;
+}
+
+@media (max-width: 1060px ) {
+    ul#words-container {
+        column-count: 3;
+        column-gap: 0.5vw;
+    }
+}
+
+@media (max-width: 768px ) {
+    ul#words-container {
+        column-count: 2;
+        column-gap: 0.5vw;
+    }
+}
+
+@media (max-width: 414px ) {
+    ul#words-container {
+        column-count: 1;
+        column-gap: 0.5vw;
+    }
+}
+
+/*768*/

@@ -1,19 +1,4 @@
 # -*- coding: utf-8 -*-
-from googletrans import Translator
-from nltk import word_tokenize
-from collections import Counter
-from wordcloud import WordCloud
-from selenium import webdriver
-from flask_restful import Api, Resource, abort, reqparse
-from flask_cors import CORS
-from flask import Flask, make_response, render_template, request, jsonify
-import googletrans
-import wordcloud
-import requests
-import pymysql.cursors
-import pymysql
-import textblob
-import numpy as np
 import ast
 import datetime
 import json
@@ -21,10 +6,23 @@ import pickle
 import random
 import string
 import time
+from collections import Counter
 
+import googletrans
 import matplotlib.pyplot as plt
 import nltk
+import numpy as np
+import pymysql
+import pymysql.cursors
+import requests
+from flask import Flask, make_response, render_template, request
+from flask_cors import CORS
+from flask_restful import Api, Resource, abort, reqparse
+from googletrans import Translator
+from nltk import word_tokenize
+from selenium import webdriver
 from textblob import TextBlob
+from wordcloud import WordCloud
 
 plt.rcdefaults()
 
@@ -223,8 +221,8 @@ def db2string(vsql):
 def analizador222():
     jsonToPost = ArmameElJSON_Bro(request.args.get('empresa'), request.args.get('experiencia'),
                                   request.args.get('num-telefono'), request.args.get(
-        'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'),
-        request.args.get('horadesde'), request.args.get('horahasta'))
+            'pregunta'), request.args.get('respuesta'), request.args.get('fechadesde'), request.args.get('fechahasta'),
+                                  request.args.get('horadesde'), request.args.get('horahasta'))
     modo = 1
     return render_template("pivote-output.html", json=jsonToPost, modo=modo)
 
@@ -402,7 +400,7 @@ def analisisconversaciones():
             request.form['json'])  # QUE ESTO QUEDE ASI CARAJO
     except:
         jsonMadePyList = []
-    if (len(jsonMadePyList) != 0):
+    if len(jsonMadePyList) != 0:
         return render_template("pivote-analysis.html", json=jsonToPost)
     # Hasta aca
     else:
@@ -525,13 +523,13 @@ def wordanalysis():
     y_pos = np.arange(len(objects))
     performance = [0, 0, 0, 0, 0, 0]
     for t in listOfTimes:
-        if (whatMomentOfTheDayIsIt(t) == "Madrugada"):
+        if whatMomentOfTheDayIsIt(t) == "Madrugada":
             performance[0] += 1
-        if (whatMomentOfTheDayIsIt(t) == "Mañana"):
+        if whatMomentOfTheDayIsIt(t) == "Mañana":
             performance[1] += 1
-        if (whatMomentOfTheDayIsIt(t) == "Mediodía"):
+        if whatMomentOfTheDayIsIt(t) == "Mediodía":
             performance[2] += 1
-        if (whatMomentOfTheDayIsIt(t) == "Tarde"):
+        if whatMomentOfTheDayIsIt(t) == "Tarde":
             performance[3] += 1
         if whatMomentOfTheDayIsIt(t) == "Noche":
             performance[4] += 1
@@ -543,7 +541,7 @@ def wordanalysis():
     plt.title('Cantidad de mensajes enviados por momento del día')
     filename = randomString()
     longpathBarChart = 'C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_bc/' + \
-        filename + '.png'
+                       filename + '.png'
     shortPath = 'img/img_bc/' + filename + ".png"
     plt.savefig(longpathBarChart)
     # endregion
@@ -586,7 +584,7 @@ def wordanalysis():
     for n in cantidad_de_tipos_de_palabras:
         if n in diccionarioClasificador_ESP:
             diccionario_final_correcto[diccionarioClasificador_ESP[n]
-                                       ] = cantidad_de_tipos_de_palabras[n]
+            ] = cantidad_de_tipos_de_palabras[n]
     diccionario_final_correcto = {k: v for k, v in sorted(
         diccionario_final_correcto.items(), key=lambda item: item[1])}
     listita = []
@@ -643,6 +641,7 @@ def posneg():
 
 @app.route('/language', methods=['POST', 'GET'])
 def language():
+    global palabra_traducida
     translator_languages_dict = googletrans.LANGUAGES
     print(translator_languages_dict)
     jsonToPost = json.dumps(request.form['language'])
@@ -665,7 +664,7 @@ def language():
     translatorcito = Translator()
     QueIdiomaEs = translatorcito.translate(
         translator_languages_dict[palabra_traducida], "es", "en")
-    print(QueIdiomaEs)
+    print(QueIdiomaEs.extra_data)
     imagen_bandera = "img/banderas/" + palabra_traducida + ".png"
 
     return render_template('language_identifier.html', json=jsonToPost, idioma=QueIdiomaEs.text,
@@ -681,32 +680,32 @@ def randomString(stringLength=10):
 def whatMomentOfTheDayIsIt(dateParameter):
     if dateParameter >= datetime.datetime.strptime('01:00:00',
                                                    '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-            '05:00:00', '%H:%M:%S').time():
+        '05:00:00', '%H:%M:%S').time():
         return "Madrugada"
     # Madrugada
     if dateParameter > datetime.datetime.strptime('05:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-            '11:00:00', '%H:%M:%S').time():
+        '11:00:00', '%H:%M:%S').time():
         return "Mañana"
     # Mañana
     if dateParameter > datetime.datetime.strptime('11:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-            '14:00:00', '%H:%M:%S').time():
+        '14:00:00', '%H:%M:%S').time():
         return "Mediodía"
     # Mediodía
     if dateParameter > datetime.datetime.strptime('14:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-            '19:00:00', '%H:%M:%S').time():
+        '19:00:00', '%H:%M:%S').time():
         return "Tarde"
     # Tarde
     if dateParameter > datetime.datetime.strptime('19:00:00',
                                                   '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-            '23:00:00', '%H:%M:%S').time():
+        '23:00:00', '%H:%M:%S').time():
         return "Noche"
     # Noche
     if dateParameter >= datetime.datetime.strptime('01:00:00',
                                                    '%H:%M:%S').time() and dateParameter <= datetime.datetime.strptime(
-            '05:00:00', '%H:%M:%S').time():
+        '05:00:00', '%H:%M:%S').time():
         return "Medianoche"
     # Medianoche
 

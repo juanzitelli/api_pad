@@ -1,59 +1,75 @@
 
 .dropdown li {
-	list-style-type: none;
-	cursor: pointer;
+    list-style-type: none;
+    cursor: pointer;
 }
-html,body{
-	height: 100vh;
+
+html, body {
+    height: 100vh;
 }
+
 button {
-	-webkit-appearance: none;
-	text-rendering: auto;
-	color: black;
-	font-family: inherit;
-	letter-spacing: normal;
-	word-spacing: normal;
-	text-transform: none;
-	text-indent: 0;
-	text-shadow: none;
-	display: inline-block;
-	text-align: center;
-	align-items: flex-start;
-	cursor: default;
-	background-color: transparent;
-	box-sizing: border-box;
-	margin: 0;
-	padding: 1px 6px;
-	border-width: 2px;
-	border-style: none;
-	border-color: transparent;
-	border-image: initial;
+    -webkit-appearance: none;
+    text-rendering: auto;
+    color: black;
+    font-family: inherit;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: none;
+    border-color: transparent;
+    border-image: initial;
 }
-div.item-menu{
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	height: 50px;
-	width: 30vw;
-	background: #03A9F4;
-	color: black;
-	font-weight: bold;
-	padding: 1vh 3vw;
-	margin: 1vw;
-	border-radius: 1vw;
+
+div.item-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 30vw;
+    background: #03A9F4;
+    color: black;
+    font-weight: bold;
+    padding: 1vh 3vw;
+    margin: 1vw;
+    border-radius: 1vw;
 }
-div.jumbotron{
-	width: 80vw;
+
+div.jumbotron {
+    width: 80vw;
 }
+
 div.childtext {
-	cursor: pointer;
-	transition: all ease 300ms;
+    cursor: pointer;
+    transition: all ease 300ms;
 }
-input.dropdownTitle, div.childtext,li:last-child {
-	margin-bottom: 3vh;
+
+input.dropdownTitle, div.childtext, li:last-child {
+    margin-bottom: 3vh;
 }
-{
+
+@media (max-width: 420px) {
+	div.jumbotron > *, input.dropdownTitle{
+		font-size: 3vmin !important;
+	}
+	body,html{
+		height: 100vh !important;
+	}
+	footer#footer > nav#footer-navbar{
+		height: 100% !important;
+	}
 
 }
 /*
