@@ -5,7 +5,6 @@ import datetime
 import json
 import pickle
 import random
-import re
 import string
 import time
 from collections import Counter
@@ -266,7 +265,7 @@ diccionario_freeling = {
         "Categoria": "Puntuacion"
     },
     "Z": {
-        "Cateoria": "Cifra"
+        "Categoria": "Cifra"
     },
 }
 
@@ -387,7 +386,7 @@ def ArmameElJSON_Bro(reqEMPRESA, reqEXPERIENCIA, reqNUMTELEFONO, reqPREGUNTA, re
             query = query + ";"
 
     resultadoRecienSacadoDeLaDB = db2string(query)
-
+    print(query)
     for obj in resultadoRecienSacadoDeLaDB:
         obj["fecha"] = "'" + str(obj["fecha"]) + "'"
     jsonToPost = json.dumps(
@@ -732,14 +731,9 @@ def wordanalysis():
             listaparajson = listaparajson[:5]
         else:
             pass
-        # jsonlisto = jsonify(json.dumps(listaparajson))
-        # print(jsonlisto)
     except Exception as e:
         print(str(e))
-        # jsonlisto = jsonify(str(e))
 
-        # print(jsonlisto)
-        print("***********************")
     finalDict = json.dumps(str(finalDict))
     string_de_finaldict_reemplazando_comillas = str(
         finalDict).replace("'", '"')
@@ -766,10 +760,12 @@ def etiquetador():
     oracion = ""
     jsonToPost = json.dumps(request.form['etiquetador'])
     postedInfoMadeJson = json.loads(request.form['etiquetador'])
+    print(postedInfoMadeJson)
     jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
     for i in jsonMadePyList:
         oracion += i["respuesta"]
         oracion += " "
+    print(oracion)
     entrada = codecs.open("fragmento-wikicorpus-tagged-spa.txt", "r", encoding="utf-8")
     tagged_words = []
     tagged_sents = []
@@ -789,18 +785,34 @@ def etiquetador():
 
     unigram_tagger = nltk.UnigramTagger(tagged_sents)
     bigram_tagger = nltk.BigramTagger(tagged_sents, backoff=unigram_tagger)
-    trigram_tagger = nltk.TrigramTagger(tagged_sents, backoff=bigram_tagger)
     tokens = nltk.tokenize.word_tokenize(oracion)
     analisi = bigram_tagger.tag(tokens)
+    analisis = []
+    for n in analisi:
+        if n in analisi and n not in analisis:
+            analisis.append(n)
     palabras_etiquetadas = []
-    for palabra_analizada in analisi:
+    listadeNN = []
+    for palabra_analizada in analisis:
         palabra_analizada = list(palabra_analizada)
-        if str(type(palabra_analizada[1])) == "<class 'NoneType'>":
+        if str(type(palabra_analizada[1])) != "<class 'NoneType'>":
+            minilist = [palabra_analizada[0], etiquetado_morfologico(palabra_analizada[1])]
+            palabras_etiquetadas.append(minilist)
+        else:
             palabra_analizada[1] = "None"
-        minilist = [palabra_analizada[0], etiquetado_morfologico(palabra_analizada[1])]
-        palabras_etiquetadas.append(minilist)
+            minilist = [palabra_analizada[0], etiquetado_morfologico(palabra_analizada[1])]
+            listadeNN.append(minilist)
+
     print(palabras_etiquetadas)
-    return render_template("etiquetado_morfologico.html")
+    n = len(palabras_etiquetadas)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if palabras_etiquetadas[j][1] > palabras_etiquetadas[j + 1][1]:
+                palabras_etiquetadas[j], palabras_etiquetadas[j + 1] = palabras_etiquetadas[j + 1], \
+                                                                       palabras_etiquetadas[j]
+    print(palabras_etiquetadas)
+    return render_template('etiquetado_morfologico.html', lista_palabras_etiquetadas=palabras_etiquetadas,
+                           lista_palabras_no_reconocidas=listadeNN)
 
 
 @app.route('/posneg', methods=['POST', 'GET'])
@@ -921,7 +933,15 @@ def word_type_count(words):
 
 
 def etiquetado_morfologico(codigo):
+    print(codigo)
+    print(str(codigo))
+    global primera_letra
+    global segunda_letra
+    global tercera_letra
+    global quinsex_letra
+    global cuarta_letra
     codigo = str(codigo).upper()
+
     if len(str(codigo)) == 1:
         primera_letra = str(codigo[0])
     elif len(str(codigo)) == 2:
@@ -944,7 +964,7 @@ def etiquetado_morfologico(codigo):
         quinsex_letra = str(f"{codigo[4]}{codigo[5]}")
 
     resultado_del_etiquetado = ""
-    if codigo == "None":
+    if codigo == "NONE" or codigo == "none" or codigo == "None":
         resultado_del_etiquetado = "N/D"
         return resultado_del_etiquetado
     if primera_letra == "A":  # Adjetivo
@@ -1039,15 +1059,15 @@ def etiquetado_morfologico(codigo):
         else:
             pron_pers = ""
 
-        resultado_del_etiquetado = f"{pron_cat} persona"
-        resultado_del_etiquetado += f"{pron_tipo} persona "
+        resultado_del_etiquetado = f"{pron_cat} "
+        resultado_del_etiquetado += f"{pron_tipo} "
         resultado_del_etiquetado += f"{pron_pers} persona "
     elif primera_letra == "C":  # Conjuncion
         conj_cat = diccionario_freeling[primera_letra]["Categoria"]
 
         if segunda_letra in diccionario_freeling[primera_letra]["Tipo"]:
             conj_tipo = diccionario_freeling[primera_letra]["Tipo"][segunda_letra]
-        else
+        else:
             conj_tipo = ""
 
         resultado_del_etiquetado = f"{conj_cat} "
@@ -1071,9 +1091,9 @@ def etiquetado_morfologico(codigo):
         resultado_del_etiquetado += f"{adp_forma} "
     elif primera_letra == "F":  # Puntuacion
         punct_cat = diccionario_freeling[primera_letra]["Categoria"]
-        patron = re.compile(r'F[a-z]]')
-        if patron.match(codigo):
-            resultado_del_etiquetado = punct_cat
+        # patron = re.compile(r'F[a-z]]')
+        # if patron.match(codigo):
+        resultado_del_etiquetado = punct_cat
 
     elif primera_letra == "Z":  # Cifra
         cif_cat = diccionario_freeling[primera_letra]["Categoria"]

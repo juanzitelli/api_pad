@@ -1,0 +1,64 @@
+{% extends "pivote-layout.html" %}
+<!-- Encabezado + Título -->
+{% block title %}Etiquetado morfológico - {% endblock %}
+
+<!-- Head -->
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tagging.css') }}">
+    <!-- static\ -->
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+<!-- Content -->
+{% block content %}
+    {{ super() }}
+    <script>
+
+    </script>
+    <div class="jumbotron">
+        <header>
+            <h5 id="section-title">Etiquetador morfológico de respuestas</h5>
+            <nav>
+                <a href="#palabras-etiquetadas-contenedor" class="tagger-section">Palabras reconocidas</a>
+                <a href="#palabras-no-etiquetadas-contenedor" class="tagger-section">Palabras no reconocidas</a>
+            </nav>
+        </header>
+        <div id="contenedor-etiquetadas">
+            <header>
+                <h6>Palabras etiquetadas ✅</h6>
+            </header>
+            <hr>
+            <ul id="palabras-etiquetadas-contenedor">
+                <li>
+                    <b>Palabra ➡ Clasificación</b>
+                    <hr>
+                </li>
+                {% for element in lista_palabras_etiquetadas %}
+                    <li><b>{{ element[0] }}</b> ► {{ element[1] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="contenedor-no-etiquetadas">
+            <header>
+                <h6>Palabras no reconocidas ❌</h6>
+            </header>
+            <hr>
+            <ul id="palabras-no-etiquetadas-contenedor">
+                <li>
+                    <b>Palabra ➡ Clasificación</b>
+                    <hr>
+                </li>
+                {% for element in lista_palabras_no_reconocidas %}
+                    <li><b>{{ element[0] }}</b> ► {{ element[1] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+{% block footer %}
+    {{ super() }}
+{% endblock %}
