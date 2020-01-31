@@ -14,3 +14,29 @@
 {% block nav %}
     {{ super() }}
 {% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <div class="jumbotron">
+        <h2 id="title">Porcentajes de positividad | negatividad de las respuestas</h2>
+        <hr>
+        <div class="percentages-container">
+            <div class="percentage" id="pos">
+                <h5 class="ptg-title">Respuestas <b>positivas</b> 😁</h5>
+                <h2 class="ptg-number">{{ pos }}%</h2>
+            </div>
+            <div class="percentage" id="neutral">
+                <h5 class="ptg-title">Respuestas <b>neutrales</b> 😐</h5>
+                <h2 class="ptg-number">{{ neutral }}%</h2>
+            </div>
+            <div class="percentage" id="neg">
+                <h5 class="ptg-title">Respuestas <b>negativas</b> 😠</h5>
+                <h2 class="ptg-number">{{ neg }}%</h2>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}

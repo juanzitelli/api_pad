@@ -522,11 +522,11 @@ def analisisconversaciones():
     postedInfoMadeJson = json.loads(
         request.form['json'])  # No sirve de una garcha
     try:
-        jsonMadePyList = ast.literal_eval(
+        jsonMadePyObjectsLists = ast.literal_eval(
             request.form['json'])  # QUE ESTO QUEDE ASI CARAJO
     except:
-        jsonMadePyList = []
-    if len(jsonMadePyList) != 0:
+        jsonMadePyObjectsLists = []
+    if len(jsonMadePyObjectsLists) != 0:
         return render_template("pivote-analysis.html", json=jsonToPost)
     # Hasta aca
     else:
@@ -538,10 +538,10 @@ def wordcloud():
     jsonToPost = json.dumps(request.form['wordcloud'])
     text = " "
     postedInfoMadeJson = json.loads(request.form['wordcloud'])
-    jsonMadePyList = ast.literal_eval(
+    jsonMadePyObjectsLists = ast.literal_eval(
         postedInfoMadeJson)  # idk if it works or nah
     wordArray = []
-    for x in jsonMadePyList:
+    for x in jsonMadePyObjectsLists:
         text = text + x['respuesta'] + " "
         wordArray.append(x['respuesta'])
     nube = WordCloud(width=480, height=480, margin=20,
@@ -563,12 +563,12 @@ def wordanalysis():
     global tagged
     jsonToPost = json.dumps(request.form['wordanalysis'])
     postedInfoMadeJson = json.loads(request.form['wordanalysis'])
-    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
+    jsonMadePyObjectsLists = ast.literal_eval(postedInfoMadeJson)
 
     # region Fechas iniciales y finales
     listOfDates = []
     listOfTimes = []
-    for objeto in jsonMadePyList:
+    for objeto in jsonMadePyObjectsLists:
         fechaSinComillas = objeto['fecha'].replace("'", "")
         fechaDelObjeto = datetime.datetime.strptime(
             fechaSinComillas, '%Y-%m-%d').date()
@@ -613,7 +613,7 @@ def wordanalysis():
     # region Cant de palabras en respuestas
     palabrasEnRespuestas_TEXTO = ""
     test = ""
-    for obj in jsonMadePyList:
+    for obj in jsonMadePyObjectsLists:
         palabrasEnRespuestas_TEXTO += obj['respuesta']
         test += obj['respuesta'] + " "
     palabras_entexto = palabrasEnRespuestas_TEXTO.split(" ")
@@ -632,7 +632,7 @@ def wordanalysis():
 
     # region Promedios
     respuestas = []
-    for e in jsonMadePyList:
+    for e in jsonMadePyObjectsLists:
         respuestas.append(e['respuesta'])
     cantRespuestas = len(respuestas)
 
@@ -761,8 +761,8 @@ def etiquetador():
     jsonToPost = json.dumps(request.form['etiquetador'])
     postedInfoMadeJson = json.loads(request.form['etiquetador'])
     print(postedInfoMadeJson)
-    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
-    for i in jsonMadePyList:
+    jsonMadePyObjectsLists = ast.literal_eval(postedInfoMadeJson)
+    for i in jsonMadePyObjectsLists:
         oracion += i["respuesta"]
         oracion += " "
     print(oracion)
@@ -817,7 +817,36 @@ def etiquetador():
 
 @app.route('/posneg', methods=['POST', 'GET'])
 def posneg():
-    return render_template('posneg.html')
+    jsonToPost = json.dumps(request.form['posneg'])
+    postedInfoMadeJson = json.loads(request.form['posneg'])
+    jsonMadePyObjectsLists = ast.literal_eval(postedInfoMadeJson)
+    texto = ""
+    for element in jsonMadePyObjectsLists:
+        texto += f'{element["respuesta"]} '
+    objetoAnalizador = TextBlob(texto)
+    objetoAnalizador_Traducido = objetoAnalizador.translate(to="en")
+    try:
+        sentiments = []
+        # [x.sentiment.polarity for x in word_tokenize(objetoAnalizador_Traducido)]
+        for palabra in word_tokenize(str(objetoAnalizador_Traducido)):
+            print(type(palabra))
+            print(palabra)
+            elementotecsblob = TextBlob(palabra)
+            sentiments.append(elementotecsblob.sentiment.polarity)
+            print(str(elementotecsblob.sentiment.polarity))
+        total = len(word_tokenize(str(objetoAnalizador_Traducido)))
+        positives = [pos for pos in sentiments if pos > 0]
+        negatives = [neg for neg in sentiments if neg < 0]
+        neutrals = [neutral for neutral in sentiments if neutral == 0]
+        pptg = str(round((len(positives) / total) * 100, 2))
+        nptg = str(round((len(negatives) / total) * 100, 2))
+        neuptg = str(round((len(neutrals) / total) * 100, 2))
+        print(f"El porcentaje de positivos es de {pptg}")
+        print(f"El porcentaje de negativos es de {nptg}")
+        print(f"El porcentaje de neutrales es de {neuptg}")
+    except Exception as e:
+        print(str(e))
+    return render_template('posneg.html',pos = pptg, neg = nptg, neutral = neuptg)
 
 
 @app.route('/language', methods=['POST', 'GET'])
@@ -827,12 +856,12 @@ def language():
     print(translator_languages_dict)
     jsonToPost = json.dumps(request.form['language'])
     postedInfoMadeJson = json.loads(request.form['language'])
-    jsonMadePyList = ast.literal_eval(postedInfoMadeJson)
+    jsonMadePyObjectsLists = ast.literal_eval(postedInfoMadeJson)
     respuestas = []
     idioma_respuestas = []
     textito = ""
     try:
-        for i in jsonMadePyList:
+        for i in jsonMadePyObjectsLists:
             palabra = i["respuesta"]
             respuestas.append(palabra)
             textito += palabra
