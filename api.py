@@ -5,6 +5,7 @@ import json
 import random
 import string
 from collections import Counter
+
 import googletrans
 import matplotlib.pyplot as plt
 import nltk
@@ -223,10 +224,6 @@ diccionario_freeling = {
 
 # endregion
 
-app = Flask(__name__)
-CORS(app)
-api = Api(app)
-
 # region Filtros
 
 
@@ -439,11 +436,11 @@ def wordcloud():
     plt.axis("off")
     plt.margins(x=10, y=10)
     shortName = randomString()
-    path = "C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_wc/" + shortName + ".png"
+    path = "/home/pad/pad2/sonda/api_pad/static/img/img_wc/" + shortName + ".png"
     nube.to_file(path)
     shortpath = "img/img_wc/" + shortName + ".png"
     wordArray.sort()
-    # shortpath = "C:/Users/juanz/Documents/CAETI/api_pad/static/" + shortpath
+    # shortpath = "/home/pad/pad2/sonda/api_pad/static/" + shortpath
     return render_template("wordcloud.html", json=jsonToPost, img_path=shortpath, words=wordArray)
 
 
@@ -555,7 +552,7 @@ def wordanalysis():
     plt.ylabel('Cantidad de mensajes')
     plt.title('Cantidad de mensajes enviados por momento del día')
     filename = randomString()
-    longpathBarChart = 'C:/Users/juanz/Documents/CAETI/api_pad/static/img/img_bc/' + \
+    longpathBarChart = '/home/pad/pad2/sonda/api_pad/static/img/img_bc/' + \
                        filename + '.png'
     shortPath = 'img/img_bc/' + filename + ".png"
     plt.savefig(longpathBarChart)
@@ -760,15 +757,15 @@ def language():
 # region Funciones útiles
 
 def db2string(vsql):
-    # dbServer = 'localhost'  # ip del servidor
-    # dbUser = 'pad'  # usurio autorizado para leer la base de datos
-    # dbPass = 'dalas'  # clave de la base de datos
-    # dbBase = 'pad2'  # nombre de la base de datos
-
     dbServer = 'localhost'  # ip del servidor
-    dbUser = 'root'  # usurio autorizado para leer la base de datos
-    dbPass = ''  # clave de la base de datos
+    dbUser = 'pad'  # usurio autorizado para leer la base de datos
+    dbPass = 'dalas'  # clave de la base de datos
     dbBase = 'pad2'  # nombre de la base de datos
+
+    # dbServer = 'localhost'  # ip del servidor
+    # dbUser = 'root'  # usurio autorizado para leer la base de datos
+    # dbPass = ''  # clave de la base de datos
+    # dbBase = 'pad2'  # nombre de la base de datos
 
     result = ""
 
@@ -1021,6 +1018,10 @@ def etiquetado_morfologico(codigo):
 
 # endregion
 
+app = Flask(__name__)
+CORS(app)
+api = Api(app)
+
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+    # app.run(debug=True)
