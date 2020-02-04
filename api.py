@@ -21,8 +21,6 @@ from textblob import TextBlob
 from wordcloud import WordCloud
 
 app = Flask(__name__)
-CORS(app)
-api = Api(app)
 
 # region Diccionarios
 diccionarioClasificador_ENG = {
@@ -759,7 +757,7 @@ def language():
 
 # endregion
 
-# region Funciones útiles
+# region Funciones
 
 def db2string(vsql):
     dbServer = 'localhost'  # ip del servidor
@@ -1022,7 +1020,6 @@ def etiquetado_morfologico(codigo):
 
 
 # endregion
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
