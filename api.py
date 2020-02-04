@@ -20,6 +20,10 @@ from nltk import word_tokenize
 from textblob import TextBlob
 from wordcloud import WordCloud
 
+app = Flask(__name__)
+CORS(app)
+api = Api(app)
+
 # region Diccionarios
 diccionarioClasificador_ENG = {
     "CC": "coordinating conjunction",
@@ -221,6 +225,7 @@ diccionario_freeling = {
         "Categoria": "Cifra"
     },
 }
+
 
 # endregion
 
@@ -1018,9 +1023,6 @@ def etiquetado_morfologico(codigo):
 
 # endregion
 
-app = Flask(__name__)
-CORS(app)
-api = Api(app)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
