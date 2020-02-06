@@ -1,3 +1,4 @@
+
 import ast
 import codecs
 import datetime
@@ -21,6 +22,7 @@ from textblob import TextBlob
 from wordcloud import WordCloud
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 300
 
 # region Diccionarios
 diccionarioClasificador_ENG = {
@@ -1023,4 +1025,4 @@ def etiquetado_morfologico(codigo):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7000)
-    # app.run(debug=True)
+    #app.run(debug=True)
